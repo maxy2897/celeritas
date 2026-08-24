@@ -36,39 +36,44 @@
     <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel.jpeg" alt="" /><span>CELERITAS</span></aside>
 
     <main id="contenido">
-      <section class="home-hero">
-        <img src="assets/celeritas-gt.png" alt="Coche de ocasión seleccionado por Celeritas" />
-        <div class="home-hero-shade"></div>
-        <div class="home-hero-copy">
-          <p class="eyebrow">Compraventa de vehículos de ocasión</p>
-          <h1>Tu próximo coche.<br />El mejor destino para el tuyo.</h1>
-          <p>Una forma más sencilla de comprar o vender: coches revisados, información clara y una persona acompañándote en cada paso.</p>
-          <div class="hero-actions"><a class="button button-light" href="comprar.html">Quiero comprar</a><a class="button button-ghost" href="vender.html">Quiero vender</a></div>
+      <section class="market-hero">
+        <div class="market-hero-copy">
+          <p class="eyebrow">Coches de ocasión revisados</p>
+          <h1>Encuentra el coche<br /><em>perfecto para ti.</em></h1>
+          <p>Vehículos seleccionados, historial explicado y garantía mínima de 12 meses. Compra con calma y con una persona a tu lado.</p>
+          <div class="hero-actions"><a class="button button-accent" href="comprar.html">Ver inventario</a><a class="button button-ghost" href="vender.html">Vender mi coche</a></div>
         </div>
-        <div class="hero-note"><strong>12 meses</strong><span>de garantía mínima</span><strong>100 puntos</strong><span>de revisión</span></div>
+        <img src="assets/celeritas-gt.png" alt="Coupé azul seleccionado por Celeritas" />
       </section>
 
-      <section class="choice-section">
-        <div class="choice-copy"><p class="eyebrow dark">Empieza por aquí</p><h2>Dos caminos.<br />La misma tranquilidad.</h2></div>
-        <div class="choice-links">
-          <a href="comprar.html"><span>01</span><div><h3>Comprar un coche</h3><p>Explora vehículos revisados, compara opciones y solicita una prueba.</p></div><b>→</b></a>
-          <a href="vender.html"><span>02</span><div><h3>Vender mi coche</h3><p>Recibe una valoración y deja el pago y los trámites en nuestras manos.</p></div><b>→</b></a>
+      <form class="inventory-search" action="comprar.html" method="get">
+        <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
+        <label><span>Marca</span><select name="marca"><option value="all">Todas las marcas</option><option value="seat">SEAT</option><option value="volkswagen">Volkswagen</option><option value="renault">Renault</option><option value="toyota">Toyota</option><option value="nissan">Nissan</option><option value="peugeot">Peugeot</option></select></label>
+        <label><span>Combustible</span><select name="combustible"><option value="all">Todos</option><option value="gasolina">Gasolina</option><option value="hibrido">Híbrido</option></select></label>
+        <label><span>Precio máximo</span><select name="precio"><option value="999999">Sin límite</option><option value="18000">18.000 €</option><option value="22000">22.000 €</option><option value="25000">25.000 €</option></select></label>
+        <button type="submit">Buscar coches →</button>
+      </form>
+
+      <section class="vehicle-types" aria-label="Buscar por tipo de vehículo">
+        <a href="comprar.html?tipo=utilitario"><span class="type-icon">⌁</span><strong>Utilitarios</strong><small>3 vehículos</small></a>
+        <a href="comprar.html?tipo=compacto"><span class="type-icon">⌁</span><strong>Compactos</strong><small>2 vehículos</small></a>
+        <a href="comprar.html?tipo=suv"><span class="type-icon">▱</span><strong>SUV</strong><small>1 vehículo</small></a>
+        <a href="comprar.html?combustible=hibrido"><span class="type-icon">◇</span><strong>Híbridos</strong><small>1 vehículo</small></a>
+        <a href="vender.html"><span class="type-icon">＋</span><strong>Vendemos el tuyo</strong><small>Valoración gratuita</small></a>
+      </section>
+
+      <section class="featured-inventory">
+        <div class="section-heading"><div><p class="eyebrow">Selección Celeritas</p><h2>Vehículos destacados</h2></div><a href="comprar.html">Ver todos →</a></div>
+        <div class="featured-grid">
+          <a class="inventory-card" href="coche.html?id=seat-ibiza"><div class="single-car-photo car-seat view-front" role="img" aria-label="SEAT Ibiza blanco, vista frontal"></div><div class="inventory-card-copy"><p>SEAT Ibiza 1.0 TSI FR</p><span>2022 · Gasolina · Manual</span><div><small>39.800 km</small><strong>17.490 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=vw-golf"><div class="single-car-photo car-golf view-front" role="img" aria-label="Volkswagen Golf gris, vista frontal"></div><div class="inventory-card-copy"><p>Volkswagen Golf Style</p><span>2021 · Gasolina · Manual</span><div><small>52.400 km</small><strong>20.900 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=toyota-corolla"><div class="single-car-photo car-corolla view-front" role="img" aria-label="Toyota Corolla azul, vista frontal"></div><div class="inventory-card-copy"><p>Toyota Corolla 125H</p><span>2021 · Híbrido · Automático</span><div><small>49.600 km</small><strong>22.900 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=nissan-qashqai"><div class="single-car-photo car-qashqai view-front" role="img" aria-label="Nissan Qashqai verde, vista frontal"></div><div class="inventory-card-copy"><p>Nissan Qashqai N-Connecta</p><span>2021 · Gasolina · Manual</span><div><small>55.200 km</small><strong>23.900 €</strong></div></div></a>
         </div>
+        <div class="trust-strip"><p><b>✓</b><span><strong>Garantía</strong>12 meses como mínimo</span></p><p><b>✓</b><span><strong>Revisión</strong>100 puntos comprobados</span></p><p><b>✓</b><span><strong>Financiación</strong>A tu medida</span></p><p><b>✓</b><span><strong>Vendemos tu coche</strong>Con todos los trámites</span></p></div>
       </section>
 
-      <section class="single-feature">
-        <div class="single-feature-image"><img src="assets/celeritas-ocasion-hero.png" alt="Vehículo compacto de ocasión" /></div>
-        <div class="single-feature-copy"><p class="eyebrow dark">Selección de la semana</p><h2>SEAT Ibiza 1.0 TSI FR</h2><p>2022 · 39.800 km · Gasolina · Cambio manual</p><strong>17.490 €</strong><a href="comprar.html" class="text-link">Ver vehículos disponibles →</a></div>
-      </section>
-
-      <section class="calm-message"><p>Sin presión. Sin letra pequeña.</p><h2>Solo coches que conocemos y decisiones que puedes tomar con calma.</h2></section>
-
-      <section class="home-service">
-        <div><p class="eyebrow dark">También compramos</p><h2>Tu coche puede ser el próximo coche de alguien.</h2></div>
-        <div><p>Lo valoramos, lo revisamos y nos ocupamos de la documentación. Tú decides si nuestra oferta te encaja.</p><a class="button button-dark" href="tasacion.html">Solicitar tasación</a></div>
-      </section>
-
-      <section class="home-contact"><p class="eyebrow">¿Hablamos?</p><h2>Cuéntanos qué coche buscas o cuál quieres vender.</h2><a href="contacto.html">Contactar con Celeritas →</a></section>
+      <section class="home-service compact-service"><div><p class="eyebrow dark">También compramos</p><h2>Tu coche puede ser el próximo coche de alguien.</h2></div><div><p>Lo valoramos, lo revisamos y nos ocupamos de la documentación. Tú decides si nuestra oferta te encaja.</p><a class="button button-dark" href="tasacion.html">Solicitar tasación</a></div></section>
     </main>
 
     <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>

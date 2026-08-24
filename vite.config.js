@@ -19,6 +19,7 @@ export default defineConfig(({ isSsrBuild }) => ({
           input: {
             inicio: resolve(import.meta.dirname, "index.html"),
             comprar: resolve(import.meta.dirname, "comprar.html"),
+            coche: resolve(import.meta.dirname, "coche.html"),
             vender: resolve(import.meta.dirname, "vender.html"),
             proceso: resolve(import.meta.dirname, "como-funciona.html"),
             contacto: resolve(import.meta.dirname, "contacto.html"),

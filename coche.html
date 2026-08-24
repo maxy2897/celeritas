@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Ficha completa del vehículo de ocasión en Celeritas." />
+    <meta name="theme-color" content="#0b2036" />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content="Vehículo de ocasión — Celeritas" />
+    <meta property="og:description" content="Consulta fotografías, características y disponibilidad." />
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Vehículo de ocasión — Celeritas" />
+    <meta name="twitter:description" content="Consulta fotografías, características y disponibilidad." />
+    <meta name="twitter:image" content="" />
+    <title>Vehículo de ocasión — Celeritas</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" type="module"></script>
+  </head>
+  <body data-page="coche">
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <header class="site-header header-light"><a class="brand" href="index.html"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a class="active" href="comprar.html">Comprar</a><a href="vender.html">Vender mi coche</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a><a class="nav-cta" href="tasacion.html">Tasación gratuita</a></nav></header>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel.jpeg" alt="" /><span>CELERITAS</span></aside>
+    <main id="contenido" class="vehicle-detail" data-vehicle-detail>
+      <a class="back-link" href="comprar.html">← Volver al inventario</a>
+      <section class="detail-heading">
+        <div><p class="eyebrow dark" data-detail-kicker>Vehículo de ocasión</p><h1 data-detail-name>Cargando vehículo…</h1><p data-detail-summary></p></div>
+        <div class="detail-price"><span>Precio final</span><strong data-detail-price>—</strong><small>Transferencia y garantía incluidas</small></div>
+      </section>
+      <section class="vehicle-gallery" aria-label="Fotografías del vehículo">
+        <div class="detail-photo view-front" data-detail-photo role="img" aria-label="Vista frontal"></div>
+        <div class="detail-photo view-side" data-detail-photo role="img" aria-label="Vista lateral"></div>
+        <div class="detail-photo view-rear" data-detail-photo role="img" aria-label="Vista trasera"></div>
+      </section>
+      <section class="detail-content">
+        <div class="specification-panel"><p class="eyebrow dark">Características</p><h2>Todo lo importante, a la vista.</h2><dl data-detail-specs></dl></div>
+        <div class="equipment-panel"><p class="eyebrow">Equipamiento</p><h2>Preparado para disfrutar.</h2><ul data-detail-features></ul><a data-detail-catalog target="_blank" rel="noreferrer">Consultar catálogo original del modelo ↗</a><small>Catálogo histórico de referencia alojado en Auto Catalog Archive. El equipamiento exacto de esta unidad es el indicado arriba.</small></div>
+      </section>
+      <section class="detail-cta"><div><p class="eyebrow">¿Quieres verlo?</p><h2>Pide una prueba sin compromiso.</h2></div><button class="button button-accent" type="button" data-interest data-interest-name="Vehículo seleccionado">Solicitar información</button></section>
+    </main>
+    <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
+    <dialog class="interest-dialog" id="interest-dialog"><button class="dialog-close" type="button" aria-label="Cerrar">×</button><p class="eyebrow dark">Solicitar información</p><h2 id="interest-name">Vehículo seleccionado</h2><form data-success-form><label><span>Nombre</span><input autocomplete="name" required /></label><label><span>Teléfono</span><input type="tel" autocomplete="tel" required /></label><label><span>Email</span><input type="email" autocomplete="email" required /></label><label><span>Me interesa</span><select><option>Probar el coche</option><option>Financiarlo</option><option>Entregar mi coche</option><option>Recibir más información</option></select></label><button class="button button-dark" type="submit">Enviar solicitud</button></form><div class="success-message" hidden><strong>Solicitud recibida.</strong><p>Te contactaremos para confirmar la disponibilidad.</p></div></dialog>
+  </body>
+</html>
