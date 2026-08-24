@@ -15,6 +15,8 @@ export default defineConfig(({ isSsrBuild }) => ({
         },
       }
     : {
+        outDir: "dist/client",
+        emptyOutDir: true,
         rollupOptions: {
           input: {
             inicio: resolve(import.meta.dirname, "index.html"),
