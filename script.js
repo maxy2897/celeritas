@@ -56,6 +56,33 @@ function updateCatalog() {
   control?.addEventListener(control === filterSearch ? "input" : "change", updateCatalog);
 });
 
+const modelTrack = document.querySelector("#model-track");
+const modelCards = [...document.querySelectorAll(".model-card")];
+const powerFilters = [...document.querySelectorAll("[data-power-filter]")];
+
+powerFilters.forEach((button) => {
+  button.addEventListener("click", () => {
+    const filter = button.dataset.powerFilter;
+    powerFilters.forEach((item) => {
+      const selected = item === button;
+      item.classList.toggle("is-selected", selected);
+      item.setAttribute("aria-pressed", String(selected));
+    });
+    modelCards.forEach((card) => {
+      card.hidden = filter !== "all" && card.dataset.power !== filter;
+    });
+    if (modelTrack) modelTrack.scrollLeft = 0;
+  });
+});
+
+document.querySelector("[data-track-prev]")?.addEventListener("click", () => {
+  modelTrack?.scrollBy({ left: -336, behavior: "auto" });
+});
+
+document.querySelector("[data-track-next]")?.addEventListener("click", () => {
+  modelTrack?.scrollBy({ left: 336, behavior: "auto" });
+});
+
 const interestDialog = document.querySelector("#interest-dialog");
 document.querySelectorAll("[data-interest]").forEach((button) => {
   button.addEventListener("click", () => {
