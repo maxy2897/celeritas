@@ -3,387 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Celeritas compra y vende coches de segunda mano. Vehículos revisados, tasación gratuita y acompañamiento de principio a fin."
-    />
-    <meta name="theme-color" content="#0c223a" />
+    <meta name="description" content="Celeritas compra y vende coches de segunda mano con revisión, garantía y tasación gratuita." />
+    <meta name="theme-color" content="#0b2036" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Celeritas — Coches de ocasión" />
-    <meta
-      property="og:description"
-      content="Compra tu próximo coche o vende el tuyo de forma clara, rápida y segura."
-    />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:description" content="Compra tu próximo coche o vende el tuyo de forma clara, rápida y segura." />
     <meta property="og:url" content="https://celeritas.benjaminmajadaljamin.chatgpt.site" />
     <meta property="og:image" content="https://celeritas.benjaminmajadaljamin.chatgpt.site/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Celeritas — Coches de ocasión" />
-    <meta
-      name="twitter:description"
-      content="Compra tu próximo coche o vende el tuyo de forma clara, rápida y segura."
-    />
+    <meta name="twitter:description" content="Compra tu próximo coche o vende el tuyo de forma clara, rápida y segura." />
     <meta name="twitter:image" content="https://celeritas.benjaminmajadaljamin.chatgpt.site/og.png" />
     <link rel="canonical" href="https://celeritas.benjaminmajadaljamin.chatgpt.site" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" type="module"></script>
   </head>
-  <body>
-    <a class="skip-link" href="#stock">Ir al catálogo</a>
-
-    <header class="site-header">
-      <a class="brand" href="#inicio" aria-label="Celeritas, volver al inicio">
-        <span class="brand-mark">C</span>
-        <span>CELERITAS<small>Coches de ocasión</small></span>
-      </a>
-
-      <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
-        <span></span><span></span><span class="sr-only">Abrir menú</span>
-      </button>
-
+  <body data-page="inicio">
+    <a class="skip-link" href="#contenido">Ir al contenido</a>
+    <header class="site-header header-over-hero">
+      <a class="brand" href="index.html" aria-label="Celeritas, inicio"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button>
       <nav id="main-nav" aria-label="Navegación principal">
-        <a href="#stock">Comprar</a>
-        <a href="#vender">Vender mi coche</a>
-        <a href="#proceso">Cómo funciona</a>
-        <a href="#contacto">Contacto</a>
-        <a class="header-action" href="#vender">Tasación gratuita</a>
+        <a href="comprar.html">Comprar</a>
+        <a href="vender.html">Vender mi coche</a>
+        <a href="como-funciona.html">Cómo funciona</a>
+        <a href="contacto.html">Contacto</a>
+        <a class="nav-cta" href="tasacion.html">Tasación gratuita</a>
       </nav>
     </header>
 
-    <aside class="scroll-wheel" aria-label="Progreso de la página">
-      <img id="scroll-wheel" src="assets/celeritas-wheel.jpeg" alt="" />
-      <span>CELERITAS</span>
-    </aside>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel.jpeg" alt="" /><span>CELERITAS</span></aside>
 
-    <main>
-      <section class="hero" id="inicio" aria-labelledby="hero-title">
-        <img
-          class="hero-image"
-          src="assets/celeritas-gt.png"
-          alt="Vehículo de ocasión destacado por Celeritas"
-        />
-        <div class="hero-overlay"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">Compraventa de coches de segunda mano</p>
-          <h1 id="hero-title">Tu próximo coche.<br />O el mejor destino para el tuyo.</h1>
-          <p class="hero-intro">
-            Compramos, revisamos y vendemos vehículos de ocasión con información clara,
-            trato humano y acompañamiento de principio a fin.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-light" href="#stock">Ver coches disponibles</a>
-            <a class="button button-outline" href="#vender">Quiero vender mi coche</a>
-          </div>
+    <main id="contenido">
+      <section class="home-hero">
+        <img src="assets/celeritas-gt.png" alt="Coche de ocasión seleccionado por Celeritas" />
+        <div class="home-hero-shade"></div>
+        <div class="home-hero-copy">
+          <p class="eyebrow">Compraventa de vehículos de ocasión</p>
+          <h1>Tu próximo coche.<br />El mejor destino para el tuyo.</h1>
+          <p>Una forma más sencilla de comprar o vender: coches revisados, información clara y una persona acompañándote en cada paso.</p>
+          <div class="hero-actions"><a class="button button-light" href="comprar.html">Quiero comprar</a><a class="button button-ghost" href="vender.html">Quiero vender</a></div>
         </div>
-        <ul class="hero-trust" aria-label="Ventajas Celeritas">
-          <li><strong>12 meses</strong><span>de garantía</span></li>
-          <li><strong>100 puntos</strong><span>de revisión</span></li>
-          <li><strong>Tasación</strong><span>gratuita y sin compromiso</span></li>
-        </ul>
+        <div class="hero-note"><strong>12 meses</strong><span>de garantía mínima</span><strong>100 puntos</strong><span>de revisión</span></div>
       </section>
 
-      <section class="intro-section" aria-labelledby="intro-title">
-        <p class="section-label">Compra con tranquilidad</p>
-        <div>
-          <h2 id="intro-title">Coches que conoces.<br />Un proceso que entiendes.</h2>
-          <p>
-            Trabajamos con las marcas y modelos más buscados en España. Cada unidad se
-            entrega revisada, con su historial explicado y sin letra pequeña.
-          </p>
-        </div>
-        <div class="brand-cloud" aria-label="Marcas habituales en Celeritas">
-          <span>SEAT</span><span>Volkswagen</span><span>Renault</span><span>Ford</span>
-          <span>Opel</span><span>Citroën</span><span>Peugeot</span><span>Toyota</span>
-          <span>Nissan</span><span>BMW</span><span>Audi</span><span>Kia</span>
+      <section class="choice-section">
+        <div class="choice-copy"><p class="eyebrow dark">Empieza por aquí</p><h2>Dos caminos.<br />La misma tranquilidad.</h2></div>
+        <div class="choice-links">
+          <a href="comprar.html"><span>01</span><div><h3>Comprar un coche</h3><p>Explora vehículos revisados, compara opciones y solicita una prueba.</p></div><b>→</b></a>
+          <a href="vender.html"><span>02</span><div><h3>Vender mi coche</h3><p>Recibe una valoración y deja el pago y los trámites en nuestras manos.</p></div><b>→</b></a>
         </div>
       </section>
 
-      <section class="stock-section" id="stock" aria-labelledby="stock-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-label">Vehículos de ocasión</p>
-            <h2 id="stock-title">Encuentra el que encaja contigo.</h2>
-          </div>
-          <p>
-            Una selección amplia de utilitarios, compactos, berlinas y SUV. Confirma la
-            disponibilidad con nuestro equipo.
-          </p>
-        </div>
-
-        <form class="filters" id="vehicle-filters" aria-label="Filtrar vehículos">
-          <label>
-            <span>Buscar</span>
-            <input id="filter-search" type="search" placeholder="Marca o modelo" />
-          </label>
-          <label>
-            <span>Marca</span>
-            <select id="filter-brand">
-              <option value="all">Todas las marcas</option>
-              <option value="seat">SEAT</option>
-              <option value="volkswagen">Volkswagen</option>
-              <option value="renault">Renault</option>
-              <option value="ford">Ford</option>
-              <option value="opel">Opel</option>
-              <option value="citroen">Citroën</option>
-              <option value="peugeot">Peugeot</option>
-              <option value="toyota">Toyota</option>
-              <option value="nissan">Nissan</option>
-              <option value="bmw">BMW</option>
-              <option value="audi">Audi</option>
-            </select>
-          </label>
-          <label>
-            <span>Combustible</span>
-            <select id="filter-fuel">
-              <option value="all">Todos</option>
-              <option value="gasolina">Gasolina</option>
-              <option value="diesel">Diésel</option>
-              <option value="hibrido">Híbrido</option>
-            </select>
-          </label>
-          <label>
-            <span>Precio máximo</span>
-            <select id="filter-price">
-              <option value="999999">Sin límite</option>
-              <option value="16000">Hasta 16.000 €</option>
-              <option value="20000">Hasta 20.000 €</option>
-              <option value="25000">Hasta 25.000 €</option>
-              <option value="30000">Hasta 30.000 €</option>
-            </select>
-          </label>
-        </form>
-
-        <div class="stock-toolbar">
-          <p><strong id="result-count">12</strong> vehículos encontrados</p>
-          <span>Historial verificado · Kilometraje certificado</span>
-        </div>
-
-        <div class="vehicle-grid" id="vehicle-grid">
-          <article class="vehicle-card" data-brand="volkswagen" data-fuel="gasolina" data-price="20900" data-search="volkswagen golf 1.5 tsi style">
-            <div class="vehicle-photo position-1"><span>Recién llegado</span></div>
-            <div class="vehicle-body">
-              <p>Volkswagen</p><h3>Golf 1.5 TSI Style</h3>
-              <dl><div><dt>Año</dt><dd>2021</dd></div><div><dt>Km</dt><dd>52.400</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>20.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="seat" data-fuel="gasolina" data-price="17490" data-search="seat ibiza 1.0 tsi fr">
-            <div class="vehicle-photo position-2"><span>Etiqueta C</span></div>
-            <div class="vehicle-body">
-              <p>SEAT</p><h3>Ibiza 1.0 TSI FR</h3>
-              <dl><div><dt>Año</dt><dd>2022</dd></div><div><dt>Km</dt><dd>39.800</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>17.490 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="seat" data-fuel="hibrido" data-price="21990" data-search="seat leon 1.5 etsi style hibrido">
-            <div class="vehicle-photo position-3"><span>Etiqueta ECO</span></div>
-            <div class="vehicle-body">
-              <p>SEAT</p><h3>León 1.5 eTSI Style</h3>
-              <dl><div><dt>Año</dt><dd>2021</dd></div><div><dt>Km</dt><dd>61.200</dd></div><div><dt>Cambio</dt><dd>Automático</dd></div></dl>
-              <div class="vehicle-footer"><strong>21.990 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="renault" data-fuel="gasolina" data-price="16250" data-search="renault clio tce zen">
-            <div class="vehicle-photo position-4"><span>Precio especial</span></div>
-            <div class="vehicle-body">
-              <p>Renault</p><h3>Clio TCe Zen</h3>
-              <dl><div><dt>Año</dt><dd>2022</dd></div><div><dt>Km</dt><dd>34.500</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>16.250 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <div class="stock-break">
-            <p class="section-label">Para todos los días</p>
-            <h3>Compactos fiables, fáciles de mantener y listos para hacer kilómetros.</h3>
-          </div>
-
-          <article class="vehicle-card" data-brand="ford" data-fuel="gasolina" data-price="17900" data-search="ford focus ecoboost titanium">
-            <div class="vehicle-photo position-5"><span>1 propietario</span></div>
-            <div class="vehicle-body">
-              <p>Ford</p><h3>Focus EcoBoost Titanium</h3>
-              <dl><div><dt>Año</dt><dd>2020</dd></div><div><dt>Km</dt><dd>72.100</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>17.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="renault" data-fuel="diesel" data-price="17450" data-search="renault megane blue dci intens diesel">
-            <div class="vehicle-photo position-6"><span>Garantía incluida</span></div>
-            <div class="vehicle-body">
-              <p>Renault</p><h3>Mégane Blue dCi Intens</h3>
-              <dl><div><dt>Año</dt><dd>2020</dd></div><div><dt>Km</dt><dd>65.400</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>17.450 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="bmw" data-fuel="diesel" data-price="27900" data-search="bmw serie 3 320d diesel">
-            <div class="vehicle-photo position-2"><span>Automático</span></div>
-            <div class="vehicle-body">
-              <p>BMW</p><h3>Serie 3 320d</h3>
-              <dl><div><dt>Año</dt><dd>2019</dd></div><div><dt>Km</dt><dd>84.900</dd></div><div><dt>Cambio</dt><dd>Automático</dd></div></dl>
-              <div class="vehicle-footer"><strong>27.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="opel" data-fuel="gasolina" data-price="15990" data-search="opel corsa 1.2 edition gasolina">
-            <div class="vehicle-photo position-6"><span>Revisado</span></div>
-            <div class="vehicle-body">
-              <p>Opel</p><h3>Corsa 1.2 Edition</h3>
-              <dl><div><dt>Año</dt><dd>2022</dd></div><div><dt>Km</dt><dd>28.900</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>15.990 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <div class="stock-break stock-break-dark">
-            <p class="section-label">Más espacio</p>
-            <h3>Opciones para viajar, crecer en familia o llevarlo todo contigo.</h3>
-          </div>
-
-          <article class="vehicle-card" data-brand="citroen" data-fuel="gasolina" data-price="15450" data-search="citroen c3 puretech feel gasolina">
-            <div class="vehicle-photo position-5"><span>Entrega rápida</span></div>
-            <div class="vehicle-body">
-              <p>Citroën</p><h3>C3 PureTech Feel</h3>
-              <dl><div><dt>Año</dt><dd>2021</dd></div><div><dt>Km</dt><dd>42.300</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>15.450 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="audi" data-fuel="gasolina" data-price="26900" data-search="audi a3 35 tfsi s line gasolina">
-            <div class="vehicle-photo position-1"><span>Selección Celeritas</span></div>
-            <div class="vehicle-body">
-              <p>Audi</p><h3>A3 35 TFSI S line</h3>
-              <dl><div><dt>Año</dt><dd>2020</dd></div><div><dt>Km</dt><dd>58.700</dd></div><div><dt>Cambio</dt><dd>Automático</dd></div></dl>
-              <div class="vehicle-footer"><strong>26.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="toyota" data-fuel="hibrido" data-price="22900" data-search="toyota corolla 125h active tech hibrido">
-            <div class="vehicle-photo position-3"><span>Etiqueta ECO</span></div>
-            <div class="vehicle-body">
-              <p>Toyota</p><h3>Corolla 125H Active Tech</h3>
-              <dl><div><dt>Año</dt><dd>2021</dd></div><div><dt>Km</dt><dd>49.600</dd></div><div><dt>Cambio</dt><dd>Automático</dd></div></dl>
-              <div class="vehicle-footer"><strong>22.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-
-          <article class="vehicle-card" data-brand="nissan" data-fuel="gasolina" data-price="23900" data-search="nissan qashqai dig-t n-connecta gasolina suv">
-            <div class="vehicle-photo position-4"><span>SUV familiar</span></div>
-            <div class="vehicle-body">
-              <p>Nissan</p><h3>Qashqai DIG-T N-Connecta</h3>
-              <dl><div><dt>Año</dt><dd>2021</dd></div><div><dt>Km</dt><dd>55.200</dd></div><div><dt>Cambio</dt><dd>Manual</dd></div></dl>
-              <div class="vehicle-footer"><strong>23.900 €</strong><button type="button" data-interest>Me interesa</button></div>
-            </div>
-          </article>
-        </div>
-
-        <p class="empty-state" id="empty-state" hidden>
-          No hay vehículos con esos filtros. Prueba con otra combinación o escríbenos y lo buscamos por ti.
-        </p>
+      <section class="single-feature">
+        <div class="single-feature-image"><img src="assets/celeritas-ocasion-hero.png" alt="Vehículo compacto de ocasión" /></div>
+        <div class="single-feature-copy"><p class="eyebrow dark">Selección de la semana</p><h2>SEAT Ibiza 1.0 TSI FR</h2><p>2022 · 39.800 km · Gasolina · Cambio manual</p><strong>17.490 €</strong><a href="comprar.html" class="text-link">Ver vehículos disponibles →</a></div>
       </section>
 
-      <section class="sell-section" id="vender" aria-labelledby="sell-title">
-        <div class="sell-copy">
-          <p class="section-label">También compramos tu coche</p>
-          <h2 id="sell-title">Véndelo bien.<br />Y sin perder el tiempo.</h2>
-          <p>
-            Cuéntanos qué coche tienes. Te damos una primera valoración, lo revisamos y,
-            si te encaja la oferta, nos ocupamos del pago y del cambio de titularidad.
-          </p>
-          <ul>
-            <li>Sin anuncios ni llamadas de desconocidos</li>
-            <li>Pago seguro y gestión del cambio de nombre</li>
-            <li>Recogida disponible en toda España</li>
-          </ul>
-        </div>
+      <section class="calm-message"><p>Sin presión. Sin letra pequeña.</p><h2>Solo coches que conocemos y decisiones que puedes tomar con calma.</h2></section>
 
-        <div class="valuation-card">
-          <p class="eyebrow">Tasación gratuita</p>
-          <h3>¿Qué coche quieres vender?</h3>
-          <form id="valuation-form">
-            <div class="form-row">
-              <label><span>Marca</span><input name="marca" required placeholder="Ej. SEAT" /></label>
-              <label><span>Modelo</span><input name="modelo" required placeholder="Ej. León" /></label>
-            </div>
-            <div class="form-row">
-              <label><span>Año</span><input name="anio" type="number" min="1990" max="2026" required placeholder="2020" /></label>
-              <label><span>Kilómetros</span><input name="km" type="number" min="0" required placeholder="65000" /></label>
-            </div>
-            <div class="form-row">
-              <label><span>Nombre</span><input name="nombre" autocomplete="name" required /></label>
-              <label><span>Teléfono</span><input name="telefono" type="tel" autocomplete="tel" required /></label>
-            </div>
-            <label class="privacy-check"><input type="checkbox" required /><span>Acepto que Celeritas me contacte para valorar mi vehículo.</span></label>
-            <button class="button button-accent" type="submit">Solicitar valoración</button>
-          </form>
-          <div class="form-success" id="valuation-success" hidden>
-            <strong>Solicitud recibida.</strong>
-            <p>Te contactaremos para preparar una primera valoración sin compromiso.</p>
-          </div>
-        </div>
+      <section class="home-service">
+        <div><p class="eyebrow dark">También compramos</p><h2>Tu coche puede ser el próximo coche de alguien.</h2></div>
+        <div><p>Lo valoramos, lo revisamos y nos ocupamos de la documentación. Tú decides si nuestra oferta te encaja.</p><a class="button button-dark" href="tasacion.html">Solicitar tasación</a></div>
       </section>
 
-      <section class="process-section" id="proceso" aria-labelledby="process-title">
-        <div class="section-heading compact">
-          <div><p class="section-label">Así de sencillo</p><h2 id="process-title">Comprar o vender, con todo claro.</h2></div>
-        </div>
-        <div class="process-grid">
-          <article><span>01</span><h3>Seleccionamos</h3><p>Revisamos procedencia, mantenimiento, kilometraje y estado general de cada coche.</p></article>
-          <article><span>02</span><h3>Te lo explicamos</h3><p>Conoces el estado real, las condiciones y el precio antes de tomar una decisión.</p></article>
-          <article><span>03</span><h3>Nos ocupamos</h3><p>Financiación, documentación, garantía y entrega coordinadas por un único equipo.</p></article>
-        </div>
-      </section>
-
-      <section class="trust-section" aria-label="Compromisos Celeritas">
-        <div><strong>+100</strong><span>puntos de revisión</span></div>
-        <div><strong>12 meses</strong><span>de garantía incluidos</span></div>
-        <div><strong>48 h</strong><span>para una tasación orientativa</span></div>
-        <div><strong>1 equipo</strong><span>durante todo el proceso</span></div>
-      </section>
-
-      <section class="faq-section" aria-labelledby="faq-title">
-        <div><p class="section-label">Preguntas frecuentes</p><h2 id="faq-title">Antes de decidir.</h2></div>
-        <div class="faq-list">
-          <details><summary>¿Puedo probar un coche antes de comprarlo?</summary><p>Sí. Pide cita con nuestro equipo y reservaremos el vehículo para una prueba acompañada.</p></details>
-          <details><summary>¿Aceptáis mi coche como parte del pago?</summary><p>Sí. Lo tasamos y puedes descontar el importe acordado del precio de tu próximo vehículo.</p></details>
-          <details><summary>¿Qué documentación necesito para vender?</summary><p>Permiso de circulación, ficha técnica, DNI del titular y, si lo tienes, historial de mantenimiento.</p></details>
-          <details><summary>¿Los coches incluyen garantía?</summary><p>Todos nuestros vehículos para particulares incluyen una garantía mínima de 12 meses.</p></details>
-        </div>
-      </section>
-
-      <section class="contact-section" id="contacto" aria-labelledby="contact-title">
-        <p class="section-label">Estamos para ayudarte</p>
-        <h2 id="contact-title">¿Buscas un coche concreto?<br />Lo buscamos contigo.</h2>
-        <div class="contact-actions">
-          <a class="button button-light" href="mailto:hola@celeritas-motors.com">hola@celeritas-motors.com</a>
-          <a class="button button-outline" href="tel:+34910000000">91 000 00 00</a>
-        </div>
-      </section>
+      <section class="home-contact"><p class="eyebrow">¿Hablamos?</p><h2>Cuéntanos qué coche buscas o cuál quieres vender.</h2><a href="contacto.html">Contactar con Celeritas →</a></section>
     </main>
 
-    <footer class="site-footer">
-      <a class="brand footer-brand" href="#inicio"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a>
-      <p>Compra y venta de vehículos de segunda mano con un proceso claro y seguro.</p>
-      <nav aria-label="Enlaces del pie"><a href="#stock">Comprar</a><a href="#vender">Vender</a><a href="#proceso">Proceso</a><a href="#contacto">Contacto</a></nav>
-      <small>© <span id="year"></span> Celeritas. Todos los derechos reservados.</small>
-    </footer>
-
-    <dialog class="interest-dialog" id="interest-dialog" aria-labelledby="interest-title">
-      <button class="dialog-close" type="button" aria-label="Cerrar">×</button>
-      <p class="eyebrow">Solicitar información</p>
-      <h2 id="interest-title">Te interesa este vehículo</h2>
-      <p id="interest-vehicle"></p>
-      <form id="interest-form">
-        <input type="hidden" id="interest-model" name="vehiculo" />
-        <label><span>Nombre</span><input name="nombre" autocomplete="name" required /></label>
-        <label><span>Teléfono</span><input name="telefono" type="tel" autocomplete="tel" required /></label>
-        <label><span>Email</span><input name="email" type="email" autocomplete="email" required /></label>
-        <label><span>¿Qué necesitas?</span><select name="motivo"><option>Quiero probarlo</option><option>Quiero financiarlo</option><option>Quiero más información</option><option>Quiero entregar mi coche</option></select></label>
-        <button class="button button-dark" type="submit">Enviar solicitud</button>
-      </form>
-      <div class="form-success" id="interest-success" hidden><strong>Solicitud enviada.</strong><p>Te llamaremos para resolver tus dudas y confirmar la disponibilidad.</p></div>
-    </dialog>
+    <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">C</span><span>CELERITAS<small>Coches de ocasión</small></span></a><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
   </body>
 </html>

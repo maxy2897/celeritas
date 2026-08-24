@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { sites } from "@openai/sites-vite-plugin";
+import { resolve } from "node:path";
 
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: isSsrBuild ? [] : [sites()],
@@ -13,5 +14,16 @@ export default defineConfig(({ isSsrBuild }) => ({
           },
         },
       }
-    : undefined,
+    : {
+        rollupOptions: {
+          input: {
+            inicio: resolve(import.meta.dirname, "index.html"),
+            comprar: resolve(import.meta.dirname, "comprar.html"),
+            vender: resolve(import.meta.dirname, "vender.html"),
+            proceso: resolve(import.meta.dirname, "como-funciona.html"),
+            contacto: resolve(import.meta.dirname, "contacto.html"),
+            tasacion: resolve(import.meta.dirname, "tasacion.html"),
+          },
+        },
+      },
 }));

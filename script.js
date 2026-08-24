@@ -1,19 +1,6 @@
 const root = document.documentElement;
 const menuButton = document.querySelector(".menu-button");
-const mainNav = document.querySelector("#main-nav");
-const cards = [...document.querySelectorAll(".vehicle-card")];
-const searchInput = document.querySelector("#filter-search");
-const brandSelect = document.querySelector("#filter-brand");
-const fuelSelect = document.querySelector("#filter-fuel");
-const priceSelect = document.querySelector("#filter-price");
-const resultCount = document.querySelector("#result-count");
-const emptyState = document.querySelector("#empty-state");
-const interestDialog = document.querySelector("#interest-dialog");
-const interestForm = document.querySelector("#interest-form");
-const interestSuccess = document.querySelector("#interest-success");
-const valuationForm = document.querySelector("#valuation-form");
-const valuationSuccess = document.querySelector("#valuation-success");
-
+const nav = document.querySelector("#main-nav");
 let wheelFrame = null;
 
 function updateWheel() {
@@ -31,79 +18,73 @@ menuButton?.addEventListener("click", () => {
   menuButton.setAttribute("aria-expanded", String(open));
 });
 
-mainNav?.addEventListener("click", () => {
+nav?.addEventListener("click", () => {
   document.body.classList.remove("menu-open");
   menuButton?.setAttribute("aria-expanded", "false");
 });
+
+const vehicleItems = [...document.querySelectorAll("[data-vehicle]")];
+const filterSearch = document.querySelector("#filter-search");
+const filterType = document.querySelector("#filter-type");
+const filterPrice = document.querySelector("#filter-price");
+const resultCount = document.querySelector("#result-count");
+const catalogEmpty = document.querySelector("#catalog-empty");
 
 function normalize(value) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-function filterVehicles() {
-  const search = normalize(searchInput.value.trim());
-  const brand = brandSelect.value;
-  const fuel = fuelSelect.value;
-  const maxPrice = Number(priceSelect.value);
+function updateCatalog() {
+  const search = normalize(filterSearch?.value.trim() || "");
+  const type = filterType?.value || "all";
+  const maxPrice = Number(filterPrice?.value || 999999);
   let visible = 0;
 
-  cards.forEach((card) => {
-    const searchable = normalize(card.dataset.search);
-    const matchesSearch = !search || searchable.includes(search);
-    const matchesBrand = brand === "all" || card.dataset.brand === brand;
-    const matchesFuel = fuel === "all" || card.dataset.fuel === fuel;
-    const matchesPrice = Number(card.dataset.price) <= maxPrice;
-    const show = matchesSearch && matchesBrand && matchesFuel && matchesPrice;
-
-    card.hidden = !show;
+  vehicleItems.forEach((item) => {
+    const show = (!search || normalize(item.dataset.search).includes(search)) &&
+      (type === "all" || item.dataset.type === type) &&
+      Number(item.dataset.price) <= maxPrice;
+    item.hidden = !show;
     if (show) visible += 1;
   });
 
-  resultCount.textContent = String(visible);
-  emptyState.hidden = visible !== 0;
+  if (resultCount) resultCount.textContent = String(visible);
+  if (catalogEmpty) catalogEmpty.hidden = visible !== 0;
 }
 
-[searchInput, brandSelect, fuelSelect, priceSelect].forEach((control) => {
-  control?.addEventListener(control === searchInput ? "input" : "change", filterVehicles);
+[filterSearch, filterType, filterPrice].forEach((control) => {
+  control?.addEventListener(control === filterSearch ? "input" : "change", updateCatalog);
 });
 
+const interestDialog = document.querySelector("#interest-dialog");
 document.querySelectorAll("[data-interest]").forEach((button) => {
   button.addEventListener("click", () => {
-    const card = button.closest(".vehicle-card");
-    const brand = card.querySelector(".vehicle-body > p").textContent;
-    const model = card.querySelector("h3").textContent;
-    const price = card.querySelector(".vehicle-footer strong").textContent;
-    const vehicle = `${brand} ${model} · ${price}`;
-
-    document.querySelector("#interest-vehicle").textContent = vehicle;
-    document.querySelector("#interest-model").value = vehicle;
-    interestForm.hidden = false;
-    interestSuccess.hidden = true;
-    interestDialog.showModal();
+    const vehicle = button.closest("[data-vehicle]");
+    const name = vehicle?.querySelector("h2")?.textContent || "Vehículo seleccionado";
+    const heading = document.querySelector("#interest-name");
+    if (heading) heading.textContent = name;
+    interestDialog?.querySelector("form")?.removeAttribute("hidden");
+    interestDialog?.querySelector(".success-message")?.setAttribute("hidden", "");
+    interestDialog?.showModal();
   });
 });
 
-document.querySelector(".dialog-close")?.addEventListener("click", () => interestDialog.close());
-
+document.querySelector(".dialog-close")?.addEventListener("click", () => interestDialog?.close());
 interestDialog?.addEventListener("click", (event) => {
-  const bounds = interestDialog.getBoundingClientRect();
-  const outside = event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
-  if (outside) interestDialog.close();
+  const box = interestDialog.getBoundingClientRect();
+  if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) interestDialog.close();
 });
 
-interestForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!interestForm.reportValidity()) return;
-  interestForm.hidden = true;
-  interestSuccess.hidden = false;
+document.querySelectorAll("[data-success-form]").forEach((form) => {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    form.hidden = true;
+    const success = form.parentElement.querySelector(".success-message");
+    if (success) success.hidden = false;
+  });
 });
 
-valuationForm?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!valuationForm.reportValidity()) return;
-  valuationForm.hidden = true;
-  valuationSuccess.hidden = false;
-});
-
-document.querySelector("#year").textContent = new Date().getFullYear();
+const year = document.querySelector("#year");
+if (year) year.textContent = new Date().getFullYear();
 updateWheel();
