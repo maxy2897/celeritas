@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Celeritas: automóviles excepcionales, ingeniería de precisión y una experiencia de conducción sin concesiones."
+    />
+    <meta name="theme-color" content="#f2f0ea" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Celeritas — Automóviles excepcionales" />
+    <meta
+      property="og:description"
+      content="La velocidad tiene una nueva forma. Descubre la colección Celeritas Grand Touring 2026."
+    />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Celeritas — Automóviles excepcionales" />
+    <meta
+      name="twitter:description"
+      content="La velocidad tiene una nueva forma. Descubre la colección Celeritas Grand Touring 2026."
+    />
+    <title>Celeritas — Automóviles excepcionales</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" type="module"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#modelos">Ir a los modelos</a>
+
+    <div class="page-loader" aria-hidden="true">
+      <div class="loader-wheel">
+        <img src="assets/celeritas-wheel.jpeg" alt="" />
+      </div>
+      <span>CELERITAS</span>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Celeritas, volver al inicio">
+        <img src="assets/celeritas-logo.jpeg" alt="Celeritas" />
+      </a>
+
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span>
+        <span class="sr-only">Abrir menú</span>
+      </button>
+
+      <nav id="main-nav" aria-label="Navegación principal">
+        <a href="#porque">Por qué Celeritas</a>
+        <a href="#modelos">Modelos</a>
+        <a href="#ingenieria">Ingeniería</a>
+        <a href="#confianza">Confianza</a>
+        <button class="nav-action" type="button" data-open-visit>Reservar visita</button>
+      </nav>
+    </header>
+
+    <aside class="scroll-emblem" aria-label="Progreso de la página">
+      <img id="scroll-wheel" src="assets/celeritas-wheel.jpeg" alt="Emblema de rueda Celeritas" />
+      <span>SCROLL</span>
+    </aside>
+
+    <main>
+      <section class="hero" id="inicio" aria-labelledby="hero-title">
+        <div class="hero-sticky">
+        <div class="hero-copy">
+          <p class="overline">Grand Touring · Colección 2026</p>
+          <h1 id="hero-title">La velocidad<br />tiene una nueva forma.</h1>
+          <div class="hero-actions">
+            <a class="primary-action" href="#ingenieria">Descubrir el GT</a>
+            <button class="text-action" type="button" data-open-visit>Solicitar prueba <span>↗</span></button>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-aura"></div>
+          <img src="assets/celeritas-gt.png" alt="" />
+          <img class="hero-car-exploded" src="assets/celeritas-gt-exploded.png" alt="" />
+          <div class="hero-piece hero-piece-roof"><img src="assets/celeritas-gt.png" alt="" /></div>
+          <div class="hero-piece hero-piece-rear"><img src="assets/celeritas-gt.png" alt="" /></div>
+          <div class="hero-piece hero-piece-center"><img src="assets/celeritas-gt.png" alt="" /></div>
+          <div class="hero-piece hero-piece-front"><img src="assets/celeritas-gt.png" alt="" /></div>
+
+          <div class="hero-tech-heading">
+            <p class="overline">Anatomía Celeritas GT</p>
+            <h2>Ingeniería<br />al descubierto.</h2>
+          </div>
+          <article class="hero-tech-label hero-label-chassis">
+            <span class="arrow-line"></span>
+            <small>01 · Estructura</small>
+            <h3>Monocasco de carbono</h3>
+            <p>Ligero, rígido y construido alrededor del conductor.</p>
+          </article>
+          <article class="hero-tech-label hero-label-engine">
+            <span class="arrow-line"></span>
+            <small>02 · Propulsión</small>
+            <h3>V8 biturbo · 620 CV</h3>
+            <p>Respuesta inmediata y 760 Nm de par máximo.</p>
+          </article>
+          <article class="hero-tech-label hero-label-gearbox">
+            <span class="arrow-line"></span>
+            <small>03 · Transmisión</small>
+            <h3>Doble embrague</h3>
+            <p>Ocho velocidades y cambios en menos de 100 ms.</p>
+          </article>
+          <article class="hero-tech-label hero-label-brakes">
+            <span class="arrow-line"></span>
+            <small>04 · Frenos</small>
+            <h3>Carbono-cerámicos</h3>
+            <p>Discos de 410 mm y pinzas de seis pistones.</p>
+          </article>
+          <div class="hero-sequence-progress"><span>EXTERIOR</span><i><b></b></i><span>INTERIOR</span></div>
+        </div>
+
+        <dl class="hero-specs" aria-label="Especificaciones principales">
+          <div>
+            <dt>0–100 km/h</dt>
+            <dd><span data-count="3.1">0</span><small>s</small></dd>
+          </div>
+          <div>
+            <dt>Potencia</dt>
+            <dd><span data-count="620">0</span><small>CV</small></dd>
+          </div>
+          <div>
+            <dt>Velocidad máx.</dt>
+            <dd><span data-count="318">0</span><small>km/h</small></dd>
+          </div>
+        </dl>
+
+        <a class="scroll-cue" href="#ingenieria">
+          <span>Explorar</span>
+          <i aria-hidden="true"></i>
+        </a>
+        </div>
+      </section>
+
+      <section class="statement reveal" aria-labelledby="statement-title">
+        <p class="section-index">01 · Filosofía</p>
+        <div>
+          <p class="overline">Diseñado para quien todavía siente la carretera</p>
+          <h2 id="statement-title">No fabricamos coches.<br /><em>Construimos impulsos.</em></h2>
+        </div>
+        <p class="statement-copy">
+          Cada Celeritas nace del equilibrio entre fuerza, precisión y belleza.
+          Ingeniería avanzada con una conexión profundamente humana.
+        </p>
+      </section>
+
+      <section class="why-celeritas" id="porque" aria-labelledby="why-title">
+        <div class="why-copy reveal">
+          <p class="section-index">02 · Por qué Celeritas</p>
+          <p class="overline">Una experiencia que empieza antes de arrancar</p>
+          <h2 id="why-title">La diferencia<br />se siente.</h2>
+          <p>Diseñamos cada encuentro con el coche como una experiencia privada: tecnología comprensible, atención humana y una decisión sin presión.</p>
+        </div>
+
+        <div class="why-pills reveal" aria-label="Ventajas Celeritas">
+          <span>Selección experta</span>
+          <span>Prueba personalizada</span>
+          <span>Entrega a medida</span>
+        </div>
+
+        <div class="top-car-stage" aria-hidden="true">
+          <span class="top-car-line top-car-line-one"></span>
+          <span class="top-car-line top-car-line-two"></span>
+          <img class="top-car" src="assets/celeritas-top.png" alt="" />
+        </div>
+
+        <div class="why-dark-copy reveal">
+          <span>01 / 03</span>
+          <h3>Todo bajo control.</h3>
+          <p>Desde la configuración hasta la entrega, una sola persona te acompaña en cada decisión.</p>
+        </div>
+      </section>
+
+      <section class="engineering" id="ingenieria" aria-labelledby="engineering-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">03 · Ingeniería</p>
+            <p class="overline">Toca los puntos para descubrirlo</p>
+          </div>
+          <h2 id="engineering-title">Precisión visible.<br />Rendimiento tangible.</h2>
+        </div>
+
+        <div class="explode-scroll" id="despiece">
+          <div class="explode-sticky">
+            <div class="explode-intro">
+              <div>
+                <p class="overline">Celeritas GT · Anatomía en movimiento</p>
+                <h3>De la forma<br />a la función.</h3>
+              </div>
+              <button class="explode-toggle" id="explode-toggle" type="button" aria-pressed="false">
+                <span>Desmontar vehículo</span><i aria-hidden="true">+</i>
+              </button>
+            </div>
+
+            <div class="explode-stage" aria-label="Animación del despiece técnico del Celeritas GT">
+              <div class="explode-grid" aria-hidden="true"></div>
+              <img
+                class="exploded-base"
+                src="assets/celeritas-gt-exploded.png"
+                alt="Vista técnica despiezada del Celeritas GT con motor, transmisión, chasis, suspensión y frenos visibles"
+              />
+
+              <div class="assembled-car" aria-hidden="true">
+                <img src="assets/celeritas-gt.png" alt="" />
+              </div>
+              <div class="shell-fragment shell-roof" aria-hidden="true"><img src="assets/celeritas-gt.png" alt="" /></div>
+              <div class="shell-fragment shell-rear" aria-hidden="true"><img src="assets/celeritas-gt.png" alt="" /></div>
+              <div class="shell-fragment shell-center" aria-hidden="true"><img src="assets/celeritas-gt.png" alt="" /></div>
+              <div class="shell-fragment shell-front" aria-hidden="true"><img src="assets/celeritas-gt.png" alt="" /></div>
+
+              <article class="explode-label label-chassis">
+                <span class="arrow-line" aria-hidden="true"></span>
+                <small>01 · Estructura</small>
+                <h4>Monocasco de carbono</h4>
+                <p>Máxima rigidez, menor peso y protección integral del habitáculo.</p>
+              </article>
+              <article class="explode-label label-engine">
+                <span class="arrow-line" aria-hidden="true"></span>
+                <small>02 · Propulsión</small>
+                <h4>Motor V8 biturbo</h4>
+                <p>620 CV y 760 Nm con respuesta inmediata desde 1.800 rpm.</p>
+              </article>
+              <article class="explode-label label-transmission">
+                <span class="arrow-line" aria-hidden="true"></span>
+                <small>03 · Transmisión</small>
+                <h4>Doble embrague</h4>
+                <p>Ocho relaciones y cambios en menos de 100 milisegundos.</p>
+              </article>
+              <article class="explode-label label-brakes">
+                <span class="arrow-line" aria-hidden="true"></span>
+                <small>04 · Control</small>
+                <h4>Frenos cerámicos</h4>
+                <p>Discos de 410 mm y pinzas de seis pistones.</p>
+              </article>
+
+              <div class="explode-status" aria-hidden="true">
+                <span>CARROCERÍA</span>
+                <i><b></b></i>
+                <span>MECÁNICA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="car-explorer reveal">
+          <div class="explorer-stage">
+            <div class="technical-grid" aria-hidden="true"></div>
+            <img class="explorer-car" src="assets/celeritas-gt.png" alt="Celeritas GT visto desde el lateral delantero" />
+
+            <button class="hotspot is-active" type="button" style="--x: 72%; --y: 49%" data-part="motor" aria-pressed="true">
+              <span>01</span><i></i><b>Motor</b>
+            </button>
+            <button class="hotspot" type="button" style="--x: 57%; --y: 69%" data-part="frenos" aria-pressed="false">
+              <span>02</span><i></i><b>Frenos</b>
+            </button>
+            <button class="hotspot" type="button" style="--x: 43%; --y: 39%" data-part="chasis" aria-pressed="false">
+              <span>03</span><i></i><b>Chasis</b>
+            </button>
+            <button class="hotspot" type="button" style="--x: 88%; --y: 64%" data-part="aero" aria-pressed="false">
+              <span>04</span><i></i><b>Aerodinámica</b>
+            </button>
+          </div>
+
+          <article class="part-panel" id="part-panel" aria-live="polite">
+            <div class="part-number" id="part-number">01</div>
+            <p class="overline" id="part-kicker">Potencia inteligente</p>
+            <h3 id="part-title">V8 Biturbo Celeritas</h3>
+            <p id="part-description">
+              Entrega inmediata, respuesta progresiva y una banda sonora afinada para convertir cada aceleración en una experiencia física.
+            </p>
+            <dl class="part-stats">
+              <div><dt id="stat-one-label">Potencia</dt><dd id="stat-one-value">620 CV</dd></div>
+              <div><dt id="stat-two-label">Par máximo</dt><dd id="stat-two-value">760 Nm</dd></div>
+            </dl>
+            <div class="part-progress"><span id="part-progress"></span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="trust-section" id="confianza" aria-labelledby="trust-title">
+        <div class="trust-heading reveal">
+          <p class="section-index">04 · Confianza</p>
+          <p class="overline">Lo importante también está bajo la superficie</p>
+          <h2 id="trust-title">Confianza<br /><em>sin concesiones.</em></h2>
+        </div>
+
+        <div class="trust-car-wrap" aria-hidden="true">
+          <img class="trust-car" src="assets/celeritas-top.png" alt="" />
+          <span>Inspección integral</span>
+        </div>
+
+        <div class="trust-rail">
+          <article class="reveal">
+            <span>01</span>
+            <h3>Diagnóstico técnico</h3>
+            <p>Cada sistema se revisa y documenta para que conozcas el vehículo antes de decidir.</p>
+          </article>
+          <article class="reveal">
+            <span>02</span>
+            <h3>Historia transparente</h3>
+            <p>Información clara, sin letra pequeña y con acompañamiento experto durante todo el proceso.</p>
+          </article>
+          <article class="reveal">
+            <span>03</span>
+            <h3>Entrega impecable</h3>
+            <p>Configuración, preparación y puesta en marcha adaptadas a tu forma de conducir.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="models" id="modelos" aria-labelledby="models-title">
+        <div class="models-copy reveal">
+          <p class="section-index">05 · Gama</p>
+          <p class="overline">Tres formas de llegar antes</p>
+          <h2 id="models-title">Elige tu<br />Celeritas.</h2>
+          <p id="model-description">Gran turismo de altas prestaciones. Potencia refinada para viajes que no quieres terminar.</p>
+
+          <div class="model-tabs" role="tablist" aria-label="Versiones Celeritas">
+            <button class="model-tab is-active" type="button" role="tab" aria-selected="true" data-model="gt">
+              <span>01</span> GT
+            </button>
+            <button class="model-tab" type="button" role="tab" aria-selected="false" data-model="r">
+              <span>02</span> R
+            </button>
+            <button class="model-tab" type="button" role="tab" aria-selected="false" data-model="e">
+              <span>03</span> E
+            </button>
+          </div>
+        </div>
+
+        <div class="model-showcase reveal">
+          <div class="model-name" aria-hidden="true">GT</div>
+          <img id="model-image" src="assets/celeritas-gt.png" alt="Celeritas GT" />
+          <div class="model-color">
+            <span id="color-name">Azul Medianoche</span>
+            <i id="color-dot"></i>
+          </div>
+          <dl class="model-specs">
+            <div><dt>Potencia</dt><dd id="model-power">620 CV</dd></div>
+            <div><dt>0–100</dt><dd id="model-acceleration">3,1 s</dd></div>
+            <div><dt>Autonomía</dt><dd id="model-range">680 km</dd></div>
+          </dl>
+          <button class="configure-button" type="button" data-open-visit>Configurar este modelo <span>→</span></button>
+        </div>
+      </section>
+
+      <section class="stories" id="historias" aria-labelledby="stories-title">
+        <div class="stories-heading reveal">
+          <div>
+            <p class="section-index">06 · Historias</p>
+            <p class="overline">La experiencia, contada desde el asiento del conductor</p>
+          </div>
+          <h2 id="stories-title">Cuando todo<br /><em>encaja.</em></h2>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card reveal">
+            <div class="story-rating" aria-label="5 de 5 estrellas">★★★★★</div>
+            <blockquote>“No me enseñaron un catálogo. Me ayudaron a entender qué coche encajaba de verdad conmigo.”</blockquote>
+            <footer><strong>Álvaro M.</strong><span>Celeritas GT</span></footer>
+          </article>
+          <article class="story-card story-card-dark reveal">
+            <div class="story-rating" aria-label="5 de 5 estrellas">★★★★★</div>
+            <blockquote>“La prueba fue tranquila, técnica y muy personal. La sensación fue de control absoluto.”</blockquote>
+            <footer><strong>Clara R.</strong><span>Celeritas E</span></footer>
+          </article>
+          <article class="story-card reveal">
+            <div class="story-rating" aria-label="5 de 5 estrellas">★★★★★</div>
+            <blockquote>“Desde la primera conversación hasta la entrega, todo tuvo el nivel que esperaba del coche.”</blockquote>
+            <footer><strong>Javier S.</strong><span>Celeritas R</span></footer>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact-section" id="contacto" aria-labelledby="contact-title">
+        <div class="contact-showroom reveal">
+          <p class="section-index">07 · Contacto</p>
+          <p class="overline">Showroom privado · Madrid</p>
+          <h2 id="contact-title">Ven a verlo.<br /><em>Quédate a sentirlo.</em></h2>
+          <div class="contact-details">
+            <a href="mailto:experiencias@celeritas-motors.com">experiencias@celeritas-motors.com</a>
+            <span>Atención exclusivamente con cita previa</span>
+          </div>
+        </div>
+
+        <div class="contact-form-wrap reveal">
+          <p class="overline">Cuéntanos qué estás buscando</p>
+          <form class="contact-form" id="contact-form">
+            <label>Nombre<input type="text" name="name" autocomplete="name" required /></label>
+            <label>Correo electrónico<input type="email" name="email" autocomplete="email" required /></label>
+            <label>¿Qué Celeritas te interesa?
+              <select name="model">
+                <option>Celeritas GT</option>
+                <option>Celeritas R</option>
+                <option>Celeritas E</option>
+                <option>Aún no lo sé</option>
+              </select>
+            </label>
+            <label>Mensaje<textarea name="message" rows="3" placeholder="Quiero concertar una prueba..."></textarea></label>
+            <button type="submit">Enviar solicitud <span>↗</span></button>
+          </form>
+          <div class="contact-success" hidden aria-live="polite">
+            <span>Solicitud recibida</span>
+            <h3>La siguiente curva empieza aquí.</h3>
+            <p>El equipo Celeritas se pondrá en contacto contigo.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section" id="preguntas" aria-labelledby="faq-title">
+        <div class="faq-heading reveal">
+          <p class="section-index">08 · Preguntas frecuentes</p>
+          <h2 id="faq-title">Antes de<br /><em>arrancar.</em></h2>
+        </div>
+        <div class="faq-list">
+          <article class="faq-item reveal">
+            <h3><button type="button" aria-expanded="false"><span>¿Cómo reservo una prueba de conducción?</span><i>+</i></button></h3>
+            <div class="faq-answer" hidden><p>Completa el formulario o pulsa “Reservar visita”. Prepararemos una sesión privada centrada en el modelo que te interesa.</p></div>
+          </article>
+          <article class="faq-item reveal">
+            <h3><button type="button" aria-expanded="false"><span>¿Puedo comparar varios modelos?</span><i>+</i></button></h3>
+            <div class="faq-answer" hidden><p>Sí. Podemos diseñar una experiencia comparativa para que valores respuesta, confort y tecnología en el mismo encuentro.</p></div>
+          </article>
+          <article class="faq-item reveal">
+            <h3><button type="button" aria-expanded="false"><span>¿Ofrecéis configuración personalizada?</span><i>+</i></button></h3>
+            <div class="faq-answer" hidden><p>Te acompañamos en la elección de acabado, color, materiales y equipamiento hasta definir una configuración coherente contigo.</p></div>
+          </article>
+          <article class="faq-item reveal">
+            <h3><button type="button" aria-expanded="false"><span>¿Cómo se revisa cada vehículo?</span><i>+</i></button></h3>
+            <div class="faq-answer" hidden><p>Aplicamos una inspección completa de mecánica, electrónica, carrocería e historial y compartimos el resultado de forma clara.</p></div>
+          </article>
+          <article class="faq-item reveal">
+            <h3><button type="button" aria-expanded="false"><span>¿Trabajáis únicamente con cita?</span><i>+</i></button></h3>
+            <div class="faq-answer" hidden><p>Sí. Así podemos dedicarte el espacio, el tiempo y el vehículo adecuados sin interrupciones.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="experience" id="experiencia" aria-labelledby="experience-title">
+        <div class="experience-line" aria-hidden="true">
+          <span>CELERITAS</span><span>CELERITAS</span><span>CELERITAS</span>
+        </div>
+        <div class="experience-inner reveal">
+          <p class="section-index">09 · Experiencia</p>
+          <p class="overline">Tu próximo viaje comienza aquí</p>
+          <h2 id="experience-title">Hay coches que se explican.<br /><em>Este tienes que sentirlo.</em></h2>
+          <button class="light-action" type="button" data-open-visit>Reservar una experiencia Celeritas <span>↗</span></button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <img class="footer-logo" src="assets/celeritas-logo.jpeg" alt="Celeritas" />
+      <div class="footer-links">
+        <a href="#modelos">Modelos</a>
+        <a href="#ingenieria">Tecnología</a>
+        <a href="#confianza">Confianza</a>
+        <a href="#preguntas">Preguntas</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <div class="footer-meta">
+        <span>© <span id="year"></span> Celeritas</span>
+        <span>Automóviles excepcionales</span>
+      </div>
+    </footer>
+
+    <dialog class="visit-dialog" id="visit-dialog" aria-labelledby="visit-title">
+      <button class="dialog-close" type="button" aria-label="Cerrar">×</button>
+      <div class="dialog-mark">
+        <img src="assets/celeritas-wheel.jpeg" alt="" />
+      </div>
+      <p class="overline">Experiencia privada</p>
+      <h2 id="visit-title">Conoce Celeritas<br />en movimiento.</h2>
+      <p>Déjanos tus datos y nos pondremos en contacto para organizar una visita personalizada.</p>
+
+      <form id="visit-form">
+        <label>Nombre completo<input type="text" name="name" autocomplete="name" required /></label>
+        <label>Correo electrónico<input type="email" name="email" autocomplete="email" required /></label>
+        <label>Modelo de interés
+          <select name="model">
+            <option>Celeritas GT</option>
+            <option>Celeritas R</option>
+            <option>Celeritas E</option>
+          </select>
+        </label>
+        <button class="dialog-submit" type="submit">Solicitar visita <span>→</span></button>
+      </form>
+
+      <div class="form-success" hidden aria-live="polite">
+        <span>Solicitud recibida</span>
+        <h3>Nos vemos en la carretera.</h3>
+        <p>El equipo Celeritas contactará contigo para organizar la experiencia.</p>
+      </div>
+    </dialog>
+  </body>
+</html>

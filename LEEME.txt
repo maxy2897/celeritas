@@ -1,0 +1,14 @@
+CELERITAS — CONCESIONARIO INTERACTIVO
+=====================================
+
+Abre index.html con doble clic para ver la web.
+
+La página funciona localmente y sin instalación. Incluye:
+- Logo oficial de Celeritas.
+- Emblema de rueda que gira con el scroll.
+- Entrada y desplazamiento animado del vehículo.
+- Puntos interactivos para motor, frenos, chasis y aerodinámica.
+- Selector de modelos GT, R y E con especificaciones.
+- Formulario de reserva de visita en una ventana interactiva.
+
+Los datos del formulario son una demostración y no se envían a ningún servidor.
