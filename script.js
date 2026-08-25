@@ -30,6 +30,15 @@ const filterFuel = document.querySelector("#filter-fuel");
 const filterPrice = document.querySelector("#filter-price");
 const resultCount = document.querySelector("#result-count");
 const catalogEmpty = document.querySelector("#catalog-empty");
+const mobileFilterButton = document.querySelector(".mobile-filter-toggle");
+const inventoryCatalog = document.querySelector(".inventory-catalog");
+
+mobileFilterButton?.addEventListener("click", () => {
+  const open = inventoryCatalog?.classList.toggle("filters-open") || false;
+  mobileFilterButton.setAttribute("aria-expanded", String(open));
+  const icon = mobileFilterButton.querySelector("b");
+  if (icon) icon.textContent = open ? "−" : "＋";
+});
 
 function normalize(value) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
