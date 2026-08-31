@@ -14,18 +14,18 @@
     <meta name="twitter:description" content="Consulta fotografías, características y disponibilidad." />
     <meta name="twitter:image" content="" />
     <title>Vehículo de ocasión — Celeritas</title>
-    <link rel="stylesheet" href="styles.css?v=8" />
-    <script src="script.js?v=8" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=13" />
+    <script src="script.js?v=13" type="module"></script>
   </head>
   <body data-page="coche">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
     <header class="site-header header-light"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.png" alt="Celeritas" /></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a class="active" href="comprar.html">Comprar</a><a href="vender.html">Vender mi coche</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a><a class="nav-cta" href="tasacion.html">Tasación gratuita</a></nav></header>
-    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel.jpeg" alt="" /><span>CELERITAS</span></aside>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon.svg" alt="" /><span>CELERITAS</span></aside>
     <main id="contenido" class="vehicle-detail" data-vehicle-detail>
       <a class="back-link" href="comprar.html">← Volver al inventario</a>
       <section class="detail-heading">
         <div><p class="eyebrow dark" data-detail-kicker>Vehículo de ocasión</p><h1 data-detail-name>Cargando vehículo…</h1><p data-detail-summary></p></div>
-        <div class="detail-price"><span>Precio final</span><strong data-detail-price>—</strong><small>Transferencia y garantía incluidas</small></div>
+        <div class="detail-price"><span>Precio final</span><strong data-detail-price>—</strong><small>Sin costes ocultos · transferencia y garantía incluidas</small></div>
       </section>
       <section class="vehicle-gallery" aria-label="Fotografías del vehículo">
         <div class="detail-photo view-front" data-detail-photo role="img" aria-label="Vista frontal"></div>
@@ -36,7 +36,28 @@
         <div class="specification-panel"><p class="eyebrow dark">Características</p><h2>Todo lo importante, a la vista.</h2><dl data-detail-specs></dl></div>
         <div class="equipment-panel"><p class="eyebrow">Equipamiento</p><h2>Preparado para disfrutar.</h2><ul data-detail-features></ul><a data-detail-catalog target="_blank" rel="noreferrer">Consultar catálogo original del modelo ↗</a><small>Catálogo histórico de referencia alojado en Auto Catalog Archive. El equipamiento exacto de esta unidad es el indicado arriba.</small></div>
       </section>
-      <section class="detail-cta"><div><p class="eyebrow">¿Quieres verlo?</p><h2>Pide una prueba sin compromiso.</h2></div><button class="button button-accent" type="button" data-interest data-interest-name="Vehículo seleccionado">Solicitar información</button></section>
+      <section class="detail-content transparency-content">
+        <div class="specification-panel">
+          <p class="eyebrow dark">Estado real</p>
+          <h2>Nada que ocultar.</h2>
+          <dl data-detail-condition></dl>
+          <p class="defects-heading">Defectos declarados</p>
+          <ul class="defects-list" data-detail-defects></ul>
+        </div>
+        <div class="equipment-panel market-panel">
+          <p class="eyebrow">Precio justo</p>
+          <h2>Comparado con el mercado.</h2>
+          <p class="market-line" data-detail-market></p>
+          <p class="location-line">📍 Vehículo disponible en <span data-detail-location></span> · matrícula completa visible en la visita</p>
+        </div>
+      </section>
+      <section class="detail-cta">
+        <div><p class="eyebrow">¿Quieres verlo?</p><h2>Pide una prueba sin compromiso.</h2></div>
+        <div class="detail-cta-actions">
+          <button class="button button-outline" type="button" data-interest data-interest-name="Vehículo seleccionado" data-interest-reason="Recibir más información">Contactar</button>
+          <button class="button button-accent" type="button" data-interest data-interest-name="Vehículo seleccionado" data-interest-reason="Probar el coche">Reservar prueba</button>
+        </div>
+      </section>
     </main>
 <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.png" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
     <dialog class="interest-dialog" id="interest-dialog"><button class="dialog-close" type="button" aria-label="Cerrar">×</button><p class="eyebrow dark">Solicitar información</p><h2 id="interest-name">Vehículo seleccionado</h2><form data-success-form><label><span>Nombre</span><input autocomplete="name" required /></label><label><span>Teléfono</span><input type="tel" autocomplete="tel" required /></label><label><span>Email</span><input type="email" autocomplete="email" required /></label><label><span>Me interesa</span><select><option>Probar el coche</option><option>Financiarlo</option><option>Entregar mi coche</option><option>Recibir más información</option></select></label><button class="button button-dark" type="submit">Enviar solicitud</button></form><div class="success-message" hidden><strong>Solicitud recibida.</strong><p>Te contactaremos para confirmar la disponibilidad.</p></div></dialog>

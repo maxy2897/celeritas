@@ -16,8 +16,8 @@
     <meta name="twitter:image" content="https://celeritas.benjaminmajadaljamin.chatgpt.site/og.png" />
     <link rel="canonical" href="https://celeritas.benjaminmajadaljamin.chatgpt.site" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
-    <link rel="stylesheet" href="styles.css?v=8" />
-    <script src="script.js?v=8" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=13" />
+    <script src="script.js?v=13" type="module"></script>
   </head>
   <body data-page="inicio">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
@@ -33,7 +33,7 @@
       </nav>
     </header>
 
-    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel.jpeg" alt="" /><span>CELERITAS</span></aside>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon.svg" alt="" /><span>CELERITAS</span></aside>
 
     <main id="contenido">
       <section class="market-hero">
@@ -44,21 +44,24 @@
         </div>
       </section>
 
-      <form class="inventory-search" action="comprar.html" method="get">
-        <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
-        <label><span>Marca</span><select name="marca"><option value="all">Todas las marcas</option><option value="seat">SEAT</option><option value="volkswagen">Volkswagen</option><option value="renault">Renault</option><option value="toyota">Toyota</option><option value="nissan">Nissan</option><option value="peugeot">Peugeot</option></select></label>
-        <label><span>Combustible</span><select name="combustible"><option value="all">Todos</option><option value="gasolina">Gasolina</option><option value="hibrido">Híbrido</option></select></label>
-        <label><span>Precio máximo</span><select name="precio"><option value="999999">Sin límite</option><option value="18000">18.000 €</option><option value="22000">22.000 €</option><option value="25000">25.000 €</option></select></label>
-        <button type="submit">Buscar coches →</button>
-      </form>
+      <button class="mobile-filter-toggle" type="button" data-hero-filter-toggle aria-expanded="false" aria-controls="hero-filters"><span>Filtros de búsqueda</span><b aria-hidden="true">＋</b></button>
+      <div class="hero-filters" id="hero-filters" data-hero-filters>
+        <form class="inventory-search" action="comprar.html" method="get">
+          <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
+          <label><span>Marca</span><select name="marca"><option value="all">Todas las marcas</option><option value="seat">SEAT</option><option value="volkswagen">Volkswagen</option><option value="renault">Renault</option><option value="toyota">Toyota</option><option value="nissan">Nissan</option><option value="peugeot">Peugeot</option></select></label>
+          <label><span>Combustible</span><select name="combustible"><option value="all">Todos</option><option value="gasolina">Gasolina</option><option value="hibrido">Híbrido</option></select></label>
+          <label><span>Precio máximo</span><select name="precio"><option value="999999">Sin límite</option><option value="18000">18.000 €</option><option value="22000">22.000 €</option><option value="25000">25.000 €</option></select></label>
+          <button type="submit">Buscar coches →</button>
+        </form>
 
-      <section class="vehicle-types" aria-label="Buscar por tipo de vehículo">
-        <a href="comprar.html?tipo=utilitario"><span class="type-icon">⌁</span><strong>Utilitarios</strong><small>3 vehículos</small></a>
-        <a href="comprar.html?tipo=compacto"><span class="type-icon">⌁</span><strong>Compactos</strong><small>2 vehículos</small></a>
-        <a href="comprar.html?tipo=suv"><span class="type-icon">▱</span><strong>SUV</strong><small>1 vehículo</small></a>
-        <a href="comprar.html?combustible=hibrido"><span class="type-icon">◇</span><strong>Híbridos</strong><small>1 vehículo</small></a>
-        <a href="vender.html"><span class="type-icon">＋</span><strong>Vendemos el tuyo</strong><small>Valoración gratuita</small></a>
-      </section>
+        <section class="vehicle-types" aria-label="Buscar por tipo de vehículo">
+          <a href="comprar.html?tipo=utilitario"><span class="type-icon">⌁</span><strong>Utilitarios</strong><small>3 vehículos</small></a>
+          <a href="comprar.html?tipo=compacto"><span class="type-icon">⌁</span><strong>Compactos</strong><small>2 vehículos</small></a>
+          <a href="comprar.html?tipo=suv"><span class="type-icon">▱</span><strong>SUV</strong><small>1 vehículo</small></a>
+          <a href="comprar.html?combustible=hibrido"><span class="type-icon">◇</span><strong>Híbridos</strong><small>1 vehículo</small></a>
+          <a href="vender.html"><span class="type-icon">＋</span><strong>Vendemos el tuyo</strong><small>Valoración gratuita</small></a>
+        </section>
+      </div>
 
       <section class="featured-inventory">
         <div class="section-heading"><div><p class="eyebrow">Selección Celeritas</p><h2>Vehículos destacados</h2></div><a href="comprar.html">Ver todos →</a></div>
