@@ -192,6 +192,7 @@ footerBrand?.insertAdjacentHTML("afterend", `<div class="footer-contact"><strong
 
 function updateWheel() {
   root.style.setProperty("--wheel-angle", `${window.scrollY * 0.42}deg`);
+  siteHeader?.classList.toggle("is-scrolled", window.scrollY > 24);
   wheelFrame = null;
 }
 
