@@ -218,7 +218,7 @@ function addBuyButtonToCard(card, id) {
   if (!card || card.querySelector("[data-card-buy]")) return;
   const price = card.querySelector(".price-stack") || card.querySelector(".inventory-card-copy > div > strong");
   if (!price) return;
-  const conditionClass = [...(card.querySelector(".condition-pill")?.classList || [])].find((className) => className.startsWith("condition-")) || "condition-reviewed";
+  const conditionClass = [...(card.querySelector(".condition-pill")?.classList || [])].find((className) => className.startsWith("condition-") && className !== "condition-pill") || "condition-reviewed";
   const purchaseStack = document.createElement("span");
   purchaseStack.className = "card-purchase-stack";
   const buyButton = document.createElement("span");
