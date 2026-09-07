@@ -54,7 +54,15 @@ function getFavorites() {
 function saveFavorites(ids) {
   const items = uniqueVehicleIds(ids);
   savePreference("celeritas-favorites", JSON.stringify(items));
+  syncFavoriteIndicator(items);
   return items;
+}
+
+function syncFavoriteIndicator(items = getFavorites()) {
+  document.querySelectorAll("[data-favorite-count]").forEach((count) => {
+    count.textContent = String(items.length);
+    count.hidden = items.length === 0;
+  });
 }
 
 function syncCartIndicator(items = getCartItems()) {
@@ -76,6 +84,40 @@ function showToast(message) {
   toast.textContent = message;
   toast.hidden = false;
   toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2400);
+}
+
+function animateVehicleToTarget(sourceButton, target) {
+  if (!target || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const photo = sourceButton.closest(".vehicle-card-shell")?.querySelector(".single-car-photo");
+  if (!photo) return;
+  const start = photo.getBoundingClientRect();
+  const finish = target.getBoundingClientRect();
+  const thumb = photo.cloneNode(false);
+  thumb.classList.add("flying-car-thumb");
+  thumb.removeAttribute("role");
+  thumb.removeAttribute("aria-label");
+  Object.assign(thumb.style, {
+    left: `${start.left}px`,
+    top: `${start.top}px`,
+    width: `${start.width}px`,
+    height: `${start.height}px`,
+  });
+  document.body.append(thumb);
+  const destinationX = finish.left + (finish.width / 2) - (start.left + (start.width / 2));
+  const destinationY = finish.top + (finish.height / 2) - (start.top + (start.height / 2));
+  const flight = thumb.animate([
+    { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
+    { transform: `translate3d(${destinationX * .45}px, ${destinationY * .35 - 36}px, 0) scale(.48)`, opacity: .92, offset: .55 },
+    { transform: `translate3d(${destinationX}px, ${destinationY}px, 0) scale(.08)`, opacity: .15 },
+  ], { duration: 720, easing: "cubic-bezier(.22,.8,.3,1)", fill: "forwards" });
+  flight.finished.finally(() => {
+    thumb.remove();
+    target.animate([
+      { transform: "scale(1)" },
+      { transform: "scale(1.22)" },
+      { transform: "scale(1)" },
+    ], { duration: 260, easing: "ease-out" });
+  });
 }
 
 const currencyRates = { EUR: 1, USD: 1.16, GBP: 0.87, CHF: 0.94 };
@@ -118,12 +160,23 @@ if (nav) {
 
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
-  const cartItems = getCartItems();
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Cuenta Celeritas" title="Cuenta Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8c.7-4 3-6 7-6s6.3 2 7 6" /></svg></button><a class="header-icon cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label></div>`);
   document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" id="account-dialog"><button class="dialog-close" type="button" data-account-close aria-label="Cerrar">×</button><p class="eyebrow dark">Favoritos Celeritas</p><h2>Tus coches guardados.</h2><div class="favorite-vehicle-list" data-favorite-list></div><p data-favorite-empty>Marca el corazón de cualquier coche para guardarlo aquí.</p><p class="account-note">Tus favoritos se guardan en este navegador y no necesitas iniciar sesión.</p><a class="button button-dark" href="comprar.html">Ver catálogo</a></dialog>`);
 }
 
+let scrollWheel = document.querySelector(".scroll-wheel");
+if (!scrollWheel) {
+  document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon.svg" alt=""/><span>CELERITAS</span></aside>');
+  scrollWheel = document.querySelector(".scroll-wheel");
+}
+if (scrollWheel) {
+  const cartItems = getCartItems();
+  const favoriteItems = getFavorites();
+  scrollWheel.insertAdjacentHTML("beforebegin", `<div class="floating-vehicle-actions" aria-label="Favoritos y carrito"><button class="floating-action" type="button" data-account-open aria-label="Ver favoritos" title="Ver favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg><b data-favorite-count ${favoriteItems.length ? "" : "hidden"}>${favoriteItems.length}</b></button><a class="floating-action cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
+}
+
 syncCartIndicator();
+syncFavoriteIndicator();
 
 document.querySelectorAll("[data-currency-select]").forEach((select) => {
   select.value = currentCurrency;
@@ -205,6 +258,7 @@ document.addEventListener("click", async (event) => {
       button.classList.toggle("is-active", willSave);
       button.setAttribute("aria-pressed", String(willSave));
     });
+    if (willSave) animateVehicleToTarget(favoriteButton, document.querySelector("[data-account-open]"));
     renderFavoritesDialog();
     showToast(willSave ? "Guardado en favoritos" : "Eliminado de favoritos");
     return;
@@ -231,7 +285,10 @@ document.addEventListener("click", async (event) => {
   if (cartButton) {
     const id = cartButton.dataset.cartVehicle;
     const items = getCartItems();
-    if (!items.includes(id)) saveCartItems([...items, id]);
+    if (!items.includes(id)) {
+      animateVehicleToTarget(cartButton, document.querySelector("[data-cart-link]"));
+      saveCartItems([...items, id]);
+    }
     showToast(items.includes(id) ? "Este coche ya está en tu carrito" : "Coche añadido al carrito");
   }
 });
