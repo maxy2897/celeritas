@@ -161,7 +161,6 @@ if (nav) {
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
   siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label></div>`);
-  document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" id="account-dialog"><button class="dialog-close" type="button" data-account-close aria-label="Cerrar">×</button><p class="eyebrow dark">Favoritos Celeritas</p><h2>Tus coches guardados.</h2><div class="favorite-vehicle-list" data-favorite-list></div><p data-favorite-empty>Marca el corazón de cualquier coche para guardarlo aquí.</p><p class="account-note">Tus favoritos se guardan en este navegador y no necesitas iniciar sesión.</p><a class="button button-dark" href="comprar.html">Ver catálogo</a></dialog>`);
 }
 
 let scrollWheel = document.querySelector(".scroll-wheel");
@@ -172,7 +171,7 @@ if (!scrollWheel) {
 if (scrollWheel) {
   const cartItems = getCartItems();
   const favoriteItems = getFavorites();
-  scrollWheel.insertAdjacentHTML("beforebegin", `<div class="floating-vehicle-actions" aria-label="Favoritos y carrito"><button class="floating-action" type="button" data-account-open aria-label="Ver favoritos" title="Ver favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg><b data-favorite-count ${favoriteItems.length ? "" : "hidden"}>${favoriteItems.length}</b></button><a class="floating-action cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
+  scrollWheel.insertAdjacentHTML("beforebegin", `<div class="floating-vehicle-actions" aria-label="Favoritos y carrito"><a class="floating-action" href="favoritos.html" data-favorites-link aria-label="Ver favoritos" title="Ver favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg><b data-favorite-count ${favoriteItems.length ? "" : "hidden"}>${favoriteItems.length}</b></a><a class="floating-action cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
 }
 
 syncCartIndicator();
@@ -186,13 +185,6 @@ document.querySelectorAll("[data-currency-select]").forEach((select) => {
     updateCurrencyPrices();
   });
 });
-
-const accountDialog = document.querySelector("#account-dialog");
-document.querySelector("[data-account-open]")?.addEventListener("click", () => {
-  renderFavoritesDialog();
-  accountDialog?.showModal();
-});
-document.querySelector("[data-account-close]")?.addEventListener("click", () => accountDialog?.close());
 
 const siteFooter = document.querySelector(".site-footer");
 const footerBrand = siteFooter?.querySelector(".footer-brand");
@@ -222,6 +214,24 @@ function vehicleIdFromCard(card) {
   try { return new URL(card.getAttribute("href"), window.location.href).searchParams.get("id"); } catch { return null; }
 }
 
+function addBuyButtonToCard(card, id) {
+  if (!card || card.querySelector("[data-card-buy]")) return;
+  const price = card.querySelector(".price-stack") || card.querySelector(".inventory-card-copy > div > strong");
+  if (!price) return;
+  const conditionClass = [...(card.querySelector(".condition-pill")?.classList || [])].find((className) => className.startsWith("condition-")) || "condition-reviewed";
+  const purchaseStack = document.createElement("span");
+  purchaseStack.className = "card-purchase-stack";
+  const buyButton = document.createElement("span");
+  buyButton.className = `card-buy-button ${conditionClass}`;
+  buyButton.dataset.cardBuy = id;
+  buyButton.setAttribute("role", "button");
+  buyButton.setAttribute("tabindex", "0");
+  buyButton.setAttribute("aria-label", "Comprar este coche");
+  buyButton.textContent = "Comprar";
+  price.before(purchaseStack);
+  purchaseStack.append(buyButton, price);
+}
+
 function enhanceVehicleCards() {
   const favoriteIds = getFavorites();
   document.querySelectorAll('a.inventory-card[href*="coche.html?id="]').forEach((card) => {
@@ -233,6 +243,7 @@ function enhanceVehicleCards() {
     shell.className = "vehicle-card-shell";
     card.before(shell);
     shell.append(card);
+    addBuyButtonToCard(card, id);
     shell.insertAdjacentHTML("beforeend", `<div class="card-actions" aria-label="Acciones para ${name}"><button type="button" data-favorite-vehicle="${id}" aria-label="Guardar ${name} en favoritos" aria-pressed="${favoriteIds.includes(id)}" title="Guardar en favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${name}" aria-label="Compartir ${name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div>`);
     const favoriteButton = shell.querySelector("[data-favorite-vehicle]");
     favoriteButton?.classList.toggle("is-active", favoriteIds.includes(id));
@@ -247,6 +258,22 @@ function enhanceVehicleCards() {
 enhanceVehicleCards();
 
 document.addEventListener("click", async (event) => {
+  const buyButton = event.target.closest("[data-card-buy]");
+  if (buyButton) {
+    event.preventDefault();
+    event.stopPropagation();
+    const id = buyButton.dataset.cardBuy;
+    const items = getCartItems();
+    if (!items.includes(id)) {
+      animateVehicleToTarget(buyButton, document.querySelector("[data-cart-link]"));
+      saveCartItems([...items, id]);
+      window.setTimeout(() => { window.location.href = `checkout.html?id=${id}`; }, 620);
+    } else {
+      window.location.href = `checkout.html?id=${id}`;
+    }
+    return;
+  }
+
   const favoriteButton = event.target.closest("[data-favorite-vehicle]");
   if (favoriteButton) {
     const id = favoriteButton.dataset.favoriteVehicle;
@@ -258,8 +285,8 @@ document.addEventListener("click", async (event) => {
       button.classList.toggle("is-active", willSave);
       button.setAttribute("aria-pressed", String(willSave));
     });
-    if (willSave) animateVehicleToTarget(favoriteButton, document.querySelector("[data-account-open]"));
-    renderFavoritesDialog();
+    if (willSave) animateVehicleToTarget(favoriteButton, document.querySelector("[data-favorites-link]"));
+    renderFavoritesPage();
     showToast(willSave ? "Guardado en favoritos" : "Eliminado de favoritos");
     return;
   }
@@ -291,6 +318,13 @@ document.addEventListener("click", async (event) => {
     }
     showToast(items.includes(id) ? "Este coche ya está en tu carrito" : "Coche añadido al carrito");
   }
+});
+
+document.addEventListener("keydown", (event) => {
+  const buyButton = event.target.closest?.("[data-card-buy]");
+  if (!buyButton || !["Enter", " "].includes(event.key)) return;
+  event.preventDefault();
+  buyButton.click();
 });
 
 const vehicleItems = [...document.querySelectorAll("[data-vehicle]")];
@@ -538,18 +572,34 @@ const vehicleCatalog = {
   }
 };
 
-function renderFavoritesDialog() {
-  const list = document.querySelector("[data-favorite-list]");
-  const empty = document.querySelector("[data-favorite-empty]");
-  if (!list || !empty) return;
+const favoriteVehicleStatus = {
+  "porsche-cayenne": ["Excelente", "condition-excellent"],
+  "seat-ibiza": ["Excelente", "condition-excellent"],
+  "vw-golf": ["Muy bueno", "condition-good"],
+  "renault-clio": ["Buen estado", "condition-reviewed"],
+  "toyota-corolla": ["Excelente", "condition-excellent"],
+  "nissan-qashqai": ["Revisado", "condition-reviewed"],
+  "peugeot-208": ["Muy bueno", "condition-good"],
+};
+
+function renderFavoritesPage() {
+  const root = document.querySelector("[data-favorites-root]");
+  if (!root) return;
+  const grid = root.querySelector("[data-favorites-grid]");
+  const empty = root.querySelector("[data-favorites-empty]");
   const favorites = getFavorites().filter((id) => Boolean(vehicleCatalog[id]));
   empty.hidden = favorites.length > 0;
-  list.innerHTML = favorites.map((id) => {
+  grid.hidden = favorites.length === 0;
+  grid.innerHTML = favorites.map((id) => {
     const vehicle = vehicleCatalog[id];
-    return `<a href="coche.html?id=${id}"><span class="favorite-vehicle-thumb ${vehicle.imageClass} view-front" aria-hidden="true"></span><span><strong>${vehicle.name}</strong><small data-price-eur="${vehicle.priceEur}">${vehicle.price}</small></span></a>`;
+    const [condition, conditionClass] = favoriteVehicleStatus[id] || ["Revisado", "condition-reviewed"];
+    return `<article class="vehicle-card-shell"><a class="inventory-card large" href="coche.html?id=${id}"><div class="card-flags"><span class="condition-pill ${conditionClass}" title="Vehículo de segunda mano · Estado ${condition.toLowerCase()}">${condition}</span></div><div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${vehicle.name}, vista frontal"></div><div class="inventory-card-copy"><p>${vehicle.name}</p><span>${vehicle.summary}</span><div><small>Ver ficha completa</small><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></div></div></a><div class="card-actions" aria-label="Acciones para ${vehicle.name}"><button class="is-active" type="button" data-favorite-vehicle="${id}" aria-label="Eliminar ${vehicle.name} de favoritos" aria-pressed="true" title="Eliminar de favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${vehicle.name}" aria-label="Compartir ${vehicle.name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${vehicle.name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div></article>`;
   }).join("");
+  grid.querySelectorAll("a.inventory-card").forEach((card) => addBuyButtonToCard(card, vehicleIdFromCard(card)));
   updateCurrencyPrices();
 }
+
+renderFavoritesPage();
 
 const detailRoot = document.querySelector("[data-vehicle-detail]");
 if (detailRoot) {
