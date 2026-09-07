@@ -16,8 +16,8 @@
     <meta name="twitter:image" content="https://maxy2897.github.io/celeritas/og.png" />
     <link rel="canonical" href="https://maxy2897.github.io/celeritas/" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
-    <link rel="stylesheet" href="styles.css?v=15" />
-    <script src="script.js?v=14" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=16" />
+    <script src="script.js?v=15" type="module"></script>
   </head>
   <body data-page="inicio">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
@@ -27,7 +27,7 @@
       <button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button>
       <nav id="main-nav" aria-label="Navegación principal">
         <a href="comprar.html">Comprar</a>
-        <a href="vender.html">Vender mi coche</a>
+        <a href="financiacion.html">Financiación</a>
         <a href="como-funciona.html">Cómo funciona</a>
         <a href="contacto.html">Contacto</a>
         <a class="nav-cta" href="tasacion.html">Tasación gratuita</a>
@@ -48,6 +48,7 @@
       <button class="mobile-filter-toggle" type="button" data-hero-filter-toggle aria-expanded="false" aria-controls="hero-filters"><span>Filtros de búsqueda</span><b aria-hidden="true">＋</b></button>
       <div class="hero-filters" id="hero-filters" data-hero-filters>
         <form class="inventory-search" action="comprar.html" method="get">
+          <label class="quick-search"><span>Búsqueda rápida</span><input name="q" type="search" placeholder="Escribe marca o modelo" /></label>
           <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
           <label><span>Marca</span><select name="marca"><option value="all">Todas las marcas</option><option value="seat">SEAT</option><option value="volkswagen">Volkswagen</option><option value="renault">Renault</option><option value="toyota">Toyota</option><option value="nissan">Nissan</option><option value="peugeot">Peugeot</option></select></label>
           <label><span>Combustible</span><select name="combustible"><option value="all">Todos</option><option value="gasolina">Gasolina</option><option value="hibrido">Híbrido</option></select></label>
@@ -58,8 +59,8 @@
         <section class="vehicle-types" aria-label="Buscar por tipo de vehículo">
           <a href="comprar.html?tipo=utilitario"><span class="type-icon">⌁</span><strong>Utilitarios</strong><small>3 vehículos</small></a>
           <a href="comprar.html?tipo=compacto"><span class="type-icon">⌁</span><strong>Compactos</strong><small>2 vehículos</small></a>
-          <a href="comprar.html?tipo=suv"><span class="type-icon">▱</span><strong>SUV</strong><small>1 vehículo</small></a>
-          <a href="comprar.html?combustible=hibrido"><span class="type-icon">◇</span><strong>Híbridos</strong><small>1 vehículo</small></a>
+          <a href="comprar.html?tipo=suv"><span class="type-icon">▱</span><strong>SUV</strong><small>2 vehículos</small></a>
+          <a href="comprar.html?combustible=hibrido"><span class="type-icon">◇</span><strong>Híbridos</strong><small>2 vehículos</small></a>
           <a href="vender.html"><span class="type-icon">＋</span><strong>Vendemos el tuyo</strong><small>Valoración gratuita</small></a>
         </section>
       </div>
@@ -67,16 +68,19 @@
       <section class="featured-inventory">
         <div class="section-heading"><div><p class="eyebrow">Selección Celeritas</p><h2>Vehículos destacados</h2></div><a href="comprar.html">Ver todos →</a></div>
         <div class="featured-grid">
-          <a class="inventory-card" href="coche.html?id=seat-ibiza"><div class="single-car-photo car-seat view-front" role="img" aria-label="SEAT Ibiza blanco, vista frontal"></div><div class="inventory-card-copy"><p>SEAT Ibiza 1.0 TSI FR</p><span>2022 · Gasolina · Manual</span><div><small>39.800 km</small><strong>17.490 €</strong></div></div></a>
-          <a class="inventory-card" href="coche.html?id=vw-golf"><div class="single-car-photo car-golf view-front" role="img" aria-label="Volkswagen Golf gris, vista frontal"></div><div class="inventory-card-copy"><p>Volkswagen Golf Style</p><span>2021 · Gasolina · Manual</span><div><small>52.400 km</small><strong>20.900 €</strong></div></div></a>
-          <a class="inventory-card" href="coche.html?id=toyota-corolla"><div class="single-car-photo car-corolla view-front" role="img" aria-label="Toyota Corolla azul, vista frontal"></div><div class="inventory-card-copy"><p>Toyota Corolla 125H</p><span>2021 · Híbrido · Automático</span><div><small>49.600 km</small><strong>22.900 €</strong></div></div></a>
-          <a class="inventory-card" href="coche.html?id=nissan-qashqai"><div class="single-car-photo car-qashqai view-front" role="img" aria-label="Nissan Qashqai verde, vista frontal"></div><div class="inventory-card-copy"><p>Nissan Qashqai N-Connecta</p><span>2021 · Gasolina · Manual</span><div><small>55.200 km</small><strong>23.900 €</strong></div></div></a>
+          <a class="inventory-card deal-card" href="coche.html?id=porsche-cayenne"><div class="card-flags"><span class="condition-pill condition-excellent">Excelente</span><span class="discount-pill">−12%</span></div><div class="single-car-photo car-cayenne view-front" role="img" aria-label="Porsche Cayenne gris, vista frontal"></div><div class="inventory-card-copy"><p>Porsche Cayenne E-Hybrid</p><span>2021 · Híbrido enchufable · Automático</span><div><small>64.800 km</small><span class="price-stack"><del data-price-eur="74900">74.900 €</del><strong data-price-eur="65900">65.900 €</strong></span></div><p class="deal-countdown">Oferta hasta el 30/09 · <strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></p></div></a>
+          <a class="inventory-card" href="coche.html?id=seat-ibiza"><div class="card-flags"><span class="condition-pill condition-excellent">Excelente</span></div><div class="single-car-photo car-seat view-front" role="img" aria-label="SEAT Ibiza blanco, vista frontal"></div><div class="inventory-card-copy"><p>SEAT Ibiza 1.0 TSI FR</p><span>2022 · Gasolina · Manual</span><div><small>39.800 km</small><strong data-price-eur="17490">17.490 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=vw-golf"><div class="card-flags"><span class="condition-pill condition-good">Muy bueno</span></div><div class="single-car-photo car-golf view-front" role="img" aria-label="Volkswagen Golf gris, vista frontal"></div><div class="inventory-card-copy"><p>Volkswagen Golf Style</p><span>2021 · Gasolina · Manual</span><div><small>52.400 km</small><strong data-price-eur="20900">20.900 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=toyota-corolla"><div class="card-flags"><span class="condition-pill condition-excellent">Excelente</span></div><div class="single-car-photo car-corolla view-front" role="img" aria-label="Toyota Corolla azul, vista frontal"></div><div class="inventory-card-copy"><p>Toyota Corolla 125H</p><span>2021 · Híbrido · Automático</span><div><small>49.600 km</small><strong data-price-eur="22900">22.900 €</strong></div></div></a>
+          <a class="inventory-card" href="coche.html?id=nissan-qashqai"><div class="card-flags"><span class="condition-pill condition-reviewed">Revisado</span></div><div class="single-car-photo car-qashqai view-front" role="img" aria-label="Nissan Qashqai verde, vista frontal"></div><div class="inventory-card-copy"><p>Nissan Qashqai N-Connecta</p><span>2021 · Gasolina · Manual</span><div><small>55.200 km</small><strong data-price-eur="23900">23.900 €</strong></div></div></a>
         </div>
         <div class="trust-intro"><p class="eyebrow">Garantía Celeritas</p><h3>Seguridad y claridad en cada paso.</h3></div>
         <div class="trust-strip"><p><b>✓</b><span><strong>Garantía Celeritas</strong>12 meses como mínimo</span></p><p><b>✓</b><span><strong>Precio claro</strong>Sin intermediarios ni costes ocultos</span></p><p><b>✓</b><span><strong>Garantía de devolución</strong>Según las condiciones de compra</span></p><p><b>✓</b><span><strong>Te ayudamos a vender tu coche</strong>Nos ocupamos de todos los trámites</span></p></div>
       </section>
 
       <section class="home-service compact-service"><div><p class="eyebrow dark">También compramos</p><h2>Vende tu coche con Celeritas y ayuda a otros a construir su camino.</h2></div><div><p>Lo valoramos, lo revisamos y nos ocupamos de la documentación. Tú decides si nuestra oferta te encaja.</p><a class="button button-dark" href="tasacion.html">Solicitar tasación</a></div></section>
+
+      <section class="reviews-section"><div class="reviews-heading"><p class="eyebrow dark">Lo que dicen nuestros clientes</p><h2>Próximamente,<br />opiniones verificadas.</h2><p>Este espacio recogerá únicamente experiencias reales y mostrará su puntuación media cuando estén disponibles.</p></div><div class="reviews-grid"><article><span aria-label="Sin puntuación todavía">☆☆☆☆☆</span><strong>Compra acompañada</strong><p>Pendiente de la primera valoración verificada.</p></article><article><span aria-label="Sin puntuación todavía">☆☆☆☆☆</span><strong>Venta sin complicaciones</strong><p>Pendiente de la primera valoración verificada.</p></article><article><span aria-label="Sin puntuación todavía">☆☆☆☆☆</span><strong>Información transparente</strong><p>Pendiente de la primera valoración verificada.</p></article></div></section>
     </main>
 
 <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.png" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>

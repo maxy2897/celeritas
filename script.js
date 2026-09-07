@@ -3,6 +3,76 @@ const menuButton = document.querySelector(".menu-button");
 const nav = document.querySelector("#main-nav");
 let wheelFrame = null;
 
+function readPreference(key) {
+  try { return window.localStorage.getItem(key); } catch { return null; }
+}
+
+function savePreference(key, value) {
+  try { window.localStorage.setItem(key, value); } catch { /* Storage can be unavailable in private browsing. */ }
+}
+
+const currencyRates = { EUR: 1, USD: 1.16, GBP: 0.87, CHF: 0.94 };
+const savedCurrency = readPreference("celeritas-currency");
+let currentCurrency = savedCurrency && Object.hasOwn(currencyRates, savedCurrency) ? savedCurrency : "EUR";
+
+function formatMoney(euros, currency = currentCurrency) {
+  const rate = currencyRates[currency] || 1;
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency, maximumFractionDigits: 0 }).format(euros * rate);
+}
+
+function updateCurrencyPrices() {
+  document.querySelectorAll("[data-price-eur]").forEach((element) => {
+    element.textContent = formatMoney(Number(element.dataset.priceEur));
+  });
+  document.querySelectorAll("[data-currency-select]").forEach((select) => { select.value = currentCurrency; });
+}
+
+const navMenuItems = {
+  "comprar.html": [["Todo el catálogo", "comprar.html"], ["SUV", "comprar.html?tipo=suv"], ["Compactos", "comprar.html?tipo=compacto"], ["Híbridos", "comprar.html?combustible=hibrido"]],
+  "financiacion.html": [["Opciones de financiación", "financiacion.html"], ["Solicitar propuesta", "contacto.html?motivo=financiacion"], ["Entregar mi coche", "tasacion.html"]],
+  "como-funciona.html": [["Proceso de compra", "como-funciona.html#comprar-proceso"], ["Proceso de venta", "como-funciona.html#vender-proceso"]],
+  "contacto.html": [["Formulario de contacto", "contacto.html"], ["WhatsApp y teléfono", "contacto.html?motivo=whatsapp"]],
+};
+
+if (nav) {
+  [...nav.querySelectorAll(":scope > a:not(.nav-cta)")].forEach((anchor) => {
+    const items = navMenuItems[anchor.getAttribute("href")];
+    if (!items) return;
+    const group = document.createElement("div");
+    group.className = "nav-group";
+    const submenu = document.createElement("div");
+    submenu.className = "nav-submenu";
+    submenu.setAttribute("aria-label", `Opciones de ${anchor.textContent.trim()}`);
+    submenu.innerHTML = items.map(([label, href]) => `<a href="${href}">${label}</a>`).join("");
+    anchor.before(group);
+    group.append(anchor, submenu);
+  });
+}
+
+const siteHeader = document.querySelector(".site-header");
+if (siteHeader) {
+  const selectedVehicle = readPreference("celeritas-selected-vehicle");
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Cuenta Celeritas" title="Cuenta Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8c.7-4 3-6 7-6s6.3 2 7 6" /></svg></button><a class="header-icon cart-link" href="${selectedVehicle ? `checkout.html?id=${selectedVehicle}` : "checkout.html"}" data-cart-link aria-label="Compra o reserva" title="Compra o reserva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${selectedVehicle ? "" : "hidden"}>1</b></a></div>`);
+  document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" id="account-dialog"><button class="dialog-close" type="button" data-account-close aria-label="Cerrar">×</button><p class="eyebrow dark">Cuenta Celeritas</p><h2>Estamos preparando tu espacio personal.</h2><p>Próximamente podrás guardar coches, seguir reservas y consultar documentación. Esta función no utiliza inicio de sesión con ChatGPT.</p><a class="button button-dark" href="contacto.html?motivo=cuenta">Quiero que me aviséis</a></dialog>`);
+}
+
+document.querySelectorAll("[data-currency-select]").forEach((select) => {
+  select.value = currentCurrency;
+  select.addEventListener("change", () => {
+    currentCurrency = select.value;
+    savePreference("celeritas-currency", currentCurrency);
+    updateCurrencyPrices();
+  });
+});
+
+const accountDialog = document.querySelector("#account-dialog");
+document.querySelector("[data-account-open]")?.addEventListener("click", () => accountDialog?.showModal());
+document.querySelector("[data-account-close]")?.addEventListener("click", () => accountDialog?.close());
+
+const siteFooter = document.querySelector(".site-footer");
+const footerBrand = siteFooter?.querySelector(".footer-brand");
+footerBrand?.insertAdjacentHTML("afterend", `<div class="footer-contact"><strong>Contacto</strong><a href="contacto.html?motivo=whatsapp">WhatsApp y teléfono · 91 000 00 00</a><a href="mailto:hola@celeritas-motors.com">hola@celeritas-motors.com</a><span>España · Atención online y con cita previa</span><span>Instagram · Próximamente</span></div>`);
+
 function updateWheel() {
   root.style.setProperty("--wheel-angle", `${window.scrollY * 0.42}deg`);
   wheelFrame = null;
@@ -98,11 +168,13 @@ if (vehicleItems.length) {
   const requestedType = params.get("tipo");
   const requestedFuel = params.get("combustible");
   const requestedBrand = params.get("marca");
+  const requestedQuery = params.get("q");
   const requestedPrice = params.get("precio");
   if (filterType && [...filterType.options].some((option) => option.value === requestedType)) filterType.value = requestedType;
   if (filterFuel && [...filterFuel.options].some((option) => option.value === requestedFuel)) filterFuel.value = requestedFuel;
   if (filterPrice && [...filterPrice.options].some((option) => option.value === requestedPrice)) filterPrice.value = requestedPrice;
-  if (filterSearch && requestedBrand && requestedBrand !== "all") filterSearch.value = requestedBrand;
+  if (filterSearch && requestedQuery) filterSearch.value = requestedQuery;
+  else if (filterSearch && requestedBrand && requestedBrand !== "all") filterSearch.value = requestedBrand;
   updateCatalog();
 }
 
@@ -149,11 +221,29 @@ document.querySelectorAll("[data-interest]").forEach((button) => {
 });
 
 const vehicleCatalog = {
+  "porsche-cayenne": {
+    name: "Porsche Cayenne E-Hybrid",
+    kicker: "Porsche · SUV híbrido enchufable · Oferta temporal",
+    summary: "2021 · 64.800 km · Híbrido enchufable · Cambio automático",
+    price: "65.900 €",
+    priceEur: 65900,
+    previousPriceEur: 74900,
+    marketAvg: 70200,
+    location: "Madrid",
+    imageClass: "car-cayenne",
+    image: "assets/vehicle-porsche-cayenne-v1.png",
+    catalog: "https://autocatalogarchive.com/porsche/",
+    specs: { Año: "2021", Kilómetros: "64.800 km", Combustible: "Híbrido enchufable", Cambio: "Automático", Potencia: "462 CV", Etiqueta: "0", Puertas: "5", Plazas: "5", Propietarios: "1" },
+    condition: { Neumáticos: "Buen estado (80% de vida útil)", Carrocería: "Excelente estado general", Interior: "Muy buen estado, sin desgaste relevante" },
+    defects: ["Leve marca de uso en una llanta trasera"],
+    features: ["Sistema híbrido enchufable", "Tracción total", "Navegación", "Cámara 360°", "Climatizador de cuatro zonas", "Faros LED matriciales"]
+  },
   "seat-ibiza": {
     name: "SEAT Ibiza 1.0 TSI FR",
     kicker: "SEAT · Utilitario",
     summary: "2022 · 39.800 km · Gasolina · Cambio manual",
     price: "17.490 €",
+    priceEur: 17490,
     marketAvg: 18700,
     location: "Madrid",
     imageClass: "car-seat",
@@ -169,6 +259,7 @@ const vehicleCatalog = {
     kicker: "Volkswagen · Compacto",
     summary: "2021 · 52.400 km · Gasolina · Cambio manual",
     price: "20.900 €",
+    priceEur: 20900,
     marketAvg: 22100,
     location: "Barcelona",
     imageClass: "car-golf",
@@ -184,6 +275,7 @@ const vehicleCatalog = {
     kicker: "Renault · Utilitario",
     summary: "2022 · 34.500 km · Gasolina · Cambio manual",
     price: "16.250 €",
+    priceEur: 16250,
     marketAvg: 17400,
     location: "Valencia",
     imageClass: "car-clio",
@@ -199,6 +291,7 @@ const vehicleCatalog = {
     kicker: "Toyota · Compacto híbrido",
     summary: "2021 · 49.600 km · Híbrido · Cambio automático",
     price: "22.900 €",
+    priceEur: 22900,
     marketAvg: 23600,
     location: "Sevilla",
     imageClass: "car-corolla",
@@ -214,6 +307,7 @@ const vehicleCatalog = {
     kicker: "Nissan · SUV",
     summary: "2021 · 55.200 km · Gasolina · Cambio manual",
     price: "23.900 €",
+    priceEur: 23900,
     marketAvg: 24800,
     location: "Bilbao",
     imageClass: "car-qashqai",
@@ -229,6 +323,7 @@ const vehicleCatalog = {
     kicker: "Peugeot · Utilitario",
     summary: "2022 · 31.700 km · Gasolina · Cambio manual",
     price: "17.800 €",
+    priceEur: 17800,
     marketAvg: 18500,
     location: "Zaragoza",
     imageClass: "car-peugeot",
@@ -248,7 +343,9 @@ if (detailRoot) {
   document.querySelector("[data-detail-name]").textContent = vehicle.name;
   document.querySelector("[data-detail-kicker]").textContent = vehicle.kicker;
   document.querySelector("[data-detail-summary]").textContent = vehicle.summary;
-  document.querySelector("[data-detail-price]").textContent = vehicle.price;
+  const detailPrice = document.querySelector("[data-detail-price]");
+  detailPrice.dataset.priceEur = String(vehicle.priceEur);
+  detailPrice.textContent = vehicle.price;
   document.querySelectorAll("[data-detail-photo]").forEach((photo) => photo.classList.add(vehicle.imageClass));
   const specs = document.querySelector("[data-detail-specs]");
   specs.innerHTML = Object.entries(vehicle.specs).map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
@@ -272,14 +369,24 @@ if (detailRoot) {
   }
   const marketLine = document.querySelector("[data-detail-market]");
   if (marketLine) {
-    const priceValue = Number(vehicle.price.replace(/[^\d]/g, ""));
-    const diff = vehicle.marketAvg - priceValue;
+    const diff = vehicle.marketAvg - vehicle.priceEur;
     marketLine.textContent = diff > 0
       ? `${diff.toLocaleString("es-ES")} € por debajo de la media de mercado (${vehicle.marketAvg.toLocaleString("es-ES")} €)`
       : `En línea con la media de mercado (${vehicle.marketAvg.toLocaleString("es-ES")} €)`;
   }
   const locationSpan = document.querySelector("[data-detail-location]");
   if (locationSpan) locationSpan.textContent = vehicle.location;
+  const detailDeal = document.querySelector("[data-detail-deal]");
+  if (detailDeal && vehicle.previousPriceEur) {
+    detailDeal.hidden = false;
+    const previousPrice = detailDeal.querySelector("[data-detail-previous-price]");
+    previousPrice.dataset.priceEur = String(vehicle.previousPriceEur);
+  }
+  const checkoutLink = document.querySelector("[data-checkout-link]");
+  if (checkoutLink) {
+    checkoutLink.href = `checkout.html?id=${id}`;
+    checkoutLink.addEventListener("click", () => savePreference("celeritas-selected-vehicle", id));
+  }
 
   const description = `${vehicle.name}: ${vehicle.summary}. ${vehicle.price}.`;
   document.title = `${vehicle.name} — Celeritas`;
@@ -290,6 +397,76 @@ if (detailRoot) {
   document.querySelector('meta[name="twitter:title"]').content = `${vehicle.name} — Celeritas`;
   document.querySelector('meta[name="twitter:description"]').content = description;
   document.querySelector('meta[name="twitter:image"]').content = new URL(vehicle.image, window.location.href).href;
+}
+
+const checkoutRoot = document.querySelector("[data-checkout-root]");
+if (checkoutRoot) {
+  const requestedId = new URLSearchParams(window.location.search).get("id") || readPreference("celeritas-selected-vehicle");
+  const vehicle = requestedId ? vehicleCatalog[requestedId] : null;
+  const emptyState = checkoutRoot.querySelector("[data-checkout-empty]");
+  const content = checkoutRoot.querySelector("[data-checkout-content]");
+  if (!vehicle) {
+    emptyState.hidden = false;
+  } else {
+    savePreference("celeritas-selected-vehicle", requestedId);
+    const cartLink = document.querySelector("[data-cart-link]");
+    if (cartLink) cartLink.href = `checkout.html?id=${requestedId}`;
+    const cartCount = document.querySelector("[data-cart-count]");
+    if (cartCount) cartCount.hidden = false;
+    content.hidden = false;
+    content.querySelector("[data-checkout-name]").textContent = vehicle.name;
+    content.querySelector("[data-checkout-summary]").textContent = vehicle.summary;
+    const photo = content.querySelector("[data-checkout-photo]");
+    photo.classList.add(vehicle.imageClass);
+    photo.setAttribute("aria-label", `${vehicle.name}, vista frontal`);
+    const detailLink = content.querySelector("[data-checkout-detail]");
+    detailLink.href = `coche.html?id=${requestedId}`;
+    const price = content.querySelector("[data-checkout-price]");
+    const shipping = content.querySelector("[data-checkout-shipping]");
+    const total = content.querySelector("[data-checkout-total]");
+    const note = content.querySelector("[data-checkout-note]");
+    const country = content.querySelector("[data-shipping-country]");
+    const deliveryEstimates = { ES: 350, "ES-ISLANDS": 900, PT: 750, FR: 950, DE: 1250, IT: 1350, EU: 1600 };
+    price.dataset.priceEur = String(vehicle.priceEur);
+
+    function updateCheckoutEstimate() {
+      const delivery = deliveryEstimates[country.value];
+      if (delivery === undefined) {
+        shipping.removeAttribute("data-price-eur");
+        total.removeAttribute("data-price-eur");
+        shipping.textContent = "A confirmar";
+        total.textContent = "Presupuesto personalizado";
+        note.textContent = "Para entregas fuera de la Unión Europea calcularemos transporte, impuestos y documentación de manera personalizada.";
+      } else {
+        shipping.dataset.priceEur = String(delivery);
+        total.dataset.priceEur = String(vehicle.priceEur + delivery);
+        note.textContent = "Estimación no contractual. Confirmaremos el coste exacto según la dirección, el transporte y la documentación necesaria.";
+        updateCurrencyPrices();
+      }
+    }
+
+    country.addEventListener("change", updateCheckoutEstimate);
+    updateCheckoutEstimate();
+  }
+}
+
+function updateCountdowns() {
+  document.querySelectorAll("[data-countdown]").forEach((element) => {
+    const remaining = new Date(element.dataset.dealDeadline).getTime() - Date.now();
+    if (remaining <= 0) {
+      element.textContent = "Oferta finalizada";
+      return;
+    }
+    const days = Math.floor(remaining / 86400000);
+    const hours = Math.floor((remaining % 86400000) / 3600000);
+    const minutes = Math.floor((remaining % 3600000) / 60000);
+    element.textContent = `${days} d · ${hours} h · ${minutes} min`;
+  });
+}
+
+if (document.querySelector("[data-countdown]")) {
+  updateCountdowns();
+  window.setInterval(updateCountdowns, 60000);
 }
 
 document.querySelector(".dialog-close")?.addEventListener("click", () => interestDialog?.close());
@@ -310,4 +487,5 @@ document.querySelectorAll("[data-success-form]").forEach((form) => {
 
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
+updateCurrencyPrices();
 updateWheel();
