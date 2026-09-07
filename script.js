@@ -165,7 +165,7 @@ if (siteHeader) {
 
 let scrollWheel = document.querySelector(".scroll-wheel");
 if (!scrollWheel) {
-  document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon.svg" alt=""/><span>CELERITAS</span></aside>');
+  document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt=""/><span>CELERITAS</span></aside>');
   scrollWheel = document.querySelector(".scroll-wheel");
 }
 if (scrollWheel) {

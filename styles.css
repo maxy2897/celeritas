@@ -37,8 +37,8 @@
 .mobile-filter-toggle{display:none}
 @media(max-width:700px){.mobile-filter-toggle{display:flex;width:100%;min-height:3.4rem;align-items:center;justify-content:space-between;margin-bottom:1rem;padding:0 1rem;color:#fff;background:#071726;border:0;font-size:.62rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.mobile-filter-toggle b{color:var(--green);font-size:1.2rem;font-weight:400}.inventory-catalog .catalog-toolbar{display:none}.inventory-catalog.filters-open .catalog-toolbar{display:grid}.hero-filters{display:none}.hero-filters.filters-open{display:block}.hero-filters .inventory-search{margin-top:0}}
 
-/* Outline every opaque wheel stroke so the rim and spokes stay visible on navy sections. */
-.scroll-wheel img{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;filter:drop-shadow(.75px 0 0 #fff) drop-shadow(-.75px 0 0 #fff) drop-shadow(0 .75px 0 #fff) drop-shadow(0 -.75px 0 #fff) drop-shadow(0 .2rem .35rem #0b20365c)}
+/* The SVG contains a real white under-stroke around every rim and spoke for reliable mobile contrast. */
+.scroll-wheel img{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;filter:drop-shadow(0 .2rem .35rem #0b20365c)}
 
 /* A compact promise bar keeps the main customer assurances visible on every page. */
 .assurance-bar{position:relative;z-index:24;display:grid;min-height:2.3rem;grid-template-columns:repeat(3,max-content);align-items:center;justify-content:end;gap:clamp(1rem,2.5vw,2.5rem);padding:0 clamp(1rem,4vw,4rem);color:var(--navy);background:var(--green);font-size:.55rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
