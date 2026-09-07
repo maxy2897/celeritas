@@ -73,14 +73,25 @@
 .inventory-search input::placeholder{color:#ffffff8a}
 @media(min-width:1001px){.inventory-search{grid-template-columns:minmax(12rem,1.35fr) repeat(4,minmax(8rem,1fr)) auto}.featured-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 
+.vehicle-card-shell{position:relative;min-width:0;height:100%}
+.vehicle-card-shell>.inventory-card{height:100%}
 .inventory-card{position:relative}
 .car-cayenne{background-image:url("assets/vehicle-porsche-cayenne-v1.png")}
 .card-flags{position:absolute;top:.75rem;left:.75rem;z-index:2;display:flex;flex-wrap:wrap;gap:.35rem}
-.condition-pill,.discount-pill{padding:.38rem .55rem;color:#fff;font-size:.5rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 .25rem .8rem #07172626}
-.condition-excellent{color:var(--navy);background:var(--green)}
-.condition-good{background:#37698f}
-.condition-reviewed{color:#2c2414;background:#e7c882}
-.discount-pill{background:#9e312e}
+.condition-pill{--condition-color:var(--green);display:grid;width:4.1rem;height:4.1rem;place-items:end center;padding:2.6rem .22rem .35rem;color:var(--navy);background:#f7f4ec url("assets/celeritas-wheel-icon.svg") no-repeat center .35rem/2.2rem;border:.25rem solid var(--condition-color);border-radius:50%;font-size:.43rem;font-weight:950;line-height:1;letter-spacing:.035em;text-align:center;text-transform:uppercase;box-shadow:0 .25rem .8rem #07172638}
+.condition-excellent{--condition-color:#6fc48d}
+.condition-good{--condition-color:#5d9fca}
+.condition-reviewed{--condition-color:#e0b447}
+.condition-used{--condition-color:#8f82c4}
+.condition-new{--condition-color:#45ad6e}
+.discount-pill{align-self:start;display:grid;width:2.35rem;height:2.35rem;place-items:center;padding:.2rem;color:#fff;background:#9e312e;border:2px solid #fff;border-radius:50%;font-size:.48rem;font-weight:950;letter-spacing:.03em;text-transform:uppercase;box-shadow:0 .25rem .8rem #07172638}
+.card-actions{position:absolute;top:.75rem;right:.75rem;z-index:4;display:grid;gap:.35rem;visibility:hidden;opacity:0}
+.vehicle-card-shell:hover .card-actions,.vehicle-card-shell:focus-within .card-actions{visibility:visible;opacity:1}
+.card-actions button{display:grid;width:2.35rem;height:2.35rem;place-items:center;padding:0;color:var(--navy);background:#fff;border:1px solid #0b203626;border-radius:50%;box-shadow:0 .3rem .9rem #07172638;cursor:pointer}
+.card-actions button:hover,.card-actions button:focus-visible,.card-actions button.is-active{color:var(--navy);background:var(--green);outline:2px solid #fff;outline-offset:1px}
+.card-actions button.is-active svg{fill:currentColor}
+.card-actions svg{width:1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.site-toast{position:fixed;right:1.2rem;bottom:1.2rem;z-index:30;max-width:min(24rem,calc(100vw - 2rem));padding:.9rem 1.1rem;color:#fff;background:var(--navy);border:1px solid #ffffff2b;box-shadow:0 .8rem 2rem #07172645;font-size:.68rem;font-weight:850}
 .price-stack{display:grid;justify-items:end;gap:.1rem}
 .price-stack del{color:#ffffff7d;font-size:.64rem}
 .inventory-card.large .price-stack del{color:var(--muted)}
@@ -105,17 +116,36 @@
 .reviews-grid article p{margin:0;color:var(--muted);font-size:.68rem;line-height:1.6}
 
 .account-dialog>p:not(.eyebrow){max-width:30rem;color:var(--muted);line-height:1.7}
+.account-dialog .account-note{padding-top:1rem;border-top:1px solid #d9d5cc;font-size:.6rem}
+.favorite-vehicle-list{display:grid;gap:.55rem;margin:1.4rem 0}
+.favorite-vehicle-list>a{display:grid;grid-template-columns:6rem 1fr;align-items:center;gap:.9rem;padding:.45rem;color:var(--navy);background:#f0ede6;border:1px solid #d9d5cc}
+.favorite-vehicle-thumb{width:6rem;aspect-ratio:1.5;background-color:#e8e5df;background-repeat:no-repeat;background-size:300% auto}
+.favorite-vehicle-list>a>span:last-child{display:grid;gap:.25rem;min-width:0}
+.favorite-vehicle-list strong{overflow:hidden;font-family:var(--sans);font-size:.7rem;text-overflow:ellipsis;white-space:nowrap}
+.favorite-vehicle-list small{color:#37644a;font-size:.65rem;font-weight:900}
 .account-dialog .button{margin-top:1.5rem}
 
 .checkout-main{padding:4rem clamp(1rem,4vw,4rem) 7rem}
 .checkout-layout{display:grid;grid-template-columns:minmax(22rem,.85fr) minmax(32rem,1.15fr);gap:clamp(2rem,5vw,6rem);align-items:start}
 .checkout-vehicle{position:sticky;top:2rem}
+.cart-vehicle-list{display:grid;gap:.55rem;margin:.8rem 0 2rem}
+.cart-vehicle-item{position:relative;display:grid;grid-template-columns:1fr auto;align-items:stretch;background:#fff;border:1px solid #d9d5cc}
+.cart-vehicle-item.is-selected{border-color:#37644a;box-shadow:inset .25rem 0 #37644a}
+.cart-vehicle-item>a{display:grid;grid-template-columns:6rem 1fr;align-items:center;gap:.9rem;min-width:0;padding:.45rem;color:var(--navy)}
+.cart-vehicle-thumb{width:6rem;aspect-ratio:1.5;background-color:#e8e5df;background-repeat:no-repeat;background-size:300% auto}
+.cart-vehicle-item>a>span:last-child{display:grid;gap:.25rem;min-width:0}
+.cart-vehicle-item strong{overflow:hidden;font-family:var(--sans);font-size:.7rem;text-overflow:ellipsis;white-space:nowrap}
+.cart-vehicle-item small{color:#37644a;font-size:.65rem;font-weight:900}
+.cart-vehicle-item>button{width:2.5rem;padding:0;color:var(--muted);background:transparent;border:0;border-left:1px solid #e3dfd6;font-size:1.2rem;cursor:pointer}
+.cart-vehicle-item>button:hover,.cart-vehicle-item>button:focus-visible{color:#fff;background:#9e312e;outline:0}
+.checkout-selected{padding-top:1.4rem;border-top:1px solid #c7c4bb}
 .checkout-photo{width:100%;aspect-ratio:1.45;background-color:#e8e5df;background-repeat:no-repeat;background-position:0 center;background-size:300% auto}
 .checkout-vehicle h1,.checkout-empty h1{margin:1.5rem 0 .7rem;font-family:var(--serif);font-size:clamp(2.8rem,4.5vw,5rem);font-weight:400;line-height:.95;letter-spacing:-.05em}
 .checkout-vehicle>p:not(.eyebrow),.checkout-empty>p:not(.eyebrow){color:var(--muted);line-height:1.7}
 .checkout-vehicle>a{display:inline-block;margin-top:1rem;font-size:.68rem;font-weight:900}
 .checkout-panel{padding:clamp(2rem,4vw,4rem);background:#fff;box-shadow:0 1.2rem 3rem #0b203614}
 .checkout-panel h2{margin:0;font-family:var(--serif);font-size:clamp(2.5rem,4vw,4.5rem);font-weight:400;line-height:.95}
+.checkout-intro{max-width:42rem;margin:1rem 0 0;color:var(--muted);font-size:.7rem;line-height:1.65}
 .checkout-panel form{display:grid;gap:1.25rem;margin-top:2.5rem}
 .checkout-panel label{display:grid;gap:.5rem}
 .checkout-panel label>span{color:var(--muted);font-size:.55rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
@@ -136,5 +166,5 @@
 @media(min-width:1001px){.site-footer{grid-template-columns:minmax(12rem,1fr) minmax(17rem,1.2fr) auto}}
 
 @media(max-width:1000px){.reviews-section,.checkout-layout{grid-template-columns:1fr}.reviews-grid{grid-template-columns:repeat(3,1fr)}.checkout-vehicle{position:static}.nav-submenu{display:none!important}.site-footer{grid-template-columns:1fr 1fr}.site-footer nav{grid-column:1/-1}}
-@media(max-width:700px){.nav-group{display:contents}.header-tools{position:absolute;top:.65rem;right:0}.currency-control select{width:3.7rem;height:2rem;font-size:.46rem}.header-icon{width:2rem;height:2rem}.reviews-section{gap:2rem;padding:4rem 1rem}.reviews-heading h2{font-size:clamp(2.5rem,11vw,3.6rem)}.reviews-grid{grid-template-columns:1fr}.reviews-grid article{min-height:0}.reviews-grid article>span{margin-bottom:1.5rem}.card-flags{top:.45rem;left:.45rem;gap:.2rem}.condition-pill,.discount-pill{padding:.28rem .36rem;font-size:.4rem}.price-stack{justify-items:start}.deal-countdown{font-size:.46rem!important}.detail-cta-actions{width:100%;justify-content:flex-start}.detail-cta-actions .button{flex:1 1 9rem}.checkout-main{padding:3rem 1rem 4rem}.checkout-layout{gap:2rem}.checkout-panel{padding:1.5rem}.checkout-panel .form-pair{grid-template-columns:1fr}.checkout-vehicle h1,.checkout-empty h1{font-size:clamp(2.7rem,12vw,4rem)}.site-footer{grid-template-columns:1fr}.site-footer nav{grid-column:auto}}
+@media(max-width:700px){.nav-group{display:contents}.header-tools{position:absolute;top:.65rem;right:0}.currency-control select{width:3.7rem;height:2rem;font-size:.46rem}.header-icon{width:2rem;height:2rem}.reviews-section{gap:2rem;padding:4rem 1rem}.reviews-heading h2{font-size:clamp(2.5rem,11vw,3.6rem)}.reviews-grid{grid-template-columns:1fr}.reviews-grid article{min-height:0}.reviews-grid article>span{margin-bottom:1.5rem}.card-flags{top:.42rem;left:.42rem;gap:.15rem}.condition-pill{width:3.2rem;height:3.2rem;padding:2rem .12rem .25rem;background-position:center .24rem;background-size:1.7rem;border-width:.2rem;font-size:.34rem}.discount-pill{width:1.8rem;height:1.8rem;padding:.1rem;font-size:.36rem}.card-actions{top:.42rem;right:.42rem;gap:.2rem;visibility:visible;opacity:1}.card-actions button{width:1.9rem;height:1.9rem}.card-actions svg{width:.82rem}.site-toast{right:.7rem;bottom:.7rem}.price-stack{justify-items:start}.deal-countdown{font-size:.46rem!important}.detail-cta-actions{width:100%;justify-content:flex-start}.detail-cta-actions .button{flex:1 1 9rem}.checkout-main{padding:3rem 1rem 4rem}.checkout-layout{gap:2rem}.checkout-panel{padding:1.5rem}.checkout-panel .form-pair{grid-template-columns:1fr}.checkout-vehicle h1,.checkout-empty h1{font-size:clamp(2.7rem,12vw,4rem)}.cart-vehicle-item>a{grid-template-columns:5rem 1fr}.cart-vehicle-thumb{width:5rem}.site-footer{grid-template-columns:1fr}.site-footer nav{grid-column:auto}}
 @media(max-width:700px){.detail-deal{align-items:flex-start;flex-direction:column;margin-top:0}}

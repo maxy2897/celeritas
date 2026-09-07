@@ -11,6 +11,73 @@ function savePreference(key, value) {
   try { window.localStorage.setItem(key, value); } catch { /* Storage can be unavailable in private browsing. */ }
 }
 
+function removePreference(key) {
+  try { window.localStorage.removeItem(key); } catch { /* Storage can be unavailable in private browsing. */ }
+}
+
+function readListPreference(key) {
+  try {
+    const value = JSON.parse(window.localStorage.getItem(key) || "[]");
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+function uniqueVehicleIds(ids) {
+  return [...new Set(ids.filter((id) => typeof id === "string" && id.trim()))];
+}
+
+function getCartItems() {
+  const items = uniqueVehicleIds(readListPreference("celeritas-cart"));
+  const legacyItem = readPreference("celeritas-selected-vehicle");
+  if (!items.length && legacyItem) {
+    items.push(legacyItem);
+    savePreference("celeritas-cart", JSON.stringify(items));
+  }
+  return items;
+}
+
+function saveCartItems(ids) {
+  const items = uniqueVehicleIds(ids);
+  savePreference("celeritas-cart", JSON.stringify(items));
+  if (items.length) savePreference("celeritas-selected-vehicle", items[0]);
+  else removePreference("celeritas-selected-vehicle");
+  syncCartIndicator(items);
+  return items;
+}
+
+function getFavorites() {
+  return uniqueVehicleIds(readListPreference("celeritas-favorites"));
+}
+
+function saveFavorites(ids) {
+  const items = uniqueVehicleIds(ids);
+  savePreference("celeritas-favorites", JSON.stringify(items));
+  return items;
+}
+
+function syncCartIndicator(items = getCartItems()) {
+  document.querySelectorAll("[data-cart-link]").forEach((link) => { link.href = "checkout.html"; });
+  document.querySelectorAll("[data-cart-count]").forEach((count) => {
+    count.textContent = String(items.length);
+    count.hidden = items.length === 0;
+  });
+}
+
+let toastTimer = null;
+function showToast(message) {
+  let toast = document.querySelector("[data-site-toast]");
+  if (!toast) {
+    document.body.insertAdjacentHTML("beforeend", '<div class="site-toast" data-site-toast role="status" aria-live="polite" hidden></div>');
+    toast = document.querySelector("[data-site-toast]");
+  }
+  window.clearTimeout(toastTimer);
+  toast.textContent = message;
+  toast.hidden = false;
+  toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2400);
+}
+
 const currencyRates = { EUR: 1, USD: 1.16, GBP: 0.87, CHF: 0.94 };
 const savedCurrency = readPreference("celeritas-currency");
 let currentCurrency = savedCurrency && Object.hasOwn(currencyRates, savedCurrency) ? savedCurrency : "EUR";
@@ -51,10 +118,12 @@ if (nav) {
 
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
-  const selectedVehicle = readPreference("celeritas-selected-vehicle");
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Cuenta Celeritas" title="Cuenta Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8c.7-4 3-6 7-6s6.3 2 7 6" /></svg></button><a class="header-icon cart-link" href="${selectedVehicle ? `checkout.html?id=${selectedVehicle}` : "checkout.html"}" data-cart-link aria-label="Compra o reserva" title="Compra o reserva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${selectedVehicle ? "" : "hidden"}>1</b></a></div>`);
-  document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" id="account-dialog"><button class="dialog-close" type="button" data-account-close aria-label="Cerrar">×</button><p class="eyebrow dark">Cuenta Celeritas</p><h2>Estamos preparando tu espacio personal.</h2><p>Próximamente podrás guardar coches, seguir reservas y consultar documentación. Esta función no utiliza inicio de sesión con ChatGPT.</p><a class="button button-dark" href="contacto.html?motivo=cuenta">Quiero que me aviséis</a></dialog>`);
+  const cartItems = getCartItems();
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Cuenta Celeritas" title="Cuenta Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8c.7-4 3-6 7-6s6.3 2 7 6" /></svg></button><a class="header-icon cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
+  document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" id="account-dialog"><button class="dialog-close" type="button" data-account-close aria-label="Cerrar">×</button><p class="eyebrow dark">Favoritos Celeritas</p><h2>Tus coches guardados.</h2><div class="favorite-vehicle-list" data-favorite-list></div><p data-favorite-empty>Marca el corazón de cualquier coche para guardarlo aquí.</p><p class="account-note">Tus favoritos se guardan en este navegador y no necesitas iniciar sesión.</p><a class="button button-dark" href="comprar.html">Ver catálogo</a></dialog>`);
 }
+
+syncCartIndicator();
 
 document.querySelectorAll("[data-currency-select]").forEach((select) => {
   select.value = currentCurrency;
@@ -66,7 +135,10 @@ document.querySelectorAll("[data-currency-select]").forEach((select) => {
 });
 
 const accountDialog = document.querySelector("#account-dialog");
-document.querySelector("[data-account-open]")?.addEventListener("click", () => accountDialog?.showModal());
+document.querySelector("[data-account-open]")?.addEventListener("click", () => {
+  renderFavoritesDialog();
+  accountDialog?.showModal();
+});
 document.querySelector("[data-account-close]")?.addEventListener("click", () => accountDialog?.close());
 
 const siteFooter = document.querySelector(".site-footer");
@@ -91,6 +163,77 @@ menuButton?.addEventListener("click", () => {
 nav?.addEventListener("click", () => {
   document.body.classList.remove("menu-open");
   menuButton?.setAttribute("aria-expanded", "false");
+});
+
+function vehicleIdFromCard(card) {
+  try { return new URL(card.getAttribute("href"), window.location.href).searchParams.get("id"); } catch { return null; }
+}
+
+function enhanceVehicleCards() {
+  const favoriteIds = getFavorites();
+  document.querySelectorAll('a.inventory-card[href*="coche.html?id="]').forEach((card) => {
+    if (card.closest(".vehicle-card-shell")) return;
+    const id = vehicleIdFromCard(card);
+    if (!id) return;
+    const name = card.querySelector(".inventory-card-copy > p")?.textContent.trim() || "este coche";
+    const shell = document.createElement("article");
+    shell.className = "vehicle-card-shell";
+    card.before(shell);
+    shell.append(card);
+    shell.insertAdjacentHTML("beforeend", `<div class="card-actions" aria-label="Acciones para ${name}"><button type="button" data-favorite-vehicle="${id}" aria-label="Guardar ${name} en favoritos" aria-pressed="${favoriteIds.includes(id)}" title="Guardar en favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${name}" aria-label="Compartir ${name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div>`);
+    const favoriteButton = shell.querySelector("[data-favorite-vehicle]");
+    favoriteButton?.classList.toggle("is-active", favoriteIds.includes(id));
+  });
+
+  document.querySelectorAll(".condition-pill").forEach((badge) => {
+    badge.setAttribute("title", `Vehículo de segunda mano · Estado ${badge.textContent.trim().toLowerCase()}`);
+    badge.setAttribute("aria-label", `Vehículo de segunda mano, estado ${badge.textContent.trim()}`);
+  });
+}
+
+enhanceVehicleCards();
+
+document.addEventListener("click", async (event) => {
+  const favoriteButton = event.target.closest("[data-favorite-vehicle]");
+  if (favoriteButton) {
+    const id = favoriteButton.dataset.favoriteVehicle;
+    const favorites = getFavorites();
+    const willSave = !favorites.includes(id);
+    const next = willSave ? [...favorites, id] : favorites.filter((item) => item !== id);
+    saveFavorites(next);
+    document.querySelectorAll(`[data-favorite-vehicle="${id}"]`).forEach((button) => {
+      button.classList.toggle("is-active", willSave);
+      button.setAttribute("aria-pressed", String(willSave));
+    });
+    renderFavoritesDialog();
+    showToast(willSave ? "Guardado en favoritos" : "Eliminado de favoritos");
+    return;
+  }
+
+  const shareButton = event.target.closest("[data-share-vehicle]");
+  if (shareButton) {
+    const id = shareButton.dataset.shareVehicle;
+    const name = shareButton.dataset.shareName;
+    const url = new URL(`coche.html?id=${id}`, window.location.href).href;
+    try {
+      if (navigator.share) await navigator.share({ title: `${name} — Celeritas`, text: `Mira este ${name} en Celeritas.`, url });
+      else {
+        await navigator.clipboard.writeText(url);
+        showToast("Enlace copiado para compartir");
+      }
+    } catch (error) {
+      if (error?.name !== "AbortError") showToast("No se ha podido compartir el enlace");
+    }
+    return;
+  }
+
+  const cartButton = event.target.closest("[data-cart-vehicle]");
+  if (cartButton) {
+    const id = cartButton.dataset.cartVehicle;
+    const items = getCartItems();
+    if (!items.includes(id)) saveCartItems([...items, id]);
+    showToast(items.includes(id) ? "Este coche ya está en tu carrito" : "Coche añadido al carrito");
+  }
 });
 
 const vehicleItems = [...document.querySelectorAll("[data-vehicle]")];
@@ -151,7 +294,9 @@ function updateCatalog() {
       (location === "all" || item.dataset.location === location) &&
       Number(item.dataset.year || 0) >= minYear &&
       Number(item.dataset.price) <= maxPrice;
-    item.hidden = !show;
+    const cardShell = item.closest(".vehicle-card-shell");
+    if (cardShell) cardShell.hidden = !show;
+    else item.hidden = !show;
     if (show) visible += 1;
   });
 
@@ -336,6 +481,19 @@ const vehicleCatalog = {
   }
 };
 
+function renderFavoritesDialog() {
+  const list = document.querySelector("[data-favorite-list]");
+  const empty = document.querySelector("[data-favorite-empty]");
+  if (!list || !empty) return;
+  const favorites = getFavorites().filter((id) => Boolean(vehicleCatalog[id]));
+  empty.hidden = favorites.length > 0;
+  list.innerHTML = favorites.map((id) => {
+    const vehicle = vehicleCatalog[id];
+    return `<a href="coche.html?id=${id}"><span class="favorite-vehicle-thumb ${vehicle.imageClass} view-front" aria-hidden="true"></span><span><strong>${vehicle.name}</strong><small data-price-eur="${vehicle.priceEur}">${vehicle.price}</small></span></a>`;
+  }).join("");
+  updateCurrencyPrices();
+}
+
 const detailRoot = document.querySelector("[data-vehicle-detail]");
 if (detailRoot) {
   const id = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
@@ -385,7 +543,11 @@ if (detailRoot) {
   const checkoutLink = document.querySelector("[data-checkout-link]");
   if (checkoutLink) {
     checkoutLink.href = `checkout.html?id=${id}`;
-    checkoutLink.addEventListener("click", () => savePreference("celeritas-selected-vehicle", id));
+    checkoutLink.addEventListener("click", () => {
+      const items = getCartItems();
+      if (!items.includes(id)) saveCartItems([...items, id]);
+      savePreference("celeritas-selected-vehicle", id);
+    });
   }
 
   const description = `${vehicle.name}: ${vehicle.summary}. ${vehicle.price}.`;
@@ -401,7 +563,10 @@ if (detailRoot) {
 
 const checkoutRoot = document.querySelector("[data-checkout-root]");
 if (checkoutRoot) {
-  const requestedId = new URLSearchParams(window.location.search).get("id") || readPreference("celeritas-selected-vehicle");
+  const queryId = new URLSearchParams(window.location.search).get("id");
+  let cartItems = getCartItems().filter((id) => Boolean(vehicleCatalog[id]));
+  if (queryId && vehicleCatalog[queryId] && !cartItems.includes(queryId)) cartItems = saveCartItems([...cartItems, queryId]);
+  const requestedId = (queryId && vehicleCatalog[queryId] ? queryId : null) || cartItems[0] || null;
   const vehicle = requestedId ? vehicleCatalog[requestedId] : null;
   const emptyState = checkoutRoot.querySelector("[data-checkout-empty]");
   const content = checkoutRoot.querySelector("[data-checkout-content]");
@@ -409,11 +574,22 @@ if (checkoutRoot) {
     emptyState.hidden = false;
   } else {
     savePreference("celeritas-selected-vehicle", requestedId);
-    const cartLink = document.querySelector("[data-cart-link]");
-    if (cartLink) cartLink.href = `checkout.html?id=${requestedId}`;
-    const cartCount = document.querySelector("[data-cart-count]");
-    if (cartCount) cartCount.hidden = false;
+    syncCartIndicator(cartItems);
     content.hidden = false;
+    const cartList = content.querySelector("[data-cart-list]");
+    cartList.innerHTML = cartItems.map((id) => {
+      const item = vehicleCatalog[id];
+      const current = id === requestedId;
+      return `<article class="cart-vehicle-item${current ? " is-selected" : ""}"><a href="checkout.html?id=${id}" aria-current="${current ? "true" : "false"}"><span class="cart-vehicle-thumb ${item.imageClass} view-front" aria-hidden="true"></span><span><strong>${item.name}</strong><small data-price-eur="${item.priceEur}">${item.price}</small></span></a><button type="button" data-cart-remove="${id}" aria-label="Quitar ${item.name} del carrito" title="Quitar del carrito">×</button></article>`;
+    }).join("");
+    cartList.addEventListener("click", (event) => {
+      const removeButton = event.target.closest("[data-cart-remove]");
+      if (!removeButton) return;
+      const nextItems = saveCartItems(cartItems.filter((id) => id !== removeButton.dataset.cartRemove));
+      showToast("Coche eliminado del carrito");
+      const nextId = removeButton.dataset.cartRemove === requestedId ? nextItems[0] : requestedId;
+      window.location.href = nextId ? `checkout.html?id=${nextId}` : "checkout.html";
+    });
     content.querySelector("[data-checkout-name]").textContent = vehicle.name;
     content.querySelector("[data-checkout-summary]").textContent = vehicle.summary;
     const photo = content.querySelector("[data-checkout-photo]");
