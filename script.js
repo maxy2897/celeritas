@@ -35,6 +35,12 @@ const resultCount = document.querySelector("#result-count");
 const catalogEmpty = document.querySelector("#catalog-empty");
 const mobileFilterButton = document.querySelector(".mobile-filter-toggle");
 const inventoryCatalog = document.querySelector(".inventory-catalog");
+const contactReason = document.querySelector("[data-contact-reason]");
+
+if (contactReason) {
+  const requestedReason = new URLSearchParams(window.location.search).get("motivo");
+  if ([...contactReason.options].some((option) => option.value === requestedReason)) contactReason.value = requestedReason;
+}
 
 mobileFilterButton?.addEventListener("click", () => {
   const open = inventoryCatalog?.classList.toggle("filters-open") || false;
