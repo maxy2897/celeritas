@@ -207,7 +207,8 @@
   top:0;
 }
 
-.site-header.is-scrolled{
+.site-header.is-scrolled,
+.site-header:not(.header-over-hero){
   top:0;
   min-height:5.2rem;
   color:#fff;
@@ -221,7 +222,8 @@
   transform:translateX(-50%);
 }
 
-.site-header.is-scrolled::before{
+.site-header.is-scrolled::before,
+.site-header:not(.header-over-hero)::before{
   position:absolute;
   z-index:-1;
   top:0;
@@ -236,8 +238,10 @@
   box-shadow:0 .45rem 1.1rem #03101d38;
 }
 
-.site-header.is-scrolled .brand-logo{filter:invert(1)}
-.site-header.is-scrolled .nav-cta{color:var(--navy)!important;background:#fff}
+.site-header.is-scrolled .brand-logo,
+.site-header:not(.header-over-hero) .brand-logo{filter:invert(1)}
+.site-header.is-scrolled .nav-cta,
+.site-header:not(.header-over-hero) .nav-cta{color:var(--navy)!important;background:#fff}
 
 @media(min-width:701px) and (max-width:1100px){
   .site-header{
@@ -249,8 +253,10 @@
 }
 
 @media(max-width:700px){
-  .site-header.is-scrolled{min-height:6.1rem}
-  .site-header.is-scrolled::before{
+  .site-header.is-scrolled,
+  .site-header:not(.header-over-hero){min-height:6.1rem}
+  .site-header.is-scrolled::before,
+  .site-header:not(.header-over-hero)::before{
     background-image:linear-gradient(90deg,#03101df7 0%,#071a2ee8 55%,#071a2eba 100%),url("assets/celeritas-road-hero-v2.png");
     background-position:center,right 22% center;
   }
