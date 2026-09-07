@@ -88,6 +88,7 @@
 .condition-excellent{--condition-color:#6fc48d}
 .condition-good{--condition-color:#5d9fca}
 .condition-reviewed{--condition-color:#e0b447}
+.condition-fair{--condition-color:#c8433f}
 .condition-used{--condition-color:#8f82c4}
 .condition-new{--condition-color:#45ad6e}
 .discount-pill{align-self:start;display:grid;width:2.35rem;height:2.35rem;place-items:center;padding:.2rem;color:#fff;background:#9e312e;border:2px solid #fff;border-radius:50%;font-size:.48rem;font-weight:950;letter-spacing:.03em;text-transform:uppercase;box-shadow:0 .25rem .8rem #07172638}

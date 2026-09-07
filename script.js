@@ -576,7 +576,7 @@ const favoriteVehicleStatus = {
   "porsche-cayenne": ["Excelente", "condition-excellent"],
   "seat-ibiza": ["Excelente", "condition-excellent"],
   "vw-golf": ["Muy bueno", "condition-good"],
-  "renault-clio": ["Buen estado", "condition-reviewed"],
+  "renault-clio": ["Buen estado", "condition-fair"],
   "toyota-corolla": ["Excelente", "condition-excellent"],
   "nissan-qashqai": ["Revisado", "condition-reviewed"],
   "peugeot-208": ["Muy bueno", "condition-good"],
