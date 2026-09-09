@@ -347,3 +347,44 @@
   .service-option{grid-template-columns:auto minmax(0,1fr);align-items:start}
   .service-option>b{grid-column:2}
 }
+
+/* Correcciones de composición para móviles reales. */
+@media(max-width:700px){
+  html,body{max-width:100%;overflow-x:clip}
+  .site-header{width:calc(100% - .75rem)}
+  .site-header .sr-only{max-width:1px;overflow:hidden!important;clip-path:inset(50%)}
+
+  .featured-grid .inventory-card-copy>.wheel-rating,
+  .inventory-grid .inventory-card-copy>.wheel-rating{
+    width:100%;
+    min-width:0;
+    align-items:center!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    justify-content:flex-start!important;
+    gap:.3rem!important;
+    margin:.7rem 0 .25rem!important;
+  }
+  .wheel-rating-icons{flex:0 0 auto;flex-wrap:nowrap}
+  .rating-wheel{flex:0 0 auto}
+  .wheel-rating-card .rating-wheel{width:.75rem}
+  .wheel-rating-card .card-purchase-stack{flex:0 0 auto;justify-items:end}
+  .wheel-rating-card strong{font-size:.52rem}
+
+  .featured-grid .inventory-card-copy>.card-price-row,
+  .inventory-grid .inventory-card-copy>.card-price-row{
+    width:100%;
+    align-items:flex-end!important;
+    flex-direction:row!important;
+    justify-content:space-between!important;
+    gap:.35rem!important;
+  }
+  .card-price-row>.card-purchase-stack,
+  .card-price-row .price-stack{justify-items:end}
+
+  .floating-vehicle-actions{right:.35rem;gap:.32rem}
+  .floating-action{width:2rem;height:2rem}
+  .floating-action svg{width:.9rem}
+  .scroll-wheel{right:.35rem}
+  .scroll-wheel img{width:2.15rem;height:2.15rem}
+}

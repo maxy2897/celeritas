@@ -253,8 +253,10 @@ function wheelRatingMarkup(rating, label = "Valoración Celeritas", className = 
 
 function addBuyButtonToCard(card, id) {
   if (!card || card.querySelector("[data-card-buy]")) return;
-  const price = card.querySelector(".price-stack") || card.querySelector(".inventory-card-copy > div > strong");
+  const price = card.querySelector(".price-stack") || card.querySelector(".inventory-card-copy > div:not(.wheel-rating) > strong");
   if (!price) return;
+  const priceRow = price.closest(".inventory-card-copy > div");
+  priceRow?.classList.add("card-price-row");
   const purchaseStack = document.createElement("span");
   purchaseStack.className = "card-purchase-stack";
   const buyButton = document.createElement("span");
