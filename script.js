@@ -24,6 +24,20 @@ function readListPreference(key) {
   }
 }
 
+function getAccountProfile() {
+  try {
+    const profile = JSON.parse(readPreference("celeritas-profile") || "{}");
+    return profile && typeof profile === "object" && !Array.isArray(profile) ? profile : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveAccountProfile(profile) {
+  savePreference("celeritas-profile", JSON.stringify(profile));
+  return profile;
+}
+
 function uniqueVehicleIds(ids) {
   return [...new Set(ids.filter((id) => typeof id === "string" && id.trim()))];
 }
@@ -160,22 +174,12 @@ if (nav) {
 
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button></div>`);
+  const accountActive = document.body.dataset.page === "mi-espacio" ? " is-active" : "";
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
 }
 
 const assuranceBar = document.querySelector(".assurance-bar");
 if (assuranceBar) assuranceBar.innerHTML = `<span>✓ Garantía Celeritas</span><a href="checkout.html">Entrega nacional e internacional</a><a href="como-funciona.html">Historial e inspección transparente</a>`;
-
-document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" data-account-dialog><button class="dialog-close" type="button" aria-label="Cerrar">×</button><p class="eyebrow dark">Mi espacio Celeritas</p><h2>Tus coches, siempre a mano.</h2><p>Consulta los vehículos que has guardado y continúa una solicitud cuando quieras.</p><div class="account-shortcuts"><a href="favoritos.html"><strong data-account-favorites>${getFavorites().length}</strong><span>Favoritos</span></a><a href="checkout.html"><strong data-account-cart>${getCartItems().length}</strong><span>En el carrito</span></a></div><p class="account-note">Por ahora estos datos se guardan únicamente en este dispositivo. La cuenta personal se activará cuando incorporemos el sistema seguro de acceso.</p><a class="button button-dark" href="contacto.html?motivo=cuenta">Solicitar una cuenta</a></dialog>`);
-
-const accountDialog = document.querySelector("[data-account-dialog]");
-document.querySelector("[data-account-open]")?.addEventListener("click", () => {
-  const favoriteCount = accountDialog?.querySelector("[data-account-favorites]");
-  const cartCount = accountDialog?.querySelector("[data-account-cart]");
-  if (favoriteCount) favoriteCount.textContent = String(getFavorites().length);
-  if (cartCount) cartCount.textContent = String(getCartItems().length);
-  accountDialog?.showModal();
-});
 
 let scrollWheel = document.querySelector(".scroll-wheel");
 if (!scrollWheel) {
@@ -683,6 +687,115 @@ function renderFavoritesPage() {
 }
 
 renderFavoritesPage();
+
+function accountDisplayName(profile) {
+  return [profile.firstName, profile.lastName].filter(Boolean).join(" ") || "Conductor Celeritas";
+}
+
+function accountCompletion(profile) {
+  const fields = ["firstName", "lastName", "email", "phone", "city", "province"];
+  const completed = fields.filter((field) => String(profile[field] || "").trim()).length;
+  return Math.round((completed / fields.length) * 100);
+}
+
+function updateAccountIdentity(profile) {
+  const fullName = accountDisplayName(profile);
+  const initials = [profile.firstName, profile.lastName]
+    .filter(Boolean)
+    .map((part) => String(part).trim().charAt(0).toUpperCase())
+    .join("")
+    .slice(0, 2) || "C";
+  document.querySelectorAll("[data-account-display-name]").forEach((element) => { element.textContent = fullName; });
+  document.querySelectorAll("[data-account-display-email]").forEach((element) => { element.textContent = profile.email || "Completa tus datos personales"; });
+  document.querySelectorAll("[data-account-initials]").forEach((element) => { element.textContent = initials; });
+  document.querySelectorAll("[data-account-completion]").forEach((element) => { element.textContent = `${accountCompletion(profile)}%`; });
+}
+
+function fillFormFromAccount(profile) {
+  const valuesByAutocomplete = {
+    name: accountDisplayName(profile) === "Conductor Celeritas" ? "" : accountDisplayName(profile),
+    "given-name": profile.firstName || "",
+    "family-name": profile.lastName || "",
+    email: profile.email || "",
+    tel: profile.phone || "",
+    "street-address": profile.address || "",
+    "postal-code": profile.postalCode || "",
+    "address-level2": profile.city || "",
+    "address-level1": profile.province || "",
+  };
+  Object.entries(valuesByAutocomplete).forEach(([autocomplete, value]) => {
+    if (!value) return;
+    document.querySelectorAll(`[autocomplete="${autocomplete}"]`).forEach((input) => {
+      if (!input.value) input.value = value;
+    });
+  });
+}
+
+function renderAccountPage() {
+  const root = document.querySelector("[data-account-page]");
+  if (!root) return;
+  let profile = getAccountProfile();
+  const form = root.querySelector("[data-account-form]");
+  const favorites = getFavorites().filter((id) => Boolean(vehicleCatalog[id]));
+  const cart = getCartItems().filter((id) => Boolean(vehicleCatalog[id]));
+  const selectedIds = uniqueVehicleIds([...favorites, ...cart]);
+  root.querySelector("[data-account-favorites]").textContent = String(favorites.length);
+  root.querySelector("[data-account-cart]").textContent = String(cart.length);
+  root.querySelector("[data-account-currency]").textContent = currentCurrency;
+
+  const vehicleList = root.querySelector("[data-account-vehicle-list]");
+  const vehicleEmpty = root.querySelector("[data-account-vehicle-empty]");
+  vehicleList.hidden = selectedIds.length === 0;
+  vehicleEmpty.hidden = selectedIds.length > 0;
+  vehicleList.innerHTML = selectedIds.map((id) => {
+    const vehicle = vehicleCatalog[id];
+    const states = [];
+    if (favorites.includes(id)) states.push("Favorito");
+    if (cart.includes(id)) states.push("En el carrito");
+    return `<a href="coche.html?id=${id}"><span class="account-vehicle-thumb ${vehicle.imageClass} view-front" aria-hidden="true"></span><span><strong>${vehicle.name}</strong><small>${states.join(" · ")}</small></span><b data-price-eur="${vehicle.priceEur}">${vehicle.price}</b></a>`;
+  }).join("");
+
+  const fields = ["firstName", "lastName", "email", "phone", "address", "postalCode", "city", "province", "preferredContact"];
+  fields.forEach((field) => {
+    const control = form.elements.namedItem(field);
+    if (control) control.value = profile[field] || (field === "preferredContact" ? "whatsapp" : "");
+  });
+  form.elements.namedItem("currency").value = profile.currency || currentCurrency;
+  form.elements.namedItem("newCars").checked = Boolean(profile.newCars);
+  form.elements.namedItem("priceChanges").checked = Boolean(profile.priceChanges);
+  updateAccountIdentity(profile);
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = new FormData(form);
+    profile = saveAccountProfile({
+      firstName: String(data.get("firstName") || "").trim(),
+      lastName: String(data.get("lastName") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      phone: String(data.get("phone") || "").trim(),
+      address: String(data.get("address") || "").trim(),
+      postalCode: String(data.get("postalCode") || "").trim(),
+      city: String(data.get("city") || "").trim(),
+      province: String(data.get("province") || "").trim(),
+      preferredContact: String(data.get("preferredContact") || "whatsapp"),
+      currency: String(data.get("currency") || "EUR"),
+      newCars: form.elements.namedItem("newCars").checked,
+      priceChanges: form.elements.namedItem("priceChanges").checked,
+    });
+    currentCurrency = Object.hasOwn(currencyRates, profile.currency) ? profile.currency : "EUR";
+    savePreference("celeritas-currency", currentCurrency);
+    root.querySelector("[data-account-currency]").textContent = currentCurrency;
+    updateAccountIdentity(profile);
+    updateCurrencyPrices();
+    const status = root.querySelector("[data-account-save-status]");
+    status.textContent = "Perfil guardado correctamente.";
+    showToast("Tu perfil Celeritas se ha guardado");
+  });
+}
+
+renderAccountPage();
+fillFormFromAccount(getAccountProfile());
 
 const detailRoot = document.querySelector("[data-vehicle-detail]");
 if (detailRoot) {

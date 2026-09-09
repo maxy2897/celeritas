@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="description" content="Gestiona tu perfil, tus coches favoritos y tus solicitudes en Mi espacio Celeritas." />
+    <meta name="theme-color" content="#0b2036" />
+    <title>Mi espacio Celeritas — Perfil</title>
+    <link rel="stylesheet" href="styles.css?v=26" />
+    <script src="script.js?v=26" type="module"></script>
+  </head>
+  <body data-page="mi-espacio">
+    <div class="assurance-bar" aria-label="Compromisos Celeritas"><span>✓ Vehículos revisados</span><span>✓ Garantía mínima de 12 meses</span><a href="contacto.html">Atención personalizada →</a></div>
+    <header class="site-header header-light"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.png" alt="Celeritas" /></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a href="comprar.html">Comprar</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a><a class="nav-cta" href="tasacion.html">Tasación gratuita</a></nav></header>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt="" /></aside>
+
+    <main class="account-main" data-account-page>
+      <section class="account-page-hero">
+        <div>
+          <p class="eyebrow">Mi espacio Celeritas</p>
+          <h1>Tu perfil.<br />Tus coches.<br />Tu camino.</h1>
+          <p>Guarda tus datos, recupera tus coches y continúa cualquier gestión desde un solo lugar.</p>
+        </div>
+        <article class="account-identity-card">
+          <div class="account-avatar" data-account-initials>C</div>
+          <span>Perfil Celeritas</span>
+          <strong data-account-display-name>Conductor Celeritas</strong>
+          <small data-account-display-email>Completa tus datos personales</small>
+          <a href="#datos">Editar perfil →</a>
+        </article>
+      </section>
+
+      <section class="account-dashboard">
+        <aside class="account-profile-nav" aria-label="Secciones de Mi espacio Celeritas">
+          <p>Mi cuenta</p>
+          <a href="#resumen">Resumen</a>
+          <a href="#datos">Datos y preferencias</a>
+          <a href="#gestiones">Gestiones</a>
+          <a href="favoritos.html">Favoritos</a>
+          <a href="checkout.html">Carrito</a>
+        </aside>
+
+        <div class="account-dashboard-content">
+          <section class="account-panel" id="resumen">
+            <div class="account-panel-heading">
+              <div><p class="eyebrow dark">Resumen</p><h2>Todo lo tuyo, a mano.</h2></div>
+              <a href="comprar.html">Ver catálogo →</a>
+            </div>
+            <div class="account-stats">
+              <a href="favoritos.html"><strong data-account-favorites>0</strong><span>Coches favoritos</span></a>
+              <a href="checkout.html"><strong data-account-cart>0</strong><span>En el carrito</span></a>
+              <a href="#datos"><strong data-account-completion>0%</strong><span>Perfil completado</span></a>
+              <a href="#datos"><strong data-account-currency>EUR</strong><span>Moneda preferida</span></a>
+            </div>
+            <div class="account-vehicles-heading"><div><p class="eyebrow dark">Tu selección</p><h3>Coches guardados y en proceso</h3></div></div>
+            <div class="account-vehicle-list" data-account-vehicle-list></div>
+            <div class="account-vehicle-empty" data-account-vehicle-empty hidden><p>Aún no tienes coches guardados.</p><a class="button button-dark" href="comprar.html">Explorar coches</a></div>
+          </section>
+
+          <section class="account-panel" id="datos">
+            <div class="account-panel-heading"><div><p class="eyebrow dark">Datos y preferencias</p><h2>Tu información.</h2></div></div>
+            <p class="account-panel-intro">La utilizaremos para completar más rápido tus solicitudes de información, reserva o compra.</p>
+            <form class="account-profile-form" data-account-form>
+              <div class="account-form-grid">
+                <label><span>Nombre</span><input name="firstName" autocomplete="given-name" required /></label>
+                <label><span>Apellidos</span><input name="lastName" autocomplete="family-name" required /></label>
+                <label><span>Correo electrónico</span><input name="email" type="email" autocomplete="email" required /></label>
+                <label><span>Teléfono</span><input name="phone" type="tel" autocomplete="tel" required /></label>
+                <label><span>Dirección</span><input name="address" autocomplete="street-address" /></label>
+                <label><span>Código postal</span><input name="postalCode" autocomplete="postal-code" /></label>
+                <label><span>Ciudad</span><input name="city" autocomplete="address-level2" /></label>
+                <label><span>Provincia</span><input name="province" autocomplete="address-level1" /></label>
+                <label><span>Contacto preferido</span><select name="preferredContact"><option value="whatsapp">WhatsApp</option><option value="phone">Llamada telefónica</option><option value="email">Correo electrónico</option></select></label>
+                <label><span>Moneda preferida</span><select name="currency"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label>
+              </div>
+              <div class="account-preferences">
+                <label><input name="newCars" type="checkbox" /><span>Avisarme cuando haya coches similares a mis favoritos.</span></label>
+                <label><input name="priceChanges" type="checkbox" /><span>Avisarme si cambia el precio de un coche guardado.</span></label>
+              </div>
+              <p class="account-storage-note">Tus datos se guardan en este dispositivo y no se envían hasta que tú presentes un formulario a Celeritas.</p>
+              <div class="account-form-actions"><button class="button button-dark" type="submit">Guardar mi perfil</button><span data-account-save-status role="status" aria-live="polite"></span></div>
+            </form>
+          </section>
+
+          <section class="account-panel" id="gestiones">
+            <div class="account-panel-heading"><div><p class="eyebrow dark">Gestiones</p><h2>Continúa cuando quieras.</h2></div></div>
+            <div class="account-management-grid">
+              <a href="checkout.html"><span>Compra o reserva</span><strong>Retoma los coches de tu carrito</strong><b>Continuar →</b></a>
+              <a href="financiacion.html"><span>Financiación</span><strong>Consulta las opciones disponibles</strong><b>Ver opciones →</b></a>
+              <a href="tasacion.html"><span>Vender mi coche</span><strong>Solicita una tasación gratuita</strong><b>Empezar →</b></a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.png" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
+  </body>
+</html>
