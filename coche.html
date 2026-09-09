@@ -14,8 +14,8 @@
     <meta name="twitter:description" content="Consulta fotografías, características y disponibilidad." />
     <meta name="twitter:image" content="" />
     <title>Vehículo de ocasión — Celeritas</title>
-    <link rel="stylesheet" href="styles.css?v=23" />
-    <script src="script.js?v=23" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=24" />
+    <script src="script.js?v=24" type="module"></script>
   </head>
   <body data-page="coche">
     <div class="assurance-bar" aria-label="Compromisos Celeritas"><span>✓ Vehículos revisados</span><span>✓ Garantía mínima de 12 meses</span><a href="contacto.html">Atención personalizada →</a></div>
@@ -26,13 +26,22 @@
       <a class="back-link" href="comprar.html">← Volver al catálogo</a>
       <section class="detail-heading">
         <div><p class="eyebrow dark" data-detail-kicker>Vehículo de ocasión</p><h1 data-detail-name>Cargando vehículo…</h1><p data-detail-summary></p></div>
-        <div class="detail-price"><span>Precio final</span><strong data-detail-price>—</strong><small>Sin costes ocultos · transferencia y garantía incluidas</small></div>
+        <div class="detail-price"><span>Precio del vehículo</span><strong data-detail-price>—</strong><small>Garantía incluida · servicios opcionales a tu medida</small></div>
       </section>
       <div class="detail-deal" data-detail-deal hidden><span>Oferta temporal · antes <del data-detail-previous-price>—</del></span><strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></div>
       <section class="vehicle-gallery" aria-label="Fotografías del vehículo">
         <div class="detail-photo view-front" data-detail-photo role="img" aria-label="Vista frontal"></div>
         <div class="detail-photo view-side" data-detail-photo role="img" aria-label="Vista lateral"></div>
         <div class="detail-photo view-rear" data-detail-photo role="img" aria-label="Vista trasera"></div>
+      </section>
+      <section class="vehicle-assessment" aria-labelledby="assessment-title">
+        <div class="assessment-heading">
+          <p class="eyebrow dark">Valoración Celeritas</p>
+          <h2 id="assessment-title">El estado, rueda a rueda.</h2>
+          <p>Cada área se puntúa sobre cinco ruedas para que puedas comparar vehículos de forma rápida y entender su precio.</p>
+          <small>Informe de muestra. Cada unidad publicada llevará los resultados firmados de su inspección real.</small>
+        </div>
+        <div class="rating-breakdown" data-detail-ratings></div>
       </section>
       <section class="detail-content">
         <div class="specification-panel"><p class="eyebrow dark">Características</p><h2>Todo lo importante, a la vista.</h2><dl data-detail-specs></dl></div>
@@ -52,6 +61,33 @@
           <p class="market-line" data-detail-market></p>
           <p class="location-line">📍 Vehículo disponible en <span data-detail-location></span> · matrícula completa visible en la visita</p>
         </div>
+      </section>
+      <section class="vehicle-report" aria-label="Historial y prueba del vehículo">
+        <article class="history-panel">
+          <p class="eyebrow dark">Historial comprobado</p>
+          <h2>Sabes de dónde viene.</h2>
+          <dl data-detail-history></dl>
+        </article>
+        <article class="road-test-panel">
+          <p class="eyebrow">Prueba dinámica</p>
+          <h2>También lo probamos en carretera.</h2>
+          <ul data-detail-road-test></ul>
+        </article>
+      </section>
+      <section class="vehicle-configurator" aria-labelledby="configurator-title">
+        <div class="configurator-copy">
+          <p class="eyebrow dark">Prepáralo a tu medida</p>
+          <h2 id="configurator-title">Elige qué quieres que resolvamos.</h2>
+          <p>Añade gestiones o mejoras antes de solicitar información, reservar o comprar. El transporte se calcula según el destino en el paso siguiente.</p>
+          <div class="service-options" data-detail-services></div>
+        </div>
+        <aside class="configurator-summary" aria-live="polite">
+          <p><span>Vehículo</span><strong data-config-base>—</strong></p>
+          <p><span>Servicios seleccionados</span><strong data-config-extras>0 €</strong></p>
+          <p class="configurator-total"><span>Total orientativo</span><strong data-config-total>—</strong></p>
+          <a class="button button-dark" href="checkout.html" data-config-checkout>Continuar con esta configuración</a>
+          <small>No se realiza ningún cargo. Confirmaremos disponibilidad, trabajos y precio final contigo.</small>
+        </aside>
       </section>
       <section class="detail-cta">
         <div><p class="eyebrow">¿Quieres verlo?</p><h2>Pide una prueba sin compromiso.</h2></div>

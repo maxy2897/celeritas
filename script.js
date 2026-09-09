@@ -160,15 +160,30 @@ if (nav) {
 
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label></div>`);
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><button class="header-icon" type="button" data-account-open aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button></div>`);
 }
+
+const assuranceBar = document.querySelector(".assurance-bar");
+if (assuranceBar) assuranceBar.innerHTML = `<span>✓ Garantía Celeritas</span><a href="checkout.html">Entrega nacional e internacional</a><a href="como-funciona.html">Historial e inspección transparente</a>`;
+
+document.body.insertAdjacentHTML("beforeend", `<dialog class="interest-dialog account-dialog" data-account-dialog><button class="dialog-close" type="button" aria-label="Cerrar">×</button><p class="eyebrow dark">Mi espacio Celeritas</p><h2>Tus coches, siempre a mano.</h2><p>Consulta los vehículos que has guardado y continúa una solicitud cuando quieras.</p><div class="account-shortcuts"><a href="favoritos.html"><strong data-account-favorites>${getFavorites().length}</strong><span>Favoritos</span></a><a href="checkout.html"><strong data-account-cart>${getCartItems().length}</strong><span>En el carrito</span></a></div><p class="account-note">Por ahora estos datos se guardan únicamente en este dispositivo. La cuenta personal se activará cuando incorporemos el sistema seguro de acceso.</p><a class="button button-dark" href="contacto.html?motivo=cuenta">Solicitar una cuenta</a></dialog>`);
+
+const accountDialog = document.querySelector("[data-account-dialog]");
+document.querySelector("[data-account-open]")?.addEventListener("click", () => {
+  const favoriteCount = accountDialog?.querySelector("[data-account-favorites]");
+  const cartCount = accountDialog?.querySelector("[data-account-cart]");
+  if (favoriteCount) favoriteCount.textContent = String(getFavorites().length);
+  if (cartCount) cartCount.textContent = String(getCartItems().length);
+  accountDialog?.showModal();
+});
 
 let scrollWheel = document.querySelector(".scroll-wheel");
 if (!scrollWheel) {
-  document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt=""/><span>CELERITAS</span></aside>');
+  document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt=""/></aside>');
   scrollWheel = document.querySelector(".scroll-wheel");
 }
 if (scrollWheel) {
+  scrollWheel.querySelector("span")?.remove();
   const cartItems = getCartItems();
   const favoriteItems = getFavorites();
   scrollWheel.insertAdjacentHTML("beforebegin", `<div class="floating-vehicle-actions" aria-label="Favoritos y carrito"><a class="floating-action" href="favoritos.html" data-favorites-link aria-label="Ver favoritos" title="Ver favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg><b data-favorite-count ${favoriteItems.length ? "" : "hidden"}>${favoriteItems.length}</b></a><a class="floating-action cart-link" href="checkout.html" data-cart-link aria-label="Ver carrito" title="Ver carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg><b data-cart-count ${cartItems.length ? "" : "hidden"}>${cartItems.length}</b></a></div>`);
@@ -215,15 +230,35 @@ function vehicleIdFromCard(card) {
   try { return new URL(card.getAttribute("href"), window.location.href).searchParams.get("id"); } catch { return null; }
 }
 
+const vehicleRatingById = {
+  "porsche-cayenne": 4.5,
+  "seat-ibiza": 4.5,
+  "vw-golf": 4,
+  "renault-clio": 3.5,
+  "toyota-corolla": 4.5,
+  "nissan-qashqai": 3.5,
+  "peugeot-208": 4,
+};
+
+function wheelRatingMarkup(rating, label = "Valoración Celeritas", className = "") {
+  const normalizedRating = Math.max(0, Math.min(5, Math.round(Number(rating) * 2) / 2));
+  const wheels = Array.from({ length: 5 }, (_, index) => {
+    const threshold = index + 1;
+    const state = normalizedRating >= threshold ? "full" : normalizedRating >= threshold - .5 ? "half" : "empty";
+    return `<span class="rating-wheel is-${state}" aria-hidden="true"></span>`;
+  }).join("");
+  const displayRating = Number.isInteger(normalizedRating) ? String(normalizedRating) : normalizedRating.toFixed(1).replace(".", ",");
+  return `<div class="wheel-rating ${className}" role="img" aria-label="${label}: ${displayRating} de 5 ruedas"><span class="wheel-rating-icons">${wheels}</span><strong>${displayRating}/5</strong></div>`;
+}
+
 function addBuyButtonToCard(card, id) {
   if (!card || card.querySelector("[data-card-buy]")) return;
   const price = card.querySelector(".price-stack") || card.querySelector(".inventory-card-copy > div > strong");
   if (!price) return;
-  const conditionClass = [...(card.querySelector(".condition-pill")?.classList || [])].find((className) => className.startsWith("condition-") && className !== "condition-pill") || "condition-reviewed";
   const purchaseStack = document.createElement("span");
   purchaseStack.className = "card-purchase-stack";
   const buyButton = document.createElement("span");
-  buyButton.className = `card-buy-button ${conditionClass}`;
+  buyButton.className = "card-buy-button";
   buyButton.dataset.cardBuy = id;
   buyButton.setAttribute("role", "button");
   buyButton.setAttribute("tabindex", "0");
@@ -240,6 +275,14 @@ function enhanceVehicleCards() {
     const id = vehicleIdFromCard(card);
     if (!id) return;
     const name = card.querySelector(".inventory-card-copy > p")?.textContent.trim() || "este coche";
+    const rating = vehicleRatingById[id] || 4;
+    const cardCopy = card.querySelector(".inventory-card-copy");
+    const priceRow = cardCopy?.querySelector(":scope > div");
+    if (priceRow && !cardCopy.querySelector(".wheel-rating")) priceRow.insertAdjacentHTML("beforebegin", wheelRatingMarkup(rating, `Valoración de ${name}`, "wheel-rating-card"));
+    card.querySelector(".condition-pill")?.remove();
+    card.querySelector(".discount-pill")?.remove();
+    const flagGroup = card.querySelector(".card-flags");
+    if (flagGroup && !flagGroup.children.length) flagGroup.remove();
     const shell = document.createElement("article");
     shell.className = "vehicle-card-shell";
     card.before(shell);
@@ -250,10 +293,7 @@ function enhanceVehicleCards() {
     favoriteButton?.classList.toggle("is-active", favoriteIds.includes(id));
   });
 
-  document.querySelectorAll(".condition-pill").forEach((badge) => {
-    badge.setAttribute("title", `Vehículo de segunda mano · Estado ${badge.textContent.trim().toLowerCase()}`);
-    badge.setAttribute("aria-label", `Vehículo de segunda mano, estado ${badge.textContent.trim()}`);
-  });
+  document.querySelectorAll(".condition-pill, .discount-pill").forEach((badge) => badge.remove());
 }
 
 enhanceVehicleCards();
@@ -573,14 +613,54 @@ const vehicleCatalog = {
   }
 };
 
-const favoriteVehicleStatus = {
-  "porsche-cayenne": ["Excelente", "condition-excellent"],
-  "seat-ibiza": ["Excelente", "condition-excellent"],
-  "vw-golf": ["Muy bueno", "condition-good"],
-  "renault-clio": ["Buen estado", "condition-fair"],
-  "toyota-corolla": ["Excelente", "condition-excellent"],
-  "nissan-qashqai": ["Revisado", "condition-reviewed"],
-  "peugeot-208": ["Muy bueno", "condition-good"],
+const standardServices = [
+  { id: "transfer", label: "Gestión del cambio de titularidad", description: "Preparamos y presentamos toda la documentación a tu nombre.", price: 390 },
+  { id: "maintenance", label: "Mantenimiento preentrega ampliado", description: "Aceite, filtros, niveles y comprobación final antes de la entrega.", price: 260 },
+];
+
+const vehicleReports = {
+  "porsche-cayenne": {
+    ratings: { General: 4.5, Mecánica: 5, Carrocería: 4, Interior: 4.5, Neumáticos: 4 },
+    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Historial digital disponible", "Daños estructurales": "No declarados" },
+    roadTest: ["Arranque en frío y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Dirección, frenada y suspensión: sin ruidos anómalos", "Climatización y sistemas eléctricos: funcionamiento comprobado"],
+    services: [{ id: "wheel-repair", label: "Reparación estética de llanta trasera", description: "Corrección de la marca de uso declarada en el informe.", price: 160 }, ...standardServices],
+  },
+  "seat-ibiza": {
+    ratings: { General: 4.5, Mecánica: 4.5, Carrocería: 4.5, Interior: 4.5, Neumáticos: 4 },
+    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Libro de mantenimiento disponible", "Daños estructurales": "No declarados" },
+    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Cambio, dirección y frenada: respuesta normal", "Climatización y sistemas multimedia: comprobados"],
+    services: [{ id: "detailing", label: "Preparación estética premium", description: "Limpieza técnica interior y protección exterior.", price: 140 }, ...standardServices],
+  },
+  "vw-golf": {
+    ratings: { General: 4, Mecánica: 4.5, Carrocería: 4, Interior: 4, Neumáticos: 4 },
+    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Facturas principales disponibles", "Daños estructurales": "No declarados" },
+    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Cambio manual y embrague: funcionamiento normal", "Sin ruidos anómalos en suspensión o dirección"],
+    services: [{ id: "bumper-repair", label: "Reparar arañazo del paragolpes", description: "Corrección y acabado del defecto estético declarado.", price: 240 }, ...standardServices],
+  },
+  "renault-clio": {
+    ratings: { General: 3.5, Mecánica: 4, Carrocería: 4, Interior: 3.5, Neumáticos: 3 },
+    history: { "Titulares anteriores": "2", Llaves: "2", Mantenimiento: "Documentación parcial disponible", "Daños estructurales": "No declarados" },
+    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y carretera: sin avisos de motor", "Dirección y frenada: funcionamiento normal", "Climatización comprobada; neumáticos con desgaste medio"],
+    services: [{ id: "tyres", label: "Juego de neumáticos nuevos", description: "Sustitución de los cuatro neumáticos antes de la entrega.", price: 520 }, { id: "upholstery", label: "Reparación de tapicería", description: "Corrección del desgaste del asiento del conductor.", price: 180 }, ...standardServices],
+  },
+  "toyota-corolla": {
+    ratings: { General: 4.5, Mecánica: 5, Carrocería: 4.5, Interior: 4.5, Neumáticos: 4.5 },
+    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Historial Toyota disponible", "Daños estructurales": "No declarados" },
+    roadTest: ["Sistema híbrido y arranque: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Transición eléctrica y térmica: funcionamiento normal", "Frenada, dirección y climatización: comprobadas"],
+    services: [{ id: "hybrid-check", label: "Informe ampliado del sistema híbrido", description: "Diagnóstico adicional y certificado del estado de la batería.", price: 120 }, ...standardServices],
+  },
+  "nissan-qashqai": {
+    ratings: { General: 3.5, Mecánica: 4, Carrocería: 3.5, Interior: 4, Neumáticos: 3.5 },
+    history: { "Titulares anteriores": "2", Llaves: "2", Mantenimiento: "Historial disponible para revisión", "Daños estructurales": "No declarados; puerta trasera repintada" },
+    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Dirección, embrague y frenada: funcionamiento normal", "Cámaras, sensores y climatización: comprobados"],
+    services: [{ id: "paint-report", label: "Informe ampliado de pintura", description: "Medición y documentación fotográfica de la reparación declarada.", price: 90 }, ...standardServices],
+  },
+  "peugeot-208": {
+    ratings: { General: 4, Mecánica: 4.5, Carrocería: 4, Interior: 4, Neumáticos: 4 },
+    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Libro de mantenimiento disponible", "Daños estructurales": "No declarados" },
+    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y carretera: sin avisos", "Cambio manual, frenada y dirección: funcionamiento normal", "Climatización, pantalla y ayudas: comprobadas"],
+    services: [{ id: "detailing", label: "Preparación estética premium", description: "Limpieza técnica interior y protección exterior.", price: 140 }, ...standardServices],
+  },
 };
 
 function renderFavoritesPage() {
@@ -593,8 +673,8 @@ function renderFavoritesPage() {
   grid.hidden = favorites.length === 0;
   grid.innerHTML = favorites.map((id) => {
     const vehicle = vehicleCatalog[id];
-    const [condition, conditionClass] = favoriteVehicleStatus[id] || ["Revisado", "condition-reviewed"];
-    return `<article class="vehicle-card-shell"><a class="inventory-card large" href="coche.html?id=${id}"><div class="card-flags"><span class="condition-pill ${conditionClass}" title="Vehículo de segunda mano · Estado ${condition.toLowerCase()}">${condition}</span></div><div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${vehicle.name}, vista frontal"></div><div class="inventory-card-copy"><p>${vehicle.name}</p><span>${vehicle.summary}</span><div><small>Ver ficha completa</small><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></div></div></a><div class="card-actions" aria-label="Acciones para ${vehicle.name}"><button class="is-active" type="button" data-favorite-vehicle="${id}" aria-label="Eliminar ${vehicle.name} de favoritos" aria-pressed="true" title="Eliminar de favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${vehicle.name}" aria-label="Compartir ${vehicle.name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${vehicle.name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div></article>`;
+    const rating = vehicleRatingById[id] || 4;
+    return `<article class="vehicle-card-shell"><a class="inventory-card large" href="coche.html?id=${id}"><div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${vehicle.name}, vista frontal"></div><div class="inventory-card-copy"><p>${vehicle.name}</p><span>${vehicle.summary}</span>${wheelRatingMarkup(rating, `Valoración de ${vehicle.name}`, "wheel-rating-card")}<div><small>Ver ficha completa</small><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></div></div></a><div class="card-actions" aria-label="Acciones para ${vehicle.name}"><button class="is-active" type="button" data-favorite-vehicle="${id}" aria-label="Eliminar ${vehicle.name} de favoritos" aria-pressed="true" title="Eliminar de favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${vehicle.name}" aria-label="Compartir ${vehicle.name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${vehicle.name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div></article>`;
   }).join("");
   grid.querySelectorAll("a.inventory-card").forEach((card) => addBuyButtonToCard(card, vehicleIdFromCard(card)));
   updateCurrencyPrices();
@@ -604,8 +684,10 @@ renderFavoritesPage();
 
 const detailRoot = document.querySelector("[data-vehicle-detail]");
 if (detailRoot) {
-  const id = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
-  const vehicle = vehicleCatalog[id] || vehicleCatalog["seat-ibiza"];
+  const requestedId = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
+  const id = Object.hasOwn(vehicleCatalog, requestedId) ? requestedId : "seat-ibiza";
+  const vehicle = vehicleCatalog[id];
+  const report = vehicleReports[id];
   document.querySelector("[data-detail-name]").textContent = vehicle.name;
   document.querySelector("[data-detail-kicker]").textContent = vehicle.kicker;
   document.querySelector("[data-detail-summary]").textContent = vehicle.summary;
@@ -613,6 +695,8 @@ if (detailRoot) {
   detailPrice.dataset.priceEur = String(vehicle.priceEur);
   detailPrice.textContent = vehicle.price;
   document.querySelectorAll("[data-detail-photo]").forEach((photo) => photo.classList.add(vehicle.imageClass));
+  const ratings = document.querySelector("[data-detail-ratings]");
+  if (ratings) ratings.innerHTML = Object.entries(report.ratings).map(([label, rating]) => `<article><span>${label}</span>${wheelRatingMarkup(rating, `${label} de ${vehicle.name}`, "wheel-rating-detail")}</article>`).join("");
   const specs = document.querySelector("[data-detail-specs]");
   specs.innerHTML = Object.entries(vehicle.specs).map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
   const features = document.querySelector("[data-detail-features]");
@@ -642,6 +726,10 @@ if (detailRoot) {
   }
   const locationSpan = document.querySelector("[data-detail-location]");
   if (locationSpan) locationSpan.textContent = vehicle.location;
+  const history = document.querySelector("[data-detail-history]");
+  if (history) history.innerHTML = Object.entries(report.history).map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+  const roadTest = document.querySelector("[data-detail-road-test]");
+  if (roadTest) roadTest.innerHTML = report.roadTest.map((item) => `<li>${item}</li>`).join("");
   const detailDeal = document.querySelector("[data-detail-deal]");
   if (detailDeal && vehicle.previousPriceEur) {
     detailDeal.hidden = false;
@@ -649,14 +737,48 @@ if (detailRoot) {
     previousPrice.dataset.priceEur = String(vehicle.previousPriceEur);
   }
   const checkoutLink = document.querySelector("[data-checkout-link]");
+  const configCheckoutLink = document.querySelector("[data-config-checkout]");
+  const servicesRoot = document.querySelector("[data-detail-services]");
+  const serviceIdsFromUrl = (new URLSearchParams(window.location.search).get("services") || "").split(",").filter(Boolean);
+  const storedServiceIds = readListPreference(`celeritas-services-${id}`);
+  const initialServiceIds = serviceIdsFromUrl.length ? serviceIdsFromUrl : storedServiceIds;
+  const validServices = new Map(report.services.map((service) => [service.id, service]));
+  if (servicesRoot) {
+    servicesRoot.innerHTML = report.services.map((service) => `<label class="service-option"><input type="checkbox" value="${service.id}" ${initialServiceIds.includes(service.id) ? "checked" : ""}/><span><strong>${service.label}</strong><small>${service.description}</small></span><b data-price-eur="${service.price}">${formatMoney(service.price)}</b></label>`).join("");
+  }
+
+  function updateVehicleConfiguration() {
+    const selectedServiceIds = [...(servicesRoot?.querySelectorAll('input[type="checkbox"]:checked') || [])].map((input) => input.value).filter((serviceId) => validServices.has(serviceId));
+    const extrasTotal = selectedServiceIds.reduce((total, serviceId) => total + validServices.get(serviceId).price, 0);
+    const basePrice = document.querySelector("[data-config-base]");
+    const extrasPrice = document.querySelector("[data-config-extras]");
+    const totalPrice = document.querySelector("[data-config-total]");
+    if (basePrice) basePrice.dataset.priceEur = String(vehicle.priceEur);
+    if (extrasPrice) extrasPrice.dataset.priceEur = String(extrasTotal);
+    if (totalPrice) totalPrice.dataset.priceEur = String(vehicle.priceEur + extrasTotal);
+    savePreference(`celeritas-services-${id}`, JSON.stringify(selectedServiceIds));
+    const checkoutParams = new URLSearchParams({ id });
+    if (selectedServiceIds.length) checkoutParams.set("services", selectedServiceIds.join(","));
+    const checkoutHref = `checkout.html?${checkoutParams.toString()}`;
+    if (checkoutLink) checkoutLink.href = checkoutHref;
+    if (configCheckoutLink) configCheckoutLink.href = checkoutHref;
+    updateCurrencyPrices();
+  }
+
+  servicesRoot?.addEventListener("change", updateVehicleConfiguration);
+  updateVehicleConfiguration();
   if (checkoutLink) {
-    checkoutLink.href = `checkout.html?id=${id}`;
     checkoutLink.addEventListener("click", () => {
       const items = getCartItems();
       if (!items.includes(id)) saveCartItems([...items, id]);
       savePreference("celeritas-selected-vehicle", id);
     });
   }
+  configCheckoutLink?.addEventListener("click", () => {
+    const items = getCartItems();
+    if (!items.includes(id)) saveCartItems([...items, id]);
+    savePreference("celeritas-selected-vehicle", id);
+  });
 
   const description = `${vehicle.name}: ${vehicle.summary}. ${vehicle.price}.`;
   document.title = `${vehicle.name} — Celeritas`;
@@ -671,7 +793,8 @@ if (detailRoot) {
 
 const checkoutRoot = document.querySelector("[data-checkout-root]");
 if (checkoutRoot) {
-  const queryId = new URLSearchParams(window.location.search).get("id");
+  const checkoutParams = new URLSearchParams(window.location.search);
+  const queryId = checkoutParams.get("id");
   let cartItems = getCartItems().filter((id) => Boolean(vehicleCatalog[id]));
   if (queryId && vehicleCatalog[queryId] && !cartItems.includes(queryId)) cartItems = saveCartItems([...cartItems, queryId]);
   const requestedId = (queryId && vehicleCatalog[queryId] ? queryId : null) || cartItems[0] || null;
@@ -688,7 +811,10 @@ if (checkoutRoot) {
     cartList.innerHTML = cartItems.map((id) => {
       const item = vehicleCatalog[id];
       const current = id === requestedId;
-      return `<article class="cart-vehicle-item${current ? " is-selected" : ""}"><a href="checkout.html?id=${id}" aria-current="${current ? "true" : "false"}"><span class="cart-vehicle-thumb ${item.imageClass} view-front" aria-hidden="true"></span><span><strong>${item.name}</strong><small data-price-eur="${item.priceEur}">${item.price}</small></span></a><button type="button" data-cart-remove="${id}" aria-label="Quitar ${item.name} del carrito" title="Quitar del carrito">×</button></article>`;
+      const savedServices = readListPreference(`celeritas-services-${id}`).filter((serviceId) => vehicleReports[id].services.some((service) => service.id === serviceId));
+      const itemParams = new URLSearchParams({ id });
+      if (savedServices.length) itemParams.set("services", savedServices.join(","));
+      return `<article class="cart-vehicle-item${current ? " is-selected" : ""}"><a href="checkout.html?${itemParams.toString()}" aria-current="${current ? "true" : "false"}"><span class="cart-vehicle-thumb ${item.imageClass} view-front" aria-hidden="true"></span><span><strong>${item.name}</strong><small data-price-eur="${item.priceEur}">${item.price}</small></span></a><button type="button" data-cart-remove="${id}" aria-label="Quitar ${item.name} del carrito" title="Quitar del carrito">×</button></article>`;
     }).join("");
     cartList.addEventListener("click", (event) => {
       const removeButton = event.target.closest("[data-cart-remove]");
@@ -704,14 +830,28 @@ if (checkoutRoot) {
     photo.classList.add(vehicle.imageClass);
     photo.setAttribute("aria-label", `${vehicle.name}, vista frontal`);
     const detailLink = content.querySelector("[data-checkout-detail]");
-    detailLink.href = `coche.html?id=${requestedId}`;
+    const report = vehicleReports[requestedId];
+    const requestedServiceIds = (checkoutParams.get("services") || "").split(",").filter(Boolean);
+    const storedServiceIds = readListPreference(`celeritas-services-${requestedId}`);
+    const selectedServiceIds = (requestedServiceIds.length ? requestedServiceIds : storedServiceIds).filter((serviceId) => report.services.some((service) => service.id === serviceId));
+    const selectedServices = report.services.filter((service) => selectedServiceIds.includes(service.id));
+    const servicesTotal = selectedServices.reduce((sum, service) => sum + service.price, 0);
+    savePreference(`celeritas-services-${requestedId}`, JSON.stringify(selectedServiceIds));
+    const detailParams = new URLSearchParams({ id: requestedId });
+    if (selectedServiceIds.length) detailParams.set("services", selectedServiceIds.join(","));
+    detailLink.href = `coche.html?${detailParams.toString()}`;
     const price = content.querySelector("[data-checkout-price]");
     const shipping = content.querySelector("[data-checkout-shipping]");
     const total = content.querySelector("[data-checkout-total]");
     const note = content.querySelector("[data-checkout-note]");
+    const extras = content.querySelector("[data-checkout-extras]");
     const country = content.querySelector("[data-shipping-country]");
     const deliveryEstimates = { ES: 350, "ES-ISLANDS": 900, PT: 750, FR: 950, DE: 1250, IT: 1350, EU: 1600 };
     price.dataset.priceEur = String(vehicle.priceEur);
+    if (extras && selectedServices.length) {
+      extras.hidden = false;
+      extras.innerHTML = selectedServices.map((service) => `<p><span>${service.label}</span><strong data-price-eur="${service.price}">${formatMoney(service.price)}</strong></p>`).join("");
+    }
 
     function updateCheckoutEstimate() {
       const delivery = deliveryEstimates[country.value];
@@ -723,7 +863,7 @@ if (checkoutRoot) {
         note.textContent = "Para entregas fuera de la Unión Europea calcularemos transporte, impuestos y documentación de manera personalizada.";
       } else {
         shipping.dataset.priceEur = String(delivery);
-        total.dataset.priceEur = String(vehicle.priceEur + delivery);
+        total.dataset.priceEur = String(vehicle.priceEur + servicesTotal + delivery);
         note.textContent = "Estimación no contractual. Confirmaremos el coste exacto según la dirección, el transporte y la documentación necesaria.";
         updateCurrencyPrices();
       }
@@ -753,7 +893,7 @@ if (document.querySelector("[data-countdown]")) {
   window.setInterval(updateCountdowns, 60000);
 }
 
-document.querySelector(".dialog-close")?.addEventListener("click", () => interestDialog?.close());
+document.querySelectorAll(".dialog-close").forEach((button) => button.addEventListener("click", () => button.closest("dialog")?.close()));
 interestDialog?.addEventListener("click", (event) => {
   const box = interestDialog.getBoundingClientRect();
   if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) interestDialog.close();
