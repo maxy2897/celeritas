@@ -485,7 +485,12 @@
 }
 
 /* Search and configuration are the two direct starting points on the home page. */
-.decision-tools{display:grid;width:var(--page);grid-template-columns:1fr 1fr;padding:4.5rem 0;margin:auto}
+.hero-search-tabs{position:relative;z-index:6;display:flex;width:var(--page);margin:-5.85rem auto 0;color:#fff;background:#071726}
+.hero-search-tabs span,.hero-search-tabs a{display:flex;min-height:2.15rem;align-items:center;padding:.45rem 1.35rem;font-size:.68rem;font-weight:900}
+.hero-search-tabs span{color:var(--navy);background:var(--green)}
+.hero-search-tabs a{border-left:1px solid #ffffff20}
+.hero-search-tabs+.inventory-search{margin-top:0}
+.decision-tools{display:grid;width:var(--page);grid-template-columns:minmax(0,1.45fr) minmax(19rem,.55fr);padding:4.5rem 0;margin:auto}
 .decision-tools article{display:flex;min-height:24rem;flex-direction:column;justify-content:space-between;padding:clamp(2rem,4vw,4rem)}
 .budget-tool{color:#fff;background:var(--navy)}
 .config-tool{color:var(--navy);background:var(--green)}
@@ -498,6 +503,12 @@
 .decision-tools option{color:var(--navy);background:#fff}
 .decision-tools button{padding:0 1.5rem;color:var(--navy);background:var(--green);border:0;font-size:.72rem;font-weight:900;cursor:pointer}
 .config-tool button{color:#fff;background:var(--navy)}
+.config-tool form{grid-template-columns:1fr}
+.config-tool button{min-height:3.5rem}
+.budget-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.65rem;margin-top:auto;padding-top:1rem}
+.budget-options a{display:block;overflow:hidden;color:var(--navy);background:var(--paper)}
+.budget-car{display:block;aspect-ratio:1.45}
+.budget-options strong{display:flex;min-height:4rem;align-items:center;padding:.8rem 1rem;font-size:.8rem;line-height:1.25}
 
 .home-paths{align-items:start;border-top:1px solid #d6d0c5}
 .home-paths .choice-copy>p:last-child{max-width:33rem;margin:1.6rem 0 0;color:var(--muted);font-size:1rem;line-height:1.7}
@@ -526,16 +537,21 @@
 .faq-list details p{max-width:46rem;margin:-.35rem 3rem 1.7rem 0;color:#ffffffa8;font-size:1rem;line-height:1.7}
 
 @media(max-width:1000px){
+  .decision-tools{grid-template-columns:1fr}
   .home-faq{grid-template-columns:1fr;gap:3rem}
 }
 
 @media(max-width:700px){
+  .hero-search-tabs{width:100%;margin:0}
+  .hero-search-tabs span,.hero-search-tabs a{flex:1;justify-content:center;padding:.45rem .6rem;font-size:.58rem;text-align:center}
   .decision-tools{grid-template-columns:1fr;padding:3rem 0}
   .decision-tools article{min-height:22rem;padding:2rem 1.25rem}
   .decision-tools h2{font-size:clamp(2.55rem,12vw,3.55rem)}
   .decision-tools article>p:not(.eyebrow){font-size:.9rem}
   .decision-tools form{grid-template-columns:1fr}
   .decision-tools button{min-height:3.3rem}
+  .budget-options{grid-template-columns:1fr 1fr;gap:.5rem;padding-top:0}
+  .budget-options strong{min-height:3.6rem;padding:.7rem;font-size:.72rem}
   .home-paths{padding:4rem 0}
   .home-paths .choice-copy h2{font-size:clamp(2.6rem,12vw,3.7rem)}
   .home-paths .choice-copy>p:last-child,.home-paths .choice-links p{font-size:.9rem}

@@ -16,7 +16,7 @@
     <meta name="twitter:image" content="https://maxy2897.github.io/celeritas/og.png" />
     <link rel="canonical" href="https://maxy2897.github.io/celeritas/" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
-    <link rel="stylesheet" href="styles.css?v=28" />
+    <link rel="stylesheet" href="styles.css?v=29" />
     <script src="script.js?v=26" type="module"></script>
   </head>
   <body data-page="inicio">
@@ -46,6 +46,7 @@
 
       <button class="mobile-filter-toggle" type="button" data-hero-filter-toggle aria-expanded="false" aria-controls="hero-filters"><span>Filtros de búsqueda</span><b aria-hidden="true">＋</b></button>
       <div class="hero-filters" id="hero-filters" data-hero-filters>
+        <div class="hero-search-tabs" aria-label="Formas de buscar"><span>Encuentra tu coche</span><a href="#configura-inicio">Configura tu coche</a></div>
         <form class="inventory-search" action="comprar.html" method="get">
           <label class="quick-search"><span>Búsqueda rápida</span><input name="q" type="search" placeholder="Escribe marca o modelo" /></label>
           <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
@@ -66,15 +67,17 @@
 
       <section class="decision-tools" aria-label="Buscar y configurar un coche">
         <article class="budget-tool">
-          <p class="eyebrow">Busca por presupuesto</p>
-          <h2>¿Cuánto quieres invertir?</h2>
-          <p>Te enseñamos únicamente los coches que encajan en el importe que elijas.</p>
-          <form action="comprar.html" method="get">
-            <label><span>Presupuesto máximo</span><select name="precio"><option value="18000">Hasta 18.000 €</option><option value="22000">Hasta 22.000 €</option><option value="25000">Hasta 25.000 €</option><option value="999999">Sin límite</option></select></label>
-            <button type="submit">Ver coches →</button>
-          </form>
+          <p class="eyebrow">Compra a tu medida</p>
+          <h2>Buscar por presupuesto.</h2>
+          <p>Elige tu límite y entra directamente en una selección que encaje contigo.</p>
+          <nav class="budget-options" aria-label="Presupuestos máximos">
+            <a href="comprar.html?precio=18000"><span class="budget-car single-car-photo car-seat view-front" role="img" aria-label="SEAT Ibiza blanco"></span><strong>Hasta 18.000 €</strong></a>
+            <a href="comprar.html?precio=22000"><span class="budget-car single-car-photo car-golf view-front" role="img" aria-label="Volkswagen Golf gris"></span><strong>Hasta 22.000 €</strong></a>
+            <a href="comprar.html?precio=25000"><span class="budget-car single-car-photo car-corolla view-front" role="img" aria-label="Toyota Corolla azul"></span><strong>Hasta 25.000 €</strong></a>
+            <a href="comprar.html?precio=999999"><span class="budget-car single-car-photo car-cayenne view-front" role="img" aria-label="Porsche Cayenne gris"></span><strong>Sin límite</strong></a>
+          </nav>
         </article>
-        <article class="config-tool">
+        <article class="config-tool" id="configura-inicio">
           <p class="eyebrow dark">Configuración Celeritas</p>
           <h2>Configura tu coche.</h2>
           <p>Elige una unidad y añade las gestiones o mejoras que quieras antes de reservarla.</p>
