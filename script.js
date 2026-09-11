@@ -382,16 +382,33 @@ const filterPrice = document.querySelector("#filter-price");
 const filterTransmission = document.querySelector("#filter-transmission");
 const filterYear = document.querySelector("#filter-year");
 const filterLocation = document.querySelector("#filter-location");
+const filterSort = document.querySelector("#filter-sort");
 const resultCount = document.querySelector("#result-count");
 const catalogEmpty = document.querySelector("#catalog-empty");
 const mobileFilterButton = document.querySelector(".mobile-filter-toggle");
 const inventoryCatalog = document.querySelector(".inventory-catalog");
 const contactReason = document.querySelector("[data-contact-reason]");
+const contactMessage = document.querySelector(".form-panel textarea");
 
 if (contactReason) {
-  const requestedReason = new URLSearchParams(window.location.search).get("motivo");
+  const contactParams = new URLSearchParams(window.location.search);
+  const requestedReason = contactParams.get("motivo");
   if ([...contactReason.options].some((option) => option.value === requestedReason)) contactReason.value = requestedReason;
+  const requestedVehicle = contactParams.get("coche");
+  if (contactMessage && requestedVehicle) {
+    const entry = contactParams.get("entrada");
+    const term = contactParams.get("plazo");
+    contactMessage.value = `Me interesa financiar el ${requestedVehicle}.${entry ? ` Entrada aproximada: ${Number(entry).toLocaleString("es-ES")} €.` : ""}${term ? ` Plazo orientativo: ${term}.` : ""}`;
+  }
 }
+
+const guideSelector = document.querySelector(".guided-selector");
+document.querySelector("[data-guide-open]")?.addEventListener("click", () => {
+  if (guideSelector) {
+    guideSelector.open = true;
+    guideSelector.scrollIntoView({ block: "start" });
+  }
+});
 
 mobileFilterButton?.addEventListener("click", () => {
   const open = inventoryCatalog?.classList.toggle("filters-open") || false;
@@ -442,9 +459,25 @@ function updateCatalog() {
   if (catalogEmpty) catalogEmpty.hidden = visible !== 0;
 }
 
+function sortCatalog() {
+  const grid = document.querySelector(".inventory-grid");
+  if (!grid || !filterSort) return;
+  const mode = filterSort.value;
+  const recommendedOrder = new Map(vehicleItems.map((item, index) => [item, index]));
+  const sortedItems = [...vehicleItems].sort((a, b) => {
+    if (mode === "price-asc") return Number(a.dataset.price) - Number(b.dataset.price);
+    if (mode === "price-desc") return Number(b.dataset.price) - Number(a.dataset.price);
+    if (mode === "km-asc") return Number(a.dataset.km) - Number(b.dataset.km);
+    if (mode === "year-desc") return Number(b.dataset.year) - Number(a.dataset.year) || Number(a.dataset.km) - Number(b.dataset.km);
+    return recommendedOrder.get(a) - recommendedOrder.get(b);
+  });
+  sortedItems.forEach((item) => grid.append(item.closest(".vehicle-card-shell") || item));
+}
+
 [filterSearch, filterType, filterFuel, filterPrice, filterTransmission, filterYear, filterLocation].forEach((control) => {
   control?.addEventListener(control === filterSearch ? "input" : "change", updateCatalog);
 });
+filterSort?.addEventListener("change", sortCatalog);
 
 if (vehicleItems.length) {
   const params = new URLSearchParams(window.location.search);
@@ -459,6 +492,7 @@ if (vehicleItems.length) {
   if (filterSearch && requestedQuery) filterSearch.value = requestedQuery;
   else if (filterSearch && requestedBrand && requestedBrand !== "all") filterSearch.value = requestedBrand;
   updateCatalog();
+  sortCatalog();
 }
 
 const modelTrack = document.querySelector("#model-track");

@@ -14,8 +14,8 @@
     <meta name="twitter:description" content="Consulta fotografías, características y disponibilidad." />
     <meta name="twitter:image" content="" />
     <title>Vehículo de ocasión — Celeritas</title>
-    <link rel="stylesheet" href="styles.css?v=29" />
-    <script src="script.js?v=26" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=30" />
+    <script src="script.js?v=30" type="module"></script>
   </head>
   <body data-page="coche">
     <div class="assurance-bar" aria-label="Compromisos Celeritas"><span>✓ Vehículos revisados</span><span>✓ Garantía mínima de 12 meses</span><a href="contacto.html">Atención personalizada →</a></div>
@@ -29,12 +29,13 @@
         <div class="detail-price"><span>Precio del vehículo</span><strong data-detail-price>—</strong><small>Garantía incluida · servicios opcionales a tu medida</small></div>
       </section>
       <div class="detail-deal" data-detail-deal hidden><span>Oferta temporal · antes <del data-detail-previous-price>—</del></span><strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></div>
-      <section class="vehicle-gallery" aria-label="Fotografías del vehículo">
+      <nav class="detail-tabs" aria-label="Contenido de la ficha"><a href="#fotos">Fotos</a><a href="#estado">Estado</a><a href="#caracteristicas">Características</a><a href="#historial">Historial</a><a href="#configura">Configura</a><a href="#comprar-coche">Comprar</a></nav>
+      <section class="vehicle-gallery" id="fotos" aria-label="Fotografías del vehículo">
         <div class="detail-photo view-front" data-detail-photo role="img" aria-label="Vista frontal"></div>
         <div class="detail-photo view-side" data-detail-photo role="img" aria-label="Vista lateral"></div>
         <div class="detail-photo view-rear" data-detail-photo role="img" aria-label="Vista trasera"></div>
       </section>
-      <section class="vehicle-assessment" aria-labelledby="assessment-title">
+      <section class="vehicle-assessment" id="estado" aria-labelledby="assessment-title">
         <div class="assessment-heading">
           <p class="eyebrow dark">Valoración Celeritas</p>
           <h2 id="assessment-title">El estado, rueda a rueda.</h2>
@@ -43,7 +44,7 @@
         </div>
         <div class="rating-breakdown" data-detail-ratings></div>
       </section>
-      <section class="detail-content">
+      <section class="detail-content" id="caracteristicas">
         <div class="specification-panel"><p class="eyebrow dark">Características</p><h2>Todo lo importante, a la vista.</h2><dl data-detail-specs></dl></div>
         <div class="equipment-panel"><p class="eyebrow">Equipamiento</p><h2>Preparado para disfrutar.</h2><ul data-detail-features></ul><a data-detail-catalog target="_blank" rel="noreferrer">Consultar catálogo original del modelo ↗</a><small>Catálogo histórico de referencia alojado en Auto Catalog Archive. El equipamiento exacto de esta unidad es el indicado arriba.</small></div>
       </section>
@@ -62,7 +63,7 @@
           <p class="location-line">📍 Vehículo disponible en <span data-detail-location></span> · matrícula completa visible en la visita</p>
         </div>
       </section>
-      <section class="vehicle-report" aria-label="Historial y prueba del vehículo">
+      <section class="vehicle-report" id="historial" aria-label="Historial y prueba del vehículo">
         <article class="history-panel">
           <p class="eyebrow dark">Historial comprobado</p>
           <h2>Sabes de dónde viene.</h2>
@@ -89,7 +90,7 @@
           <small>No se realiza ningún cargo. Confirmaremos disponibilidad, trabajos y precio final contigo.</small>
         </aside>
       </section>
-      <section class="detail-cta">
+      <section class="detail-cta" id="comprar-coche">
         <div><p class="eyebrow">¿Quieres verlo?</p><h2>Pide una prueba sin compromiso.</h2></div>
         <div class="detail-cta-actions">
           <button class="button button-outline" type="button" data-interest data-interest-name="Vehículo seleccionado" data-interest-reason="Recibir más información">Contactar</button>
