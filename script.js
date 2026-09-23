@@ -885,6 +885,13 @@ if (detailRoot) {
     const previousPrice = detailDeal.querySelector("[data-detail-previous-price]");
     previousPrice.dataset.priceEur = String(vehicle.previousPriceEur);
   }
+  const detailTabs = document.querySelector(".detail-tabs");
+  if (detailTabs) {
+    const updateTabsEdge = () => detailTabs.classList.toggle("is-scrolled-end", detailTabs.scrollLeft + detailTabs.clientWidth >= detailTabs.scrollWidth - 2);
+    detailTabs.addEventListener("scroll", updateTabsEdge, { passive: true });
+    window.addEventListener("resize", updateTabsEdge);
+    updateTabsEdge();
+  }
   const checkoutLink = document.querySelector("[data-checkout-link]");
   const configCheckoutLink = document.querySelector("[data-config-checkout]");
   const servicesRoot = document.querySelector("[data-detail-services]");
