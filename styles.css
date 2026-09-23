@@ -735,3 +735,30 @@ body[data-page="comparar"] .compare-bar{display:none}
   .compare-scroll .compare-table{width:max-content;min-width:100%}
   .compare-table td,.compare-table thead th:not(:first-child){min-width:10.5rem}
 }
+.type-icon{width:4.2rem;height:4.2rem;background:#ebe7de;border-radius:50%}
+.type-icon svg{width:2.9rem;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.vehicle-types strong{margin-top:.4rem;font-size:.74rem;letter-spacing:.04em}
+.vehicle-types small{font-size:.66rem}
+.trust-strip span{font-size:.74rem}
+.trust-strip strong{margin-bottom:.15rem;font-size:.76rem;letter-spacing:.03em}
+.home-paths .choice-links b{display:grid;width:3rem;height:3rem;place-items:center;border:1px solid #cfc9bd;border-radius:50%;font-size:1.1rem}
+.home-service-photo{position:relative;width:100%;min-height:36rem;align-items:center;padding:7rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2));color:#fff;background:linear-gradient(90deg,#071726f5 0%,#071726d9 42%,#0717264d 75%,#07172600 100%),url("assets/celeritas-concesionario.webp") center 60%/cover no-repeat var(--navy)}
+.home-service-photo .eyebrow.dark{color:var(--green)}
+.home-service-photo h2{max-width:40rem}
+.home-service-photo p:not(.eyebrow){color:#ffffffc7}
+.home-service-photo>div:last-child{align-self:end;justify-content:flex-end;padding:1.8rem 2rem;background:#071726cc;border-left:3px solid var(--green)}
+.home-service-photo>div:last-child p:not(.eyebrow){margin-bottom:1.4rem}
+@media(max-width:700px){
+  .type-icon{width:3.4rem;height:3.4rem}
+  .type-icon svg{width:2.4rem}
+  .home-service-photo{min-height:0;gap:2rem;padding:4rem 1rem 1rem;background:linear-gradient(180deg,#071726f2 0%,#071726c7 50%,#07172633 100%),url("assets/celeritas-concesionario.webp") 70% center/cover no-repeat var(--navy)}
+  .home-service-photo>div:last-child{padding:1.4rem}
+}
+.vehicle-types a:focus-visible .type-icon{color:var(--green);background:var(--navy)}
+.home-paths .choice-links>a:focus-visible h3{color:#37644a}
+.home-paths .choice-links>a:focus-visible b{color:var(--navy);background:var(--green);border-color:var(--green)}
+@media(hover:hover){
+  .vehicle-types a:hover .type-icon{color:var(--green);background:var(--navy)}
+  .home-paths .choice-links>a:hover h3{color:#37644a}
+  .home-paths .choice-links>a:hover b{color:var(--navy);background:var(--green);border-color:var(--green)}
+}
