@@ -717,6 +717,7 @@ function renderFavoritesPage() {
     return `<article class="vehicle-card-shell"><a class="inventory-card large" href="coche.html?id=${id}"><div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${vehicle.name}, vista frontal"></div><div class="inventory-card-copy"><p>${vehicle.name}</p><span>${vehicle.summary}</span>${wheelRatingMarkup(rating, `Valoración de ${vehicle.name}`, "wheel-rating-card")}<div><small>Ver ficha completa</small><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></div></div></a><div class="card-actions" aria-label="Acciones para ${vehicle.name}"><button class="is-active" type="button" data-favorite-vehicle="${id}" aria-label="Eliminar ${vehicle.name} de favoritos" aria-pressed="true" title="Eliminar de favoritos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg></button><button type="button" data-share-vehicle="${id}" data-share-name="${vehicle.name}" aria-label="Compartir ${vehicle.name}" title="Compartir"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg></button><button type="button" data-cart-vehicle="${id}" aria-label="Añadir ${vehicle.name} al carrito" title="Añadir al carrito"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10h9.9l2-7H6M9 19h.01M17 19h.01" /></svg></button></div></article>`;
   }).join("");
   grid.querySelectorAll("a.inventory-card").forEach((card) => addBuyButtonToCard(card, vehicleIdFromCard(card)));
+  addCompareButtons();
   updateCurrencyPrices();
 }
 
@@ -1069,3 +1070,203 @@ const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
 updateCurrencyPrices();
 updateWheel();
+
+function getCompareIds() {
+  return uniqueVehicleIds(readListPreference("celeritas-compare")).slice(0, 3);
+}
+
+function saveCompareIds(ids) {
+  const items = uniqueVehicleIds(ids).slice(0, 3);
+  savePreference("celeritas-compare", JSON.stringify(items));
+  syncCompareState(items);
+  return items;
+}
+
+function addCompareButtons() {
+  const compareIds = getCompareIds();
+  document.querySelectorAll(".vehicle-card-shell .card-actions").forEach((actions) => {
+    if (actions.querySelector("[data-compare-vehicle]")) return;
+    const id = actions.querySelector("[data-favorite-vehicle]")?.dataset.favoriteVehicle;
+    if (!id) return;
+    const selected = compareIds.includes(id);
+    actions.insertAdjacentHTML("beforeend", `<button type="button" data-compare-vehicle="${id}" class="${selected ? "is-active" : ""}" aria-pressed="${selected}" aria-label="Comparar este coche" title="Comparar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7" /></svg></button>`);
+  });
+}
+
+function syncCompareState(items = getCompareIds()) {
+  document.querySelectorAll("[data-compare-vehicle]").forEach((button) => {
+    const selected = items.includes(button.dataset.compareVehicle);
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  let bar = document.querySelector("[data-compare-bar]");
+  if (document.body.dataset.page === "comparar") {
+    bar?.remove();
+    renderComparePage();
+    return;
+  }
+  if (!bar) {
+    document.body.insertAdjacentHTML("beforeend", '<div class="compare-bar" data-compare-bar role="region" aria-label="Comparador" hidden><span data-compare-bar-text></span><div><button type="button" data-compare-clear>Vaciar</button><a data-compare-bar-link href="comparar.html">Comparar →</a></div></div>');
+    bar = document.querySelector("[data-compare-bar]");
+  }
+  bar.hidden = items.length === 0;
+  const text = bar.querySelector("[data-compare-bar-text]");
+  const link = bar.querySelector("[data-compare-bar-link]");
+  text.innerHTML = items.length === 1 ? "<strong>1 coche</strong> elegido · añade otro para comparar" : `<strong>${items.length} coches</strong> listos para comparar`;
+  link.href = `comparar.html?ids=${items.join(",")}`;
+  link.classList.toggle("is-disabled", items.length < 2);
+  link.setAttribute("aria-disabled", String(items.length < 2));
+}
+
+function compareNumber(value) {
+  return Number(String(value || "").replace(/[^\d]/g, "")) || 0;
+}
+
+function renderComparePage() {
+  const root = document.querySelector("[data-compare-root]");
+  if (!root) return;
+  const table = root.querySelector("[data-compare-table]");
+  const empty = root.querySelector("[data-compare-empty]");
+  const ids = getCompareIds().filter((id) => Boolean(vehicleCatalog[id]));
+  empty.hidden = ids.length > 0;
+  table.hidden = ids.length === 0;
+  if (!ids.length) {
+    table.innerHTML = "";
+    return;
+  }
+  const vehicles = ids.map((id) => ({ id, ...vehicleCatalog[id] }));
+  const bestOf = (values, pick) => {
+    if (vehicles.length < 2) return null;
+    const target = pick(...values);
+    return values.filter((value) => value === target).length === values.length ? null : target;
+  };
+  const numericRow = (label, values, display, pick) => {
+    const best = bestOf(values, pick);
+    return { label, cells: values.map((value, index) => ({ html: display[index], best: best !== null && value === best })) };
+  };
+  const prices = vehicles.map((vehicle) => vehicle.priceEur);
+  const kms = vehicles.map((vehicle) => compareNumber(vehicle.specs.Kilómetros));
+  const years = vehicles.map((vehicle) => compareNumber(vehicle.specs.Año));
+  const power = vehicles.map((vehicle) => compareNumber(vehicle.specs.Potencia));
+  const marketGap = vehicles.map((vehicle) => (vehicle.marketAvg ? vehicle.marketAvg - vehicle.priceEur : 0));
+  const marketGapPercent = vehicles.map((vehicle, index) => (vehicle.marketAvg ? Math.round((marketGap[index] / vehicle.marketAvg) * 1000) / 10 : 0));
+  const textRow = (label, read) => ({ label, cells: vehicles.map((vehicle) => ({ html: read(vehicle) || "—" })) });
+  const rows = [
+    numericRow("Precio", prices, vehicles.map((vehicle) => `<strong data-price-eur="${vehicle.priceEur}">${formatMoney(vehicle.priceEur)}</strong>`), Math.min),
+    numericRow("Frente al mercado", marketGapPercent, marketGap.map((gap, index) => (gap > 0 ? `<span data-price-eur="${gap}">${formatMoney(gap)}</span> por debajo (${marketGapPercent[index].toLocaleString("es-ES")} %)` : gap < 0 ? `<span data-price-eur="${-gap}">${formatMoney(-gap)}</span> por encima` : "En precio de mercado")), Math.max),
+    numericRow("Año", years, vehicles.map((vehicle) => vehicle.specs.Año), Math.max),
+    numericRow("Kilómetros", kms, vehicles.map((vehicle) => vehicle.specs.Kilómetros), Math.min),
+    numericRow("Potencia", power, vehicles.map((vehicle) => vehicle.specs.Potencia || "—"), Math.max),
+    textRow("Combustible", (vehicle) => vehicle.specs.Combustible),
+    textRow("Cambio", (vehicle) => vehicle.specs.Cambio),
+    textRow("Etiqueta DGT", (vehicle) => vehicle.specs.Etiqueta),
+    textRow("Propietarios", (vehicle) => vehicle.specs.Propietarios),
+    textRow("Ubicación", (vehicle) => vehicle.location),
+    textRow("Garantía", () => "12 meses como mínimo"),
+    textRow("Neumáticos", (vehicle) => vehicle.condition?.Neumáticos),
+    textRow("Carrocería", (vehicle) => vehicle.condition?.Carrocería),
+    textRow("Interior", (vehicle) => vehicle.condition?.Interior),
+    textRow("Detalles declarados", (vehicle) => (vehicle.defects?.length ? vehicle.defects.join("<br />") : "Ninguno")),
+    textRow("Equipamiento", (vehicle) => `<ul>${(vehicle.features || []).map((feature) => `<li>${feature}</li>`).join("")}</ul>`),
+  ];
+  const head = vehicles.map((vehicle) => `<th scope="col"><a href="coche.html?id=${vehicle.id}"><span class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${vehicle.name}"></span><strong>${vehicle.name}</strong></a>${wheelRatingMarkup(vehicleRatingById[vehicle.id] || 4, `Valoración de ${vehicle.name}`, "wheel-rating-card")}<button type="button" data-compare-vehicle="${vehicle.id}" class="compare-remove" aria-label="Quitar ${vehicle.name} de la comparación">Quitar</button></th>`).join("");
+  const body = rows.map((row) => `<tr><th scope="row">${row.label}</th>${row.cells.map((cell) => `<td${cell.best ? ' class="is-best"' : ""}>${cell.html}${cell.best ? '<small class="best-flag">Mejor</small>' : ""}</td>`).join("")}</tr>`).join("");
+  const actions = `<tr class="compare-actions"><th scope="row"><span class="sr-only">Acciones</span></th>${vehicles.map((vehicle) => `<td><a class="button button-dark" href="coche.html?id=${vehicle.id}">Ver ficha</a></td>`).join("")}</tr>`;
+  const addMore = vehicles.length < 3 ? '<p class="compare-add">Puedes añadir hasta tres coches. <a class="text-link" href="comprar.html">Elegir otro en el catálogo →</a></p>' : "";
+  table.innerHTML = `<table class="compare-table"><caption class="sr-only">Comparación de ${vehicles.length} coches</caption><thead><tr><th scope="col"><span class="sr-only">Característica</span></th>${head}</tr></thead><tbody>${body}${actions}</tbody></table>${addMore}`;
+  updateCurrencyPrices();
+}
+
+if (document.body.dataset.page === "comparar") {
+  const idsFromUrl = (new URLSearchParams(window.location.search).get("ids") || "").split(",").filter((id) => Boolean(vehicleCatalog[id]));
+  if (idsFromUrl.length) savePreference("celeritas-compare", JSON.stringify(uniqueVehicleIds(idsFromUrl).slice(0, 3)));
+}
+addCompareButtons();
+syncCompareState();
+
+document.addEventListener("click", (event) => {
+  const compareButton = event.target.closest("[data-compare-vehicle]");
+  if (compareButton) {
+    event.preventDefault();
+    const id = compareButton.dataset.compareVehicle;
+    const items = getCompareIds();
+    if (items.includes(id)) {
+      saveCompareIds(items.filter((item) => item !== id));
+      showToast("Quitado de la comparación");
+    } else if (items.length >= 3) {
+      showToast("Puedes comparar hasta tres coches");
+    } else {
+      saveCompareIds([...items, id]);
+      showToast(items.length ? "Añadido a la comparación" : "Añadido · elige otro coche para comparar");
+    }
+    return;
+  }
+  if (event.target.closest("[data-compare-clear]")) {
+    saveCompareIds([]);
+    return;
+  }
+  const disabledLink = event.target.closest("[data-compare-bar-link].is-disabled");
+  if (disabledLink) {
+    event.preventDefault();
+    showToast("Elige al menos dos coches para comparar");
+  }
+});
+
+const vehicleViews = ["view-front", "view-side", "view-rear"];
+let photoSwipe = null;
+let suppressCardClick = false;
+
+function showVehicleView(photo, index) {
+  const next = Math.max(0, Math.min(vehicleViews.length - 1, index));
+  photo.classList.remove(...vehicleViews);
+  photo.classList.add(vehicleViews[next]);
+  photo.style.setProperty("--view-index", String(next));
+  photo.dataset.viewIndex = String(next);
+}
+
+function swipeablePhoto(target) {
+  return target instanceof Element ? target.closest(".vehicle-card-shell .single-car-photo") : null;
+}
+
+document.addEventListener("pointermove", (event) => {
+  if (event.pointerType !== "mouse") return;
+  const photo = swipeablePhoto(event.target);
+  if (!photo) return;
+  const box = photo.getBoundingClientRect();
+  showVehicleView(photo, Math.floor(((event.clientX - box.left) / box.width) * vehicleViews.length));
+});
+
+document.addEventListener("pointerout", (event) => {
+  if (event.pointerType !== "mouse") return;
+  const photo = swipeablePhoto(event.target);
+  if (photo && !photo.contains(event.relatedTarget)) showVehicleView(photo, 0);
+});
+
+document.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "mouse") return;
+  const photo = swipeablePhoto(event.target);
+  photoSwipe = photo ? { photo, x: event.clientX, y: event.clientY } : null;
+});
+
+document.addEventListener("pointerup", (event) => {
+  if (!photoSwipe) return;
+  const deltaX = event.clientX - photoSwipe.x;
+  const deltaY = event.clientY - photoSwipe.y;
+  if (Math.abs(deltaX) > 30 && Math.abs(deltaX) > Math.abs(deltaY)) {
+    const current = Number(photoSwipe.photo.dataset.viewIndex || 0);
+    showVehicleView(photoSwipe.photo, current + (deltaX < 0 ? 1 : -1));
+    suppressCardClick = true;
+    window.setTimeout(() => { suppressCardClick = false; }, 400);
+  }
+  photoSwipe = null;
+});
+
+document.addEventListener("pointercancel", () => { photoSwipe = null; });
+
+document.addEventListener("click", (event) => {
+  if (suppressCardClick && swipeablePhoto(event.target)) {
+    event.preventDefault();
+    event.stopPropagation();
+    suppressCardClick = false;
+  }
+}, true);
