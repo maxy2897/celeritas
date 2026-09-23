@@ -11,7 +11,9 @@ const types = {
   ".js": "text/javascript; charset=utf-8",
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
-  ".png": "image/png"
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".woff2": "font/woff2"
 };
 
 http.createServer((request, response) => {
