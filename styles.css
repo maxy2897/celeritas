@@ -782,3 +782,55 @@ body[data-page="comparar"] .compare-bar{display:none}
   .vehicle-card-shell .card-actions button{width:1.65rem;height:1.65rem}
   .vehicle-card-shell .card-actions svg{width:.82rem}
 }
+/* Motion */
+@keyframes rise-in{from{opacity:0;translate:0 2.2rem}to{opacity:1;translate:0 0}}
+@keyframes hero-zoom{from{scale:1.14}to{scale:1}}
+@keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.js-reveal [data-reveal]{opacity:0;translate:0 2.4rem;transition:opacity .8s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s),translate .8s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s)}
+.js-reveal [data-reveal].is-revealed{opacity:1;translate:0 0}
+.market-hero-copy h1{animation:rise-in .9s cubic-bezier(.2,.7,.2,1) both}
+.market-hero-copy h1 em{display:inline-block;animation:rise-in .9s cubic-bezier(.2,.7,.2,1) .18s both}
+.market-hero-copy>p:not(.eyebrow){animation:rise-in .9s cubic-bezier(.2,.7,.2,1) .34s both}
+.market-hero-copy .hero-actions{animation:rise-in .9s cubic-bezier(.2,.7,.2,1) .48s both}
+@media(min-width:701px){
+  .market-hero::before{position:absolute;inset:-12% 0 -4%;z-index:0;content:"";background:inherit;background-position:58% 52%;translate:0 var(--hero-shift,0);animation:hero-zoom 2.6s cubic-bezier(.2,.7,.2,1) both;will-change:translate}
+  .market-hero::after{z-index:1}
+}
+.brand-marquee{overflow:hidden;padding:1.6rem 0;color:var(--navy);background:#fff;border-block:1px solid #e3ded4}
+.marquee-track{display:flex;width:max-content;animation:marquee-scroll 38s linear infinite}
+.brand-marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-group{display:flex;flex:0 0 auto}
+.marquee-group span{display:flex;align-items:center;gap:3.2rem;padding-right:3.2rem;font-family:var(--serif);font-size:clamp(1.6rem,2.6vw,2.4rem);white-space:nowrap}
+.marquee-group span::after{width:.55rem;height:.55rem;content:"";background:var(--green);border-radius:50%}
+.stats-band{display:grid;grid-template-columns:repeat(4,1fr);padding:5.5rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2));background:#fff;border-bottom:1px solid #e3ded4}
+.stat-item{padding:0 2rem}
+.stat-item+.stat-item{border-left:1px solid #e3ded4}
+.stat-item strong{display:flex;align-items:baseline;gap:.4rem;color:var(--navy);font-size:clamp(3.2rem,5.5vw,5.4rem);font-weight:900;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat-item strong small{color:#37644a;font-size:1.1rem;font-weight:800;letter-spacing:0}
+.stat-item p{max-width:14rem;margin:.9rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.5}
+.vehicle-card-shell{transition:opacity .8s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s),translate .8s cubic-bezier(.2,.7,.2,1) var(--reveal-delay,0s),transform .35s cubic-bezier(.2,.7,.2,1)}
+.inventory-card{transition:box-shadow .35s ease,border-color .35s ease}
+.inventory-card .single-car-photo{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.button,.nav-cta,.card-buy-button,.compare-bar a,.hero-search-tabs a,.inventory-search button{transition:background-color .25s ease,color .25s ease,transform .25s ease,box-shadow .25s ease}
+.type-icon,.home-paths .choice-links b,.home-paths .choice-links h3{transition:background-color .3s ease,color .3s ease,border-color .3s ease,transform .3s ease}
+@media(hover:hover){
+  .vehicle-card-shell:hover{transform:translateY(-6px)}
+  .vehicle-card-shell:hover .single-car-photo{transform:scale(1.045)}
+  .button:hover,.nav-cta:hover,.inventory-search button:hover{transform:translateY(-2px);box-shadow:0 .7rem 1.4rem #03101d33}
+  .vehicle-types a:hover .type-icon{transform:translateY(-4px)}
+  .home-paths .choice-links>a:hover b{transform:translateX(6px)}
+}
+@media(max-width:700px){
+  .brand-marquee{padding:1.1rem 0}
+  .stats-band{grid-template-columns:1fr 1fr;gap:2.2rem 0;padding:3.5rem 1rem}
+  .stat-item{padding:0 1rem}
+  .stat-item:nth-child(3){border-left:0}
+  .stat-item p{font-size:.8rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .market-hero-copy h1,.market-hero-copy h1 em,.market-hero-copy>p,.market-hero-copy .hero-actions,.market-hero::before{animation:none}
+  .marquee-track{animation:none;flex-wrap:wrap}
+  .marquee-group[aria-hidden]{display:none}
+  .vehicle-card-shell,.inventory-card .single-car-photo,.button,.nav-cta,.type-icon{transition:none}
+  .vehicle-card-shell:hover,.vehicle-card-shell:hover .single-car-photo,.button:hover,.nav-cta:hover{transform:none}
+}

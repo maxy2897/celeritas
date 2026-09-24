@@ -1270,3 +1270,68 @@ document.addEventListener("click", (event) => {
     suppressCardClick = false;
   }
 }, true);
+
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+document.querySelectorAll('[data-count-source="vehicles"]').forEach((counter) => { counter.dataset.countTo = String(Object.keys(vehicleCatalog).length); counter.textContent = counter.dataset.countTo; });
+document.querySelectorAll('[data-count-source="cities"]').forEach((counter) => { counter.dataset.countTo = String(new Set(Object.values(vehicleCatalog).map((vehicle) => vehicle.location)).size); counter.textContent = counter.dataset.countTo; });
+
+function runCounter(counter) {
+  const target = Number(counter.dataset.countTo) || 0;
+  if (prefersReducedMotion || target === 0) {
+    counter.textContent = target.toLocaleString("es-ES");
+    return;
+  }
+  const start = performance.now();
+  const duration = 1400;
+  const step = (now) => {
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    counter.textContent = Math.round(target * eased).toLocaleString("es-ES");
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  counter.textContent = "0";
+  requestAnimationFrame(step);
+}
+
+const revealSelectors = [
+  ".section-heading", ".choice-copy", ".choice-links > a", ".vehicle-card-shell", ".budget-heading", ".budget-options",
+  ".config-tool", ".trust-intro", ".trust-strip > p", ".stat-item", ".home-service-photo > div", ".vehicle-types > a",
+  ".reviews-heading", ".reviews-grid > article", ".home-faq-heading", ".faq-list details", ".inventory-page-head > *",
+  ".vehicle-gallery", ".detail-heading", ".page-hero", ".sell-options article", ".dark-flow li", ".journey-steps article",
+  ".compare-table", ".favorites-empty", ".footer-brand",
+];
+
+if (!prefersReducedMotion && "IntersectionObserver" in window) {
+  root.classList.add("js-reveal");
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-revealed");
+      entry.target.querySelectorAll("[data-count-to]").forEach(runCounter);
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  document.querySelectorAll(revealSelectors.join(",")).forEach((element) => {
+    if (element.closest("[data-reveal]")) return;
+    const siblings = [...element.parentElement.children].filter((child) => child.matches(revealSelectors.join(",")));
+    element.dataset.reveal = "";
+    element.style.setProperty("--reveal-delay", `${Math.min(siblings.indexOf(element), 5) * 90}ms`);
+    revealObserver.observe(element);
+  });
+  document.querySelectorAll(".stats-band [data-count-to]").forEach((counter) => { counter.textContent = "0"; });
+} else {
+  document.querySelectorAll("[data-count-to]").forEach(runCounter);
+}
+
+const heroSection = document.querySelector(".market-hero");
+if (heroSection && !prefersReducedMotion) {
+  let heroFrame = null;
+  const updateHeroParallax = () => {
+    heroFrame = null;
+    const offset = Math.min(window.scrollY, heroSection.offsetHeight);
+    heroSection.style.setProperty("--hero-shift", `${offset * 0.28}px`);
+  };
+  window.addEventListener("scroll", () => { if (!heroFrame) heroFrame = requestAnimationFrame(updateHeroParallax); }, { passive: true });
+  updateHeroParallax();
+}
