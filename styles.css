@@ -762,3 +762,23 @@ body[data-page="comparar"] .compare-bar{display:none}
   .home-paths .choice-links>a:hover h3{color:#37644a}
   .home-paths .choice-links>a:hover b{color:var(--navy);background:var(--green);border-color:var(--green)}
 }
+.inventory-card.large .inventory-card-copy .wheel-rating strong{font-family:var(--sans);font-size:.74rem;font-weight:900}
+.card-buy-button{padding:.5rem .8rem;font-size:.6rem;letter-spacing:.06em}
+.inventory-grid .vehicle-card-shell{display:flex;align-self:stretch;flex-direction:column}
+.inventory-grid .vehicle-card-shell>.inventory-card{display:flex;flex:1;flex-direction:column}
+.inventory-grid .inventory-card-copy{display:flex;flex:1;flex-direction:column}
+.inventory-grid .inventory-card-copy>div{margin-top:auto;padding-top:.9rem}
+.inventory-grid .inventory-card-copy>p:first-child{font-size:1rem}
+.inventory-page-head{background:linear-gradient(90deg,#071726fa 0%,#071726e6 45%,#07172699 100%),url("assets/celeritas-concesionario.webp") center 62%/cover no-repeat var(--navy)}
+@media(hover:hover){
+  .inventory-card.large:hover{border-color:#0b203659;box-shadow:0 1.2rem 2.5rem #0b20361f}
+}
+@media(max-width:700px){
+  .inventory-page-head{background:linear-gradient(180deg,#071726f7 0%,#071726e0 60%,#071726a6 100%),url("assets/celeritas-concesionario.webp") 70% center/cover no-repeat var(--navy)}
+  .card-buy-button{padding:.42rem .6rem;font-size:.54rem}
+}
+@media(max-width:700px){
+  .inventory-grid .inventory-card-copy>p:first-child{font-size:.86rem}
+  .vehicle-card-shell .card-actions button{width:1.65rem;height:1.65rem}
+  .vehicle-card-shell .card-actions svg{width:.82rem}
+}
