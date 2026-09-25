@@ -1020,3 +1020,7 @@ body[data-page="comparar"] .compare-bar{display:none}
   .success-check circle,.success-check path{stroke-dashoffset:0}
   .order-details,.order-details-toggle svg,.checkout-panel label.choice-tile{transition:none}
 }
+.account-privacy{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.8rem 1.5rem;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid #e3ded4}
+.account-privacy p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.5}
+.account-clear{padding:.6rem 1rem;color:#9e312e;background:transparent;border:1.5px solid #e6c9c7;border-radius:2rem;font-size:.74rem;font-weight:800;cursor:pointer;transition:color .2s ease,background-color .2s ease,border-color .2s ease}
+.account-clear:hover,.account-clear:focus-visible{color:#fff;background:#9e312e;border-color:#9e312e}

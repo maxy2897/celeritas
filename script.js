@@ -1,4 +1,17 @@
 const root = document.documentElement;
+
+// Anti-clickjacking: GitHub Pages cannot send frame-ancestors headers, so refuse to render inside another site's frame.
+const framedByOtherSite = (() => {
+  try {
+    return window.top !== window.self && window.top.location.origin !== window.location.origin;
+  } catch {
+    return true;
+  }
+})();
+if (framedByOtherSite) {
+  root.hidden = true;
+  try { window.top.location.replace(window.location.href); } catch { /* Navigation can be blocked by the embedding page. */ }
+}
 const menuButton = document.querySelector(".menu-button");
 const nav = document.querySelector("#main-nav");
 let wheelFrame = null;
@@ -36,6 +49,10 @@ function getAccountProfile() {
 function saveAccountProfile(profile) {
   savePreference("celeritas-profile", JSON.stringify(profile));
   return profile;
+}
+
+function isVehicleId(id) {
+  return typeof id === "string" && Object.hasOwn(vehicleCatalog, id);
 }
 
 function uniqueVehicleIds(ids) {
@@ -394,11 +411,13 @@ if (contactReason) {
   const contactParams = new URLSearchParams(window.location.search);
   const requestedReason = contactParams.get("motivo");
   if ([...contactReason.options].some((option) => option.value === requestedReason)) contactReason.value = requestedReason;
-  const requestedVehicle = contactParams.get("coche");
-  if (contactMessage && requestedVehicle) {
-    const entry = contactParams.get("entrada");
-    const term = contactParams.get("plazo");
-    contactMessage.value = `Me interesa financiar el ${requestedVehicle}.${entry ? ` Entrada aproximada: ${Number(entry).toLocaleString("es-ES")} €.` : ""}${term ? ` Plazo orientativo: ${term}.` : ""}`;
+  const requestedVehicle = contactParams.get("coche") || "";
+  if (contactMessage && /^[\p{L}\p{N} .\-]{2,60}$/u.test(requestedVehicle)) {
+    const entry = Number(contactParams.get("entrada"));
+    const term = contactParams.get("plazo") || "";
+    const validEntry = Number.isFinite(entry) && entry > 0 && entry <= 1000000;
+    const validTerm = /^\d{1,3} meses$/.test(term);
+    contactMessage.value = `Me interesa financiar el ${requestedVehicle}.${validEntry ? ` Entrada aproximada: ${entry.toLocaleString("es-ES")} €.` : ""}${validTerm ? ` Plazo orientativo: ${term}.` : ""}`;
   }
 }
 
@@ -708,7 +727,7 @@ function renderFavoritesPage() {
   if (!root) return;
   const grid = root.querySelector("[data-favorites-grid]");
   const empty = root.querySelector("[data-favorites-empty]");
-  const favorites = getFavorites().filter((id) => Boolean(vehicleCatalog[id]));
+  const favorites = getFavorites().filter(isVehicleId);
   empty.hidden = favorites.length > 0;
   grid.hidden = favorites.length === 0;
   grid.innerHTML = favorites.map((id) => {
@@ -771,8 +790,8 @@ function renderAccountPage() {
   if (!root) return;
   let profile = getAccountProfile();
   const form = root.querySelector("[data-account-form]");
-  const favorites = getFavorites().filter((id) => Boolean(vehicleCatalog[id]));
-  const cart = getCartItems().filter((id) => Boolean(vehicleCatalog[id]));
+  const favorites = getFavorites().filter(isVehicleId);
+  const cart = getCartItems().filter(isVehicleId);
   const selectedIds = uniqueVehicleIds([...favorites, ...cart]);
   root.querySelector("[data-account-favorites]").textContent = String(favorites.length);
   root.querySelector("[data-account-cart]").textContent = String(cart.length);
@@ -952,9 +971,9 @@ const checkoutRoot = document.querySelector("[data-checkout-root]");
 if (checkoutRoot) {
   const checkoutParams = new URLSearchParams(window.location.search);
   const queryId = checkoutParams.get("id");
-  let cartItems = getCartItems().filter((id) => Boolean(vehicleCatalog[id]));
-  if (queryId && vehicleCatalog[queryId] && !cartItems.includes(queryId)) cartItems = saveCartItems([...cartItems, queryId]);
-  const requestedId = (queryId && vehicleCatalog[queryId] ? queryId : null) || cartItems[0] || null;
+  let cartItems = getCartItems().filter(isVehicleId);
+  if (isVehicleId(queryId) && !cartItems.includes(queryId)) cartItems = saveCartItems([...cartItems, queryId]);
+  const requestedId = (isVehicleId(queryId) ? queryId : null) || cartItems[0] || null;
   const vehicle = requestedId ? vehicleCatalog[requestedId] : null;
   const emptyState = checkoutRoot.querySelector("[data-checkout-empty]");
   const content = checkoutRoot.querySelector("[data-checkout-content]");
@@ -1183,7 +1202,7 @@ function renderComparePage() {
   if (!root) return;
   const table = root.querySelector("[data-compare-table]");
   const empty = root.querySelector("[data-compare-empty]");
-  const ids = getCompareIds().filter((id) => Boolean(vehicleCatalog[id]));
+  const ids = getCompareIds().filter(isVehicleId);
   empty.hidden = ids.length > 0;
   table.hidden = ids.length === 0;
   if (!ids.length) {
@@ -1234,7 +1253,7 @@ function renderComparePage() {
 }
 
 if (document.body.dataset.page === "comparar") {
-  const idsFromUrl = (new URLSearchParams(window.location.search).get("ids") || "").split(",").filter((id) => Boolean(vehicleCatalog[id]));
+  const idsFromUrl = (new URLSearchParams(window.location.search).get("ids") || "").split(",").filter(isVehicleId);
   if (idsFromUrl.length) savePreference("celeritas-compare", JSON.stringify(uniqueVehicleIds(idsFromUrl).slice(0, 3)));
 }
 addCompareButtons();
@@ -1471,12 +1490,14 @@ const brandTrack = document.querySelector("[data-marquee]");
 if (brandTrack && !prefersReducedMotion) {
   const originals = [...brandTrack.children];
   const fillViewport = () => {
-    while (brandTrack.scrollWidth < brandTrack.parentElement.clientWidth * 1.15) {
+    for (let round = 0; round < 6 && brandTrack.scrollWidth < brandTrack.parentElement.clientWidth * 1.15; round += 1) {
+      const widthBefore = brandTrack.scrollWidth;
       originals.forEach((item) => {
         const copy = item.cloneNode(true);
         copy.setAttribute("aria-hidden", "true");
         brandTrack.append(copy);
       });
+      if (brandTrack.scrollWidth <= widthBefore) break;
     }
   };
   fillViewport();
@@ -1488,7 +1509,7 @@ if (brandTrack && !prefersReducedMotion) {
     if (lastTime !== null) offset += (speed * Math.min(time - lastTime, 100)) / 1000;
     lastTime = time;
     let first = brandTrack.firstElementChild;
-    while (first && offset >= first.offsetWidth) {
+    while (first && first.offsetWidth > 0 && offset >= first.offsetWidth) {
       offset -= first.offsetWidth;
       brandTrack.append(first);
       first = brandTrack.firstElementChild;
@@ -1498,3 +1519,11 @@ if (brandTrack && !prefersReducedMotion) {
   };
   requestAnimationFrame(tick);
 }
+
+document.querySelector("[data-account-clear]")?.addEventListener("click", () => {
+  if (!window.confirm("¿Borrar tu perfil, favoritos, carrito y preferencias guardados en este dispositivo? No se puede deshacer.")) return;
+  try {
+    Object.keys(window.localStorage).filter((key) => key.startsWith("celeritas-")).forEach((key) => window.localStorage.removeItem(key));
+  } catch { /* Storage can be unavailable in private browsing. */ }
+  window.location.reload();
+});

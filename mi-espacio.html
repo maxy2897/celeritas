@@ -2,12 +2,13 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; base-uri 'self'; form-action 'self'" /><meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta name="description" content="Gestiona tu perfil, tus coches favoritos y tus solicitudes en Mi espacio Celeritas." />
     <meta name="theme-color" content="#0b2036" />
     <title>Mi espacio Celeritas — Perfil</title>
-    <link rel="stylesheet" href="styles.css?v=44" />
-    <script src="script.js?v=44" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=45" />
+    <script src="script.js?v=45" type="module"></script>
   </head>
   <body data-page="mi-espacio">
     <div class="assurance-bar" aria-label="Compromisos Celeritas"><span>✓ Vehículos revisados</span><span>✓ Garantía mínima de 12 meses</span><a href="contacto.html">Atención personalizada →</a></div>
@@ -79,6 +80,7 @@
               </div>
               <p class="account-storage-note">Tus datos se guardan en este dispositivo y no se envían hasta que tú presentes un formulario a Celeritas.</p>
               <div class="account-form-actions"><button class="button button-dark" type="submit">Guardar mi perfil</button><span data-account-save-status role="status" aria-live="polite"></span></div>
+              <div class="account-privacy"><p>Tus datos se guardan solo en este navegador y no se envían a ningún servidor.</p><button class="account-clear" type="button" data-account-clear>Borrar mis datos de este dispositivo</button></div>
             </form>
           </section>
 
