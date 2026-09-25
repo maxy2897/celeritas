@@ -1410,3 +1410,35 @@ if (detailRoot) {
     updateStickyBar();
   }
 }
+
+const brandTrack = document.querySelector("[data-marquee]");
+if (brandTrack && !prefersReducedMotion) {
+  const originals = [...brandTrack.children];
+  const fillViewport = () => {
+    while (brandTrack.scrollWidth < brandTrack.parentElement.clientWidth * 1.15) {
+      originals.forEach((item) => {
+        const copy = item.cloneNode(true);
+        copy.setAttribute("aria-hidden", "true");
+        brandTrack.append(copy);
+      });
+    }
+  };
+  fillViewport();
+  window.addEventListener("resize", fillViewport);
+  const speed = 45;
+  let offset = 0;
+  let lastTime = null;
+  const tick = (time) => {
+    if (lastTime !== null) offset += (speed * Math.min(time - lastTime, 100)) / 1000;
+    lastTime = time;
+    let first = brandTrack.firstElementChild;
+    while (first && offset >= first.offsetWidth) {
+      offset -= first.offsetWidth;
+      brandTrack.append(first);
+      first = brandTrack.firstElementChild;
+    }
+    brandTrack.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
