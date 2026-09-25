@@ -12,6 +12,7 @@ Celeritas es una web española de compraventa de coches de segunda mano. El cód
 - No eliminar páginas, vehículos, formularios, filtros ni enlaces existentes salvo petición expresa del usuario.
 - Animaciones permitidas por decisión del usuario: aparición al hacer scroll, zoom y parallax en la portada, contadores, cinta de marcas y efectos al pasar el ratón. Deben respetar `prefers-reduced-motion` y no bloquear el contenido. Se conserva el efecto de la rueda.
 - Validar cualquier cambio funcional o visual con `npm run build`.
+- Al modificar `styles.css` o `script.js`, subir el número `?v=` en todos los HTML para que los navegadores no usen la versión en caché.
 - Claude puede analizar, proponer y editar el proyecto, pero no debe publicar la web.
 - Codex revisará los cambios finales y realizará la publicación en OpenAI Sites con autorización del usuario.
 - Al terminar una intervención, indicar qué archivos se modificaron y qué validación se ejecutó.
