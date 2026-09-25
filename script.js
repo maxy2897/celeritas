@@ -893,7 +893,7 @@ if (detailRoot) {
     window.addEventListener("resize", updateTabsEdge);
     updateTabsEdge();
   }
-  const checkoutLink = document.querySelector("[data-checkout-link]");
+  const checkoutLinks = document.querySelectorAll("[data-checkout-link]");
   const configCheckoutLink = document.querySelector("[data-config-checkout]");
   const servicesRoot = document.querySelector("[data-detail-services]");
   const serviceIdsFromUrl = (new URLSearchParams(window.location.search).get("services") || "").split(",").filter(Boolean);
@@ -917,20 +917,20 @@ if (detailRoot) {
     const checkoutParams = new URLSearchParams({ id });
     if (selectedServiceIds.length) checkoutParams.set("services", selectedServiceIds.join(","));
     const checkoutHref = `checkout.html?${checkoutParams.toString()}`;
-    if (checkoutLink) checkoutLink.href = checkoutHref;
+    checkoutLinks.forEach((link) => { link.href = checkoutHref; });
     if (configCheckoutLink) configCheckoutLink.href = checkoutHref;
     updateCurrencyPrices();
   }
 
   servicesRoot?.addEventListener("change", updateVehicleConfiguration);
   updateVehicleConfiguration();
-  if (checkoutLink) {
-    checkoutLink.addEventListener("click", () => {
+  checkoutLinks.forEach((link) => {
+    link.addEventListener("click", () => {
       const items = getCartItems();
       if (!items.includes(id)) saveCartItems([...items, id]);
       savePreference("celeritas-selected-vehicle", id);
     });
-  }
+  });
   configCheckoutLink?.addEventListener("click", () => {
     const items = getCartItems();
     if (!items.includes(id)) saveCartItems([...items, id]);
@@ -1334,4 +1334,79 @@ if (heroSection && !prefersReducedMotion) {
   };
   window.addEventListener("scroll", () => { if (!heroFrame) heroFrame = requestAnimationFrame(updateHeroParallax); }, { passive: true });
   updateHeroParallax();
+}
+
+if (detailRoot) {
+  const detailId = (() => {
+    const requested = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
+    return Object.hasOwn(vehicleCatalog, requested) ? requested : "seat-ibiza";
+  })();
+  const detailVehicle = vehicleCatalog[detailId];
+
+  const keySpecs = document.querySelector("[data-detail-keyspecs]");
+  if (keySpecs) {
+    keySpecs.innerHTML = ["Año", "Kilómetros", "Combustible", "Cambio", "Potencia", "Etiqueta"]
+      .filter((label) => detailVehicle.specs[label])
+      .map((label) => `<li><span>${label === "Etiqueta" ? "Etiqueta DGT" : label}</span><strong>${detailVehicle.specs[label]}</strong></li>`).join("");
+  }
+
+  const quickActions = document.querySelector("[data-detail-quick-actions]");
+  if (quickActions) {
+    const isFavorite = getFavorites().includes(detailId);
+    quickActions.innerHTML = `<button type="button" data-favorite-vehicle="${detailId}" class="${isFavorite ? "is-active" : ""}" aria-pressed="${isFavorite}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg>Guardar</button><button type="button" data-compare-vehicle="${detailId}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4 3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7" /></svg>Comparar</button><button type="button" data-share-vehicle="${detailId}" data-share-name="${detailVehicle.name}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4"/></svg>Compartir</button>`;
+    syncCompareState();
+  }
+
+  const stage = document.querySelector("[data-detail-stage]");
+  const stagePhoto = stage?.querySelector("[data-stage-photo]");
+  const stageThumbs = [...document.querySelectorAll("[data-stage-thumb]")];
+  const viewLabels = ["Vista frontal", "Vista lateral", "Vista trasera"];
+  let stageIndex = 0;
+  const showStageView = (index) => {
+    stageIndex = (index + vehicleViews.length) % vehicleViews.length;
+    stagePhoto.classList.remove(...vehicleViews);
+    stagePhoto.classList.add(vehicleViews[stageIndex]);
+    stagePhoto.setAttribute("aria-label", `${viewLabels[stageIndex]} del ${detailVehicle.name}`);
+    stage.querySelector("[data-stage-count]").textContent = `${stageIndex + 1} / ${vehicleViews.length}`;
+    stageThumbs.forEach((thumb, thumbIndex) => {
+      thumb.classList.toggle("is-active", thumbIndex === stageIndex);
+      thumb.setAttribute("aria-pressed", String(thumbIndex === stageIndex));
+    });
+  };
+  if (stage && stagePhoto) {
+    stageThumbs.forEach((thumb) => thumb.addEventListener("click", () => showStageView(Number(thumb.dataset.stageThumb))));
+    stage.querySelectorAll("[data-stage-step]").forEach((button) => button.addEventListener("click", () => showStageView(stageIndex + Number(button.dataset.stageStep))));
+    stage.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") showStageView(stageIndex + 1);
+      if (event.key === "ArrowLeft") showStageView(stageIndex - 1);
+    });
+    let stageStart = null;
+    stage.addEventListener("pointerdown", (event) => { if (event.pointerType !== "mouse") stageStart = { x: event.clientX, y: event.clientY }; });
+    stage.addEventListener("pointerup", (event) => {
+      if (!stageStart) return;
+      const deltaX = event.clientX - stageStart.x;
+      if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(event.clientY - stageStart.y)) showStageView(stageIndex + (deltaX < 0 ? 1 : -1));
+      stageStart = null;
+    });
+    stage.addEventListener("pointercancel", () => { stageStart = null; });
+    showStageView(0);
+  }
+
+  const stickyBar = document.querySelector("[data-detail-sticky-bar]");
+  const mainCta = document.querySelector("[data-detail-main-cta]");
+  if (stickyBar && mainCta) {
+    stickyBar.querySelector("[data-sticky-name]").textContent = detailVehicle.name;
+    const stickyPrice = stickyBar.querySelector("[data-sticky-price]");
+    stickyPrice.dataset.priceEur = String(detailVehicle.priceEur);
+    stickyPrice.textContent = formatMoney(detailVehicle.priceEur);
+    let stickyFrame = null;
+    const updateStickyBar = () => {
+      stickyFrame = null;
+      const show = mainCta.getBoundingClientRect().bottom < 0;
+      stickyBar.classList.toggle("is-visible", show);
+      document.body.classList.toggle("has-sticky-buy", show);
+    };
+    window.addEventListener("scroll", () => { if (!stickyFrame) stickyFrame = requestAnimationFrame(updateStickyBar); }, { passive: true });
+    updateStickyBar();
+  }
 }

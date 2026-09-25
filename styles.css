@@ -834,3 +834,73 @@ body[data-page="comparar"] .compare-bar{display:none}
   .vehicle-card-shell,.inventory-card .single-car-photo,.button,.nav-cta,.type-icon{transition:none}
   .vehicle-card-shell:hover,.vehicle-card-shell:hover .single-car-photo,.button:hover,.nav-cta:hover{transform:none}
 }
+/* Vehicle detail redesign */
+.vehicle-detail .back-link{margin:.5rem 0 1.5rem}
+.detail-hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(21rem,1fr);gap:2rem;align-items:start;margin-bottom:2.5rem}
+.detail-media{min-width:0}
+.detail-stage{position:relative;overflow:hidden;aspect-ratio:1.42;background:#e8e5df;border-radius:.5rem;outline-offset:3px}
+.detail-stage .detail-photo{position:absolute;inset:0;background-position-y:center;touch-action:pan-y}
+.stage-arrow{position:absolute;top:50%;display:grid;width:3rem;height:3rem;place-items:center;padding:0 0 .2rem;color:var(--navy);background:#ffffffe6;border:0;border-radius:50%;box-shadow:0 .5rem 1.4rem #0b203626;font-size:1.8rem;line-height:1;cursor:pointer;translate:0 -50%;transition:background-color .25s ease,color .25s ease}
+.stage-prev{left:1rem}
+.stage-next{right:1rem}
+.stage-arrow:hover,.stage-arrow:focus-visible{color:#fff;background:var(--navy)}
+.stage-count{position:absolute;right:1rem;bottom:1rem;padding:.35rem .7rem;color:#fff;background:#0b2036b3;border-radius:2rem;font-size:.7rem;font-weight:800}
+.detail-thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.6rem}
+.detail-thumbs .detail-photo:first-child{grid-row:auto}
+.detail-thumbs .detail-photo{aspect-ratio:1.42;padding:0;background-position-y:center;border:2px solid transparent;border-radius:.4rem;cursor:pointer;opacity:.72;transition:opacity .25s ease,border-color .25s ease}
+.detail-thumbs .detail-photo:hover,.detail-thumbs .detail-photo.is-active{opacity:1}
+.detail-thumbs .detail-photo.is-active{border-color:var(--navy)}
+.detail-summary{position:sticky;top:6.8rem;display:grid;gap:0;padding:2rem;background:#fff;border:1px solid #e3ded4;border-radius:.5rem;box-shadow:0 1.5rem 3rem #0b203612}
+.detail-summary .eyebrow{margin-bottom:.6rem}
+.detail-summary h1{margin:0;font-family:var(--sans);font-size:clamp(1.7rem,2.4vw,2.5rem);font-weight:900;line-height:1.08;letter-spacing:-.02em;text-transform:uppercase}
+.detail-summary-line{margin:.6rem 0 0;color:var(--muted);font-size:.88rem}
+.detail-keyspecs{display:grid;grid-template-columns:repeat(3,1fr);margin:1.4rem 0 0;padding:0;list-style:none;border-top:1px solid #ebe6dc}
+.detail-keyspecs li{display:grid;gap:.2rem;padding:.8rem .6rem .8rem 0;border-bottom:1px solid #ebe6dc}
+.detail-keyspecs span{color:var(--muted);font-size:.58rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.detail-keyspecs strong{color:var(--ink);font-size:.86rem;font-weight:800}
+.detail-summary .detail-price{justify-items:start;gap:.2rem;padding:1.3rem 0 .4rem}
+.detail-summary .detail-price strong{font-size:clamp(2.4rem,3.4vw,3.2rem);line-height:1}
+.detail-summary .detail-price>span,.detail-summary .detail-price>small{font-size:.62rem;letter-spacing:.06em}
+.detail-summary .detail-deal{margin:.8rem 0 0;border-radius:.3rem}
+.detail-actions{display:grid;gap:.5rem;margin-top:1.2rem}
+.detail-actions>div{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.detail-actions .button{width:100%;min-height:3.1rem;font-size:.74rem}
+.detail-actions .button-buy{min-height:3.5rem;font-size:.82rem}
+.detail-quick-actions{display:flex;justify-content:space-between;gap:.4rem;margin-top:1rem;padding-top:1rem;border-top:1px solid #ebe6dc}
+.detail-quick-actions button{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .2rem;color:var(--navy);background:transparent;border:0;font-size:.72rem;font-weight:800;cursor:pointer}
+.detail-quick-actions svg{width:1.05rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.detail-quick-actions button.is-active{color:#37644a}
+.detail-quick-actions button[data-favorite-vehicle].is-active svg{fill:currentColor}
+.detail-trust{display:grid;gap:.45rem;margin:1rem 0 0;padding:1rem 0 0;list-style:none;border-top:1px solid #ebe6dc;color:var(--muted);font-size:.74rem}
+.detail-trust li::before{margin-right:.5rem;color:#37644a;font-weight:900;content:"✓"}
+.detail-sticky-bar{display:none}
+@media(max-width:1000px){
+  .detail-hero{grid-template-columns:1fr}
+  .detail-summary{position:static}
+}
+@media(max-width:700px){
+  .vehicle-detail .back-link{margin:.2rem 0 1rem}
+  .detail-hero{gap:1.2rem;margin-bottom:1.5rem}
+  .detail-stage{aspect-ratio:1.3;border-radius:.35rem}
+  .stage-arrow{width:2.4rem;height:2.4rem;font-size:1.4rem}
+  .stage-prev{left:.6rem}
+  .stage-next{right:.6rem}
+  .detail-thumbs{gap:.4rem;margin-top:.4rem}
+  .detail-summary{padding:1.3rem;box-shadow:none}
+  .detail-summary h1{font-size:1.75rem}
+  .detail-keyspecs li{padding-right:.4rem}
+  .detail-keyspecs strong{font-size:.78rem}
+  .detail-tabs{position:static}
+  .detail-sticky-bar{position:fixed;right:0;bottom:0;left:0;z-index:33;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1rem calc(.7rem + env(safe-area-inset-bottom));color:#fff;background:var(--navy);box-shadow:0 -.6rem 1.5rem #03101d40;translate:0 110%;transition:translate .35s cubic-bezier(.2,.7,.2,1)}
+  .detail-sticky-bar.is-visible{translate:0 0}
+  .detail-sticky-bar>div{display:grid;min-width:0}
+  .detail-sticky-bar small{overflow:hidden;color:#ffffffa6;font-size:.64rem;white-space:nowrap;text-overflow:ellipsis}
+  .detail-sticky-bar strong{color:var(--green);font-family:var(--serif);font-size:1.45rem;font-weight:400}
+  .detail-sticky-bar .button{min-height:2.9rem;padding:0 1.4rem;font-size:.76rem}
+  body.has-sticky-buy .floating-vehicle-actions{bottom:10.6rem}
+  body.has-sticky-buy .scroll-wheel{bottom:5rem}
+  body.has-sticky-buy .compare-bar{bottom:5rem}
+  body[data-page="coche"] .vehicle-detail{padding-bottom:6rem}
+  .detail-content h2,.vehicle-report h2,.vehicle-configurator h2,.detail-cta h2,.assessment-heading h2{font-size:clamp(2rem,9vw,2.6rem)}
+}
+@media(prefers-reduced-motion:reduce){.detail-sticky-bar{transition:none}}

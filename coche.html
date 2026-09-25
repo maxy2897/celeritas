@@ -24,17 +24,35 @@
     <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt="" /><span>CELERITAS</span></aside>
     <main id="contenido" class="vehicle-detail" data-vehicle-detail>
       <a class="back-link" href="comprar.html">← Volver al catálogo</a>
-      <section class="detail-heading">
-        <div><p class="eyebrow dark" data-detail-kicker>Vehículo de ocasión</p><h1 data-detail-name>Cargando vehículo…</h1><p data-detail-summary></p></div>
-        <div class="detail-price"><span>Precio del vehículo</span><strong data-detail-price>—</strong><small>Garantía incluida · servicios opcionales a tu medida</small></div>
+      <section class="detail-hero" id="fotos">
+        <div class="detail-media">
+          <div class="detail-stage" data-detail-stage tabindex="0" aria-label="Fotografías del vehículo. Usa las flechas para cambiar de vista.">
+            <div class="detail-photo view-front" data-detail-photo data-stage-photo role="img" aria-label="Vista frontal"></div>
+            <button class="stage-arrow stage-prev" type="button" data-stage-step="-1" aria-label="Vista anterior">‹</button>
+            <button class="stage-arrow stage-next" type="button" data-stage-step="1" aria-label="Vista siguiente">›</button>
+            <span class="stage-count" data-stage-count>1 / 3</span>
+          </div>
+          <div class="detail-thumbs" aria-label="Vistas del coche"><button class="detail-photo view-front is-active" type="button" data-detail-photo data-stage-thumb="0" aria-label="Ver vista frontal" aria-pressed="true"></button><button class="detail-photo view-side" type="button" data-detail-photo data-stage-thumb="1" aria-label="Ver vista lateral" aria-pressed="false"></button><button class="detail-photo view-rear" type="button" data-detail-photo data-stage-thumb="2" aria-label="Ver vista trasera" aria-pressed="false"></button></div>
+        </div>
+        <aside class="detail-summary">
+          <p class="eyebrow dark" data-detail-kicker>Vehículo de ocasión</p>
+          <h1 data-detail-name>Cargando vehículo…</h1>
+          <p class="detail-summary-line" data-detail-summary></p>
+          <ul class="detail-keyspecs" data-detail-keyspecs></ul>
+          <div class="detail-price"><span>Precio al contado</span><strong data-detail-price>—</strong><small>Garantía de 12 meses como mínimo incluida</small></div>
+          <div class="detail-deal" data-detail-deal hidden><span>Oferta temporal · antes <del data-detail-previous-price>—</del></span><strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></div>
+          <div class="detail-actions">
+            <a class="button button-buy" href="checkout.html" data-checkout-link data-detail-main-cta>Comprar o reservar</a>
+            <div>
+              <button class="button button-accent" type="button" data-interest data-interest-name="Vehículo seleccionado" data-interest-reason="Probar el coche">Reservar prueba</button>
+              <button class="button button-outline" type="button" data-interest data-interest-name="Vehículo seleccionado" data-interest-reason="Recibir más información">Preguntar</button>
+            </div>
+          </div>
+          <div class="detail-quick-actions" data-detail-quick-actions></div>
+          <ul class="detail-trust"><li>Revisión de 100 puntos</li><li>Garantía mínima de 12 meses</li><li>Entrega nacional e internacional</li></ul>
+        </aside>
       </section>
-      <div class="detail-deal" data-detail-deal hidden><span>Oferta temporal · antes <del data-detail-previous-price>—</del></span><strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></div>
       <nav class="detail-tabs" aria-label="Contenido de la ficha"><a href="#fotos">Fotos</a><a href="#estado">Estado</a><a href="#caracteristicas">Características</a><a href="#historial">Historial</a><a href="#configura">Configura</a><a href="#comprar-coche">Comprar</a></nav>
-      <section class="vehicle-gallery" id="fotos" aria-label="Fotografías del vehículo">
-        <div class="detail-photo view-front" data-detail-photo role="img" aria-label="Vista frontal"></div>
-        <div class="detail-photo view-side" data-detail-photo role="img" aria-label="Vista lateral"></div>
-        <div class="detail-photo view-rear" data-detail-photo role="img" aria-label="Vista trasera"></div>
-      </section>
       <section class="vehicle-assessment" id="estado" aria-labelledby="assessment-title">
         <div class="assessment-heading">
           <p class="eyebrow dark">Valoración Celeritas</p>
@@ -98,6 +116,7 @@
           <a class="button button-buy" href="checkout.html" data-checkout-link>Comprar o reservar</a>
         </div>
       </section>
+      <div class="detail-sticky-bar" data-detail-sticky-bar><div><small data-sticky-name></small><strong data-sticky-price>—</strong></div><a class="button button-buy" href="checkout.html" data-checkout-link>Comprar</a></div>
     </main>
 <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
     <dialog class="interest-dialog" id="interest-dialog"><button class="dialog-close" type="button" aria-label="Cerrar">×</button><p class="eyebrow dark">Solicitar información</p><h2 id="interest-name">Vehículo seleccionado</h2><form data-success-form><label><span>Nombre</span><input autocomplete="name" required /></label><label><span>Teléfono</span><input type="tel" autocomplete="tel" required /></label><label><span>Email</span><input type="email" autocomplete="email" required /></label><label><span>Me interesa</span><select><option>Probar el coche</option><option>Financiarlo</option><option>Entregar mi coche</option><option>Recibir más información</option></select></label><button class="button button-dark" type="submit">Enviar solicitud</button></form><div class="success-message" hidden><strong>Solicitud recibida.</strong><p>Te contactaremos para confirmar la disponibilidad.</p></div></dialog>
