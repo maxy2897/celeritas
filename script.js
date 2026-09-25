@@ -965,7 +965,9 @@ if (checkoutRoot) {
     syncCartIndicator(cartItems);
     content.hidden = false;
     const cartList = content.querySelector("[data-cart-list]");
-    cartList.innerHTML = cartItems.map((id) => {
+    const cartBlock = content.querySelector("[data-cart-block]");
+    if (cartBlock) cartBlock.hidden = cartItems.length < 2;
+    cartList.innerHTML = cartItems.filter((id) => id !== requestedId).map((id) => {
       const item = vehicleCatalog[id];
       const current = id === requestedId;
       const savedServices = readListPreference(`celeritas-services-${id}`).filter((serviceId) => vehicleReports[id].services.some((service) => service.id === serviceId));
@@ -973,7 +975,12 @@ if (checkoutRoot) {
       if (savedServices.length) itemParams.set("services", savedServices.join(","));
       return `<article class="cart-vehicle-item${current ? " is-selected" : ""}"><a href="checkout.html?${itemParams.toString()}" aria-current="${current ? "true" : "false"}"><span class="cart-vehicle-thumb ${item.imageClass} view-front" aria-hidden="true"></span><span><strong>${item.name}</strong><small data-price-eur="${item.priceEur}">${item.price}</small></span></a><button type="button" data-cart-remove="${id}" aria-label="Quitar ${item.name} del carrito" title="Quitar del carrito">×</button></article>`;
     }).join("");
-    cartList.addEventListener("click", (event) => {
+    const orderRemove = content.querySelector("[data-checkout-remove]");
+    if (orderRemove) {
+      orderRemove.dataset.cartRemove = requestedId;
+      orderRemove.setAttribute("aria-label", `Quitar ${vehicle.name} del carrito`);
+    }
+    content.addEventListener("click", (event) => {
       const removeButton = event.target.closest("[data-cart-remove]");
       if (!removeButton) return;
       const nextItems = saveCartItems(cartItems.filter((id) => id !== removeButton.dataset.cartRemove));
@@ -986,6 +993,42 @@ if (checkoutRoot) {
     const photo = content.querySelector("[data-checkout-photo]");
     photo.classList.add(vehicle.imageClass);
     photo.setAttribute("aria-label", `${vehicle.name}, vista frontal`);
+    const mini = content.querySelector("[data-checkout-mini]");
+    if (mini) {
+      mini.src = `assets/mini-${requestedId}.webp`;
+      mini.alt = vehicle.name;
+    }
+    const checkoutViews = ["view-front", "view-side", "view-rear"];
+    const checkoutViewLabels = ["vista frontal", "vista lateral", "vista trasera"];
+    const checkoutThumbs = [...content.querySelectorAll("[data-checkout-thumb]")];
+    checkoutThumbs.forEach((thumb) => {
+      thumb.classList.add(vehicle.imageClass);
+      thumb.addEventListener("click", () => {
+        const index = Number(thumb.dataset.checkoutThumb);
+        photo.classList.remove(...checkoutViews);
+        photo.classList.add(checkoutViews[index]);
+        photo.setAttribute("aria-label", `${vehicle.name}, ${checkoutViewLabels[index]}`);
+        checkoutThumbs.forEach((other) => {
+          other.classList.toggle("is-active", other === thumb);
+          other.setAttribute("aria-pressed", String(other === thumb));
+        });
+      });
+    });
+    const checkoutSpecs = content.querySelector("[data-checkout-specs]");
+    if (checkoutSpecs) {
+      checkoutSpecs.innerHTML = ["Año", "Kilómetros", "Combustible", "Cambio", "Potencia", "Etiqueta"]
+        .filter((label) => vehicle.specs[label])
+        .map((label) => `<li><span>${label === "Etiqueta" ? "Etiqueta DGT" : label}</span><strong>${vehicle.specs[label]}</strong></li>`).join("");
+    }
+    const detailsToggle = content.querySelector("[data-checkout-toggle]");
+    const detailsPanel = content.querySelector("[data-checkout-details]");
+    detailsToggle?.addEventListener("click", () => {
+      const open = !detailsPanel.classList.contains("is-open");
+      detailsPanel.classList.toggle("is-open", open);
+      detailsPanel.inert = !open;
+      detailsToggle.setAttribute("aria-expanded", String(open));
+      detailsToggle.querySelector("[data-checkout-toggle-label]").textContent = open ? "Ocultar detalles" : "Ver detalles del coche";
+    });
     const detailLink = content.querySelector("[data-checkout-detail]");
     const report = vehicleReports[requestedId];
     const requestedServiceIds = (checkoutParams.get("services") || "").split(",").filter(Boolean);
@@ -1010,8 +1053,17 @@ if (checkoutRoot) {
       extras.innerHTML = selectedServices.map((service) => `<p><span>${service.label}</span><strong data-price-eur="${service.price}">${formatMoney(service.price)}</strong></p>`).join("");
     }
 
+    let estimateReady = false;
+    function flashTotal() {
+      if (!estimateReady) return;
+      total.classList.remove("is-updated");
+      void total.offsetWidth;
+      total.classList.add("is-updated");
+    }
+
     function updateCheckoutEstimate() {
       const delivery = deliveryEstimates[country.value];
+      flashTotal();
       if (delivery === undefined) {
         shipping.removeAttribute("data-price-eur");
         total.removeAttribute("data-price-eur");
@@ -1028,6 +1080,7 @@ if (checkoutRoot) {
 
     country.addEventListener("change", updateCheckoutEstimate);
     updateCheckoutEstimate();
+    estimateReady = true;
   }
 }
 
@@ -1062,7 +1115,10 @@ document.querySelectorAll("[data-success-form]").forEach((form) => {
     if (!form.reportValidity()) return;
     form.hidden = true;
     const success = form.parentElement.querySelector(".success-message");
-    if (success) success.hidden = false;
+    if (success) {
+      success.hidden = false;
+      success.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    }
   });
 });
 
@@ -1299,7 +1355,7 @@ const revealSelectors = [
   ".config-tool", ".trust-intro", ".trust-strip > p", ".stat-item", ".home-service-photo > div", ".vehicle-types > a",
   ".reviews-heading", ".reviews-grid > article", ".home-faq-heading", ".faq-list details", ".inventory-page-head > *",
   ".vehicle-gallery", ".detail-heading", ".page-hero", ".sell-options article", ".dark-flow li", ".journey-steps article",
-  ".compare-table", ".favorites-empty", ".footer-brand",
+  ".compare-table", ".favorites-empty", ".footer-brand", ".order-card", ".cart-others", ".checkout-step",
 ];
 
 if (!prefersReducedMotion && "IntersectionObserver" in window) {
