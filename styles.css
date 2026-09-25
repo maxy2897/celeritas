@@ -795,11 +795,11 @@ body[data-page="comparar"] .compare-bar{display:none}
   .market-hero::before{position:absolute;inset:-12% 0 -4%;z-index:0;content:"";background:inherit;background-position:58% 52%;translate:0 var(--hero-shift,0);animation:hero-zoom 2.6s cubic-bezier(.2,.7,.2,1) both;will-change:translate}
   .market-hero::after{z-index:1}
 }
-.brand-marquee{overflow:hidden;padding:1.6rem 0;color:var(--navy);background:#fff;border-block:1px solid #e3ded4}
+.brand-marquee{overflow:hidden;padding:1.1rem 0;color:var(--navy);background:#fff;border-block:1px solid #e3ded4}
 .marquee-track{display:flex;width:max-content;will-change:transform}
-.marquee-track span{display:flex;align-items:center;gap:1.1rem;padding-right:3.2rem;font-family:var(--serif);font-size:clamp(1.6rem,2.6vw,2.4rem);white-space:nowrap}
-.marquee-track span::after{width:.55rem;height:.55rem;margin-left:2.1rem;content:"";background:var(--green);border-radius:50%}
-.marquee-track img{flex:0 0 auto;width:clamp(5.6rem,8vw,7.2rem);height:auto;filter:drop-shadow(0 .35rem .3rem #0b203629)}
+.marquee-track span{display:flex;align-items:center;gap:.8rem;padding-right:2.4rem;font-family:var(--serif);font-size:clamp(1.25rem,1.9vw,1.75rem);white-space:nowrap}
+.marquee-track span::after{width:.45rem;height:.45rem;margin-left:1.6rem;content:"";background:var(--green);border-radius:50%}
+.marquee-track img{flex:0 0 auto;width:clamp(4.4rem,6vw,5.4rem);height:auto;filter:drop-shadow(0 .3rem .25rem #0b203629)}
 .stats-band{display:grid;grid-template-columns:repeat(4,1fr);padding:5.5rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2));background:#fff;border-bottom:1px solid #e3ded4}
 .stat-item{padding:0 2rem}
 .stat-item+.stat-item{border-left:1px solid #e3ded4}
@@ -819,10 +819,10 @@ body[data-page="comparar"] .compare-bar{display:none}
   .home-paths .choice-links>a:hover b{transform:translateX(6px)}
 }
 @media(max-width:700px){
-  .brand-marquee{padding:1rem 0}
-  .marquee-track span{gap:.7rem;padding-right:1.8rem;font-size:1.3rem}
-  .marquee-track span::after{width:.42rem;height:.42rem;margin-left:1.1rem}
-  .marquee-track img{width:4.6rem}
+  .brand-marquee{padding:.8rem 0}
+  .marquee-track span{gap:.55rem;padding-right:1.4rem;font-size:1.08rem}
+  .marquee-track span::after{width:.36rem;height:.36rem;margin-left:.9rem}
+  .marquee-track img{width:3.8rem}
   .stats-band{grid-template-columns:1fr 1fr;gap:2.2rem 0;padding:3.5rem 1rem}
   .stat-item{padding:0 1rem}
   .stat-item:nth-child(3){border-left:0}
@@ -830,7 +830,9 @@ body[data-page="comparar"] .compare-bar{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   .market-hero-copy h1,.market-hero-copy h1 em,.market-hero-copy>p,.market-hero-copy .hero-actions,.market-hero::before{animation:none}
-  .marquee-track{flex-wrap:wrap;width:auto}
+  .brand-marquee{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .brand-marquee::-webkit-scrollbar{display:none}
+  .marquee-track{flex-wrap:nowrap;width:max-content;padding-left:1rem}
   .vehicle-card-shell,.inventory-card .single-car-photo,.button,.nav-cta,.type-icon{transition:none}
   .vehicle-card-shell:hover,.vehicle-card-shell:hover .single-car-photo,.button:hover,.nav-cta:hover{transform:none}
 }
