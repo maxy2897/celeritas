@@ -1051,5 +1051,5 @@ body[data-page="comparar"] .compare-bar{display:none}
 .budget-tool{padding-top:clamp(1.75rem,2.5vw,2.5rem)}
 /* Hero without action buttons: pull the search filters up into the freed space. */
 @media(min-width:701px){.market-hero{min-height:34rem;padding-bottom:6.6rem}}
-@media(max-width:700px){.market-hero{padding-bottom:.5rem}.market-hero+.mobile-filter-toggle{margin-bottom:0}}
+@media(max-width:700px){.market-hero{padding-bottom:.35rem}.market-hero-copy>p:not(.eyebrow){margin-bottom:0}.market-hero+.mobile-filter-toggle{margin-bottom:0}}
 @media(max-width:700px){.budget-tool{padding-top:1.1rem;padding-bottom:1.25rem}.budget-heading{margin-bottom:1.1rem}}

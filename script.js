@@ -195,9 +195,6 @@ if (siteHeader) {
   siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
 }
 
-const assuranceBar = document.querySelector(".assurance-bar");
-if (assuranceBar) assuranceBar.innerHTML = `<span>✓ Garantía Celeritas</span><a href="checkout.html">Entrega nacional e internacional</a><a href="como-funciona.html">Historial e inspección transparente</a>`;
-
 let scrollWheel = document.querySelector(".scroll-wheel");
 if (!scrollWheel) {
   document.body.insertAdjacentHTML("beforeend", '<aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt=""/></aside>');
