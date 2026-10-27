@@ -1069,3 +1069,6 @@ body[data-page="comparar"] .compare-bar{display:none}
 .types-menu .vehicle-types a:hover .type-icon{transform:none}
 @keyframes types-menu-in{from{opacity:0;transform:translate(-50%,-.5rem)}to{opacity:1;transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.types-menu .vehicle-types{animation:none}.burger-lines i,.types-burger{transition:none}}
+/* Hero without action buttons: pull the search filters up into the freed space. */
+@media(min-width:701px){.market-hero{min-height:34rem;padding-bottom:6.6rem}}
+@media(max-width:700px){.market-hero{padding-bottom:1.25rem}}
