@@ -508,6 +508,7 @@
 .config-tool button{color:#fff;background:var(--navy)}
 .config-tool form{grid-column:2;grid-row:1/4;grid-template-columns:1fr}
 .config-tool button{min-height:3.5rem}
+.config-section .config-tool{margin:4.5rem auto}
 .budget-options{display:grid;width:var(--page);grid-template-columns:repeat(6,minmax(0,1fr));gap:1rem;margin:0 auto}
 .budget-options a{position:relative;display:block;min-width:0;overflow:hidden;color:var(--navy);background:#dddcd9;border:0;border-radius:.65rem;transform:translateY(0);transition:transform .38s cubic-bezier(.22,.72,.24,1)}
 .budget-options a:hover,.budget-options a:focus-visible{z-index:2;outline:0;transform:translateY(-1rem)}
