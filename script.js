@@ -429,21 +429,62 @@ document.querySelector("[data-guide-open]")?.addEventListener("click", () => {
   }
 });
 
+// Close an open panel after a short idle period, or as soon as the user presses anywhere outside it.
+const panelIdleDelay = 2000;
+function autoCollapse(areas, isOpen, close) {
+  let timer = null;
+  const arm = () => {
+    window.clearTimeout(timer);
+    if (!isOpen()) return;
+    timer = window.setTimeout(() => {
+      if (!isOpen()) return;
+      const inUse = areas.some((area) => area.querySelector(":focus-visible, input:focus, select:focus, textarea:focus"));
+      if (inUse) arm();
+      else close();
+    }, panelIdleDelay);
+  };
+  areas.forEach((area) => {
+    ["pointermove", "pointerdown", "wheel", "touchstart", "touchmove", "keydown", "input", "change", "scroll"].forEach((type) => area.addEventListener(type, arm, { passive: true, capture: true }));
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (isOpen() && !areas.some((area) => area.contains(event.target))) close();
+  });
+  return arm;
+}
+
+function setFilterToggle(button, open) {
+  button.setAttribute("aria-expanded", String(open));
+  const icon = button.querySelector("b");
+  if (icon) icon.textContent = open ? "−" : "＋";
+}
+
+const catalogToolbar = document.querySelector("#catalog-toolbar");
+const armCatalogFilters = mobileFilterButton && inventoryCatalog && catalogToolbar
+  ? autoCollapse([mobileFilterButton, catalogToolbar], () => inventoryCatalog.classList.contains("filters-open"), () => {
+    inventoryCatalog.classList.remove("filters-open");
+    setFilterToggle(mobileFilterButton, false);
+  })
+  : null;
+
 mobileFilterButton?.addEventListener("click", () => {
   const open = inventoryCatalog?.classList.toggle("filters-open") || false;
-  mobileFilterButton.setAttribute("aria-expanded", String(open));
-  const icon = mobileFilterButton.querySelector("b");
-  if (icon) icon.textContent = open ? "−" : "＋";
+  setFilterToggle(mobileFilterButton, open);
+  armCatalogFilters?.();
 });
 
 const heroFilterToggle = document.querySelector("[data-hero-filter-toggle]");
 const heroFilters = document.querySelector("[data-hero-filters]");
+const armHeroFilters = heroFilterToggle && heroFilters
+  ? autoCollapse([heroFilterToggle, heroFilters], () => heroFilters.classList.contains("filters-open"), () => {
+    heroFilters.classList.remove("filters-open");
+    setFilterToggle(heroFilterToggle, false);
+  })
+  : null;
 
 heroFilterToggle?.addEventListener("click", () => {
   const open = heroFilters?.classList.toggle("filters-open") || false;
-  heroFilterToggle.setAttribute("aria-expanded", String(open));
-  const icon = heroFilterToggle.querySelector("b");
-  if (icon) icon.textContent = open ? "−" : "＋";
+  setFilterToggle(heroFilterToggle, open);
+  armHeroFilters?.();
 });
 
 function normalize(value) {
@@ -1581,9 +1622,10 @@ if (typesMenu) {
     typesMenu.classList.toggle("is-open", open);
     typesPanel.hidden = !open;
   };
-  typesToggle.addEventListener("click", () => setTypesOpen(typesPanel.hidden));
-  document.addEventListener("click", (event) => {
-    if (!typesPanel.hidden && !typesMenu.contains(event.target)) setTypesOpen(false);
+  const armTypesMenu = autoCollapse([typesMenu], () => !typesPanel.hidden, () => setTypesOpen(false));
+  typesToggle.addEventListener("click", () => {
+    setTypesOpen(typesPanel.hidden);
+    armTypesMenu();
   });
   typesMenu.addEventListener("keydown", (event) => {
     if (event.key !== "Escape" || typesPanel.hidden) return;
