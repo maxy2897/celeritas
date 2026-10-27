@@ -1527,3 +1527,43 @@ document.querySelector("[data-account-clear]")?.addEventListener("click", () => 
   } catch { /* Storage can be unavailable in private browsing. */ }
   window.location.reload();
 });
+
+const shippingOptions = document.querySelector("[data-shipping]");
+if (shippingOptions) {
+  const shippingArea = shippingOptions.closest(".budget-tool") || shippingOptions.parentElement;
+  const continentButtons = [...shippingOptions.querySelectorAll("button[data-continent]")];
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+  let pinned = null;
+  const showContinent = (button) => {
+    continentButtons.forEach((item) => {
+      const open = item === button;
+      item.setAttribute("aria-expanded", String(open));
+      const panel = document.getElementById(item.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !open;
+    });
+  };
+  continentButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (pinned === button) {
+        pinned = null;
+        showContinent(null);
+      } else {
+        pinned = button;
+        showContinent(button);
+      }
+    });
+    button.addEventListener("mouseenter", () => {
+      if (canHover.matches && !pinned) showContinent(button);
+    });
+  });
+  shippingArea.addEventListener("mouseleave", () => {
+    if (canHover.matches && !pinned) showContinent(null);
+  });
+  shippingArea.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !continentButtons.some((item) => item.getAttribute("aria-expanded") === "true")) return;
+    const open = continentButtons.find((item) => item.getAttribute("aria-expanded") === "true");
+    pinned = null;
+    showContinent(null);
+    open?.focus();
+  });
+}
