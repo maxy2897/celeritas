@@ -1531,7 +1531,7 @@ document.querySelector("[data-account-clear]")?.addEventListener("click", () => 
 const shippingOptions = document.querySelector("[data-shipping]");
 if (shippingOptions) {
   const continentTiles = [...shippingOptions.querySelectorAll(".continent-tile")];
-  const idleDelay = 5000;
+  const idleDelay = 1000;
   let openTile = null;
   let idleTimer = null;
   const showContinent = (tile) => {
@@ -1554,6 +1554,9 @@ if (shippingOptions) {
       else if (openTile) armIdleTimer();
     }, idleDelay);
   };
+  document.addEventListener("pointerdown", (event) => {
+    if (openTile && !openTile.contains(event.target)) showContinent(null);
+  });
   continentTiles.forEach((tile) => {
     tile.querySelector("[data-continent-toggle]")?.addEventListener("click", () => {
       showContinent(openTile === tile ? null : tile);
