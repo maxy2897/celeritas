@@ -17,8 +17,8 @@
     <meta name="twitter:image" content="https://maxy2897.github.io/celeritas/og.png" />
     <link rel="canonical" href="https://maxy2897.github.io/celeritas/" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
-    <link rel="stylesheet" href="styles.css?v=49" />
-    <script src="script.js?v=49" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=50" />
+    <script src="script.js?v=50" type="module"></script>
   </head>
   <body data-page="inicio">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
@@ -57,13 +57,16 @@
           <button type="submit">Buscar coches →</button>
         </form>
 
-        <section class="vehicle-types" aria-label="Buscar por tipo de vehículo">
+        <div class="types-menu" data-types-menu>
+          <button class="types-burger" type="button" aria-expanded="false" aria-controls="vehicle-types" data-types-toggle><span class="burger-lines" aria-hidden="true"><i></i><i></i><i></i></span><span>Tipos de vehículo</span></button>
+        <section class="vehicle-types" id="vehicle-types" aria-label="Buscar por tipo de vehículo" hidden>
           <a href="comprar.html?tipo=utilitario"><span class="type-icon"><svg viewBox="0 0 44 24" aria-hidden="true"><path d="M5 18H4v-5l5-1.5L14 7h11l5 4.5 7 1.5v5h-1M14 18h14"/><circle cx="11" cy="18" r="3"/><circle cx="33" cy="18" r="3"/></svg></span><strong>Utilitarios</strong><small>3 vehículos</small></a>
           <a href="comprar.html?tipo=compacto"><span class="type-icon"><svg viewBox="0 0 44 24" aria-hidden="true"><path d="M4 18H3v-5l6-1.5L15 7h13l7 4.5 6 1.5v5h-2M14 18h16"/><circle cx="10" cy="18" r="3"/><circle cx="35" cy="18" r="3"/></svg></span><strong>Compactos</strong><small>2 vehículos</small></a>
           <a href="comprar.html?tipo=suv"><span class="type-icon"><svg viewBox="0 0 44 24" aria-hidden="true"><path d="M5 18H4v-6l3-1 3-5h20l5 5 4 1v6h-1M14 18h16"/><circle cx="11" cy="18" r="3"/><circle cx="34" cy="18" r="3"/></svg></span><strong>SUV</strong><small>2 vehículos</small></a>
           <a href="comprar.html?combustible=hibrido"><span class="type-icon"><svg viewBox="0 0 44 24" aria-hidden="true"><path d="M13 20c0-9 6-15 19-16 0 12-7 17-16 17"/><path d="M13 20l10-10"/></svg></span><strong>Híbridos</strong><small>2 vehículos</small></a>
           <a href="vender.html"><span class="type-icon"><svg viewBox="0 0 44 24" aria-hidden="true"><path d="M9 5h13l13 12-9 8-13-12z"/><circle cx="15" cy="10" r="1.6"/></svg></span><strong>Vendemos el tuyo</strong><small>Valoración gratuita</small></a>
         </section>
+        </div>
       </div>
 
       <section class="brand-marquee" aria-label="Marcas disponibles en Celeritas"><div class="marquee-track" data-marquee><span><img src="assets/mini-seat-ibiza.webp" alt="" width="360" height="146" decoding="async" />SEAT</span><span><img src="assets/mini-vw-golf.webp" alt="" width="360" height="130" decoding="async" />Volkswagen</span><span><img src="assets/mini-renault-clio.webp" alt="" width="360" height="148" decoding="async" />Renault</span><span><img src="assets/mini-toyota-corolla.webp" alt="" width="360" height="127" decoding="async" />Toyota</span><span><img src="assets/mini-nissan-qashqai.webp" alt="" width="360" height="139" decoding="async" />Nissan</span><span><img src="assets/mini-peugeot-208.webp" alt="" width="360" height="151" decoding="async" />Peugeot</span><span><img src="assets/mini-porsche-cayenne.webp" alt="" width="360" height="133" decoding="async" />Porsche</span></div></section>

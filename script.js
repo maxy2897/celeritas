@@ -1371,7 +1371,7 @@ function runCounter(counter) {
 
 const revealSelectors = [
   ".section-heading", ".choice-copy", ".choice-links > a", ".vehicle-card-shell", ".budget-heading", ".budget-options",
-  ".config-tool", ".trust-intro", ".trust-strip > p", ".stat-item", ".home-service-photo > div", ".vehicle-types > a",
+  ".config-tool", ".trust-intro", ".trust-strip > p", ".stat-item", ".home-service-photo > div",
   ".reviews-heading", ".reviews-grid > article", ".home-faq-heading", ".faq-list details", ".inventory-page-head > *",
   ".vehicle-gallery", ".detail-heading", ".page-hero", ".sell-options article", ".dark-flow li", ".journey-steps article",
   ".compare-table", ".favorites-empty", ".footer-brand", ".order-card", ".cart-others", ".checkout-step",
@@ -1559,5 +1559,25 @@ if (shippingOptions) {
       showContinent(null);
       tile.querySelector("[data-continent-toggle]")?.focus();
     });
+  });
+}
+
+const typesMenu = document.querySelector("[data-types-menu]");
+if (typesMenu) {
+  const typesToggle = typesMenu.querySelector("[data-types-toggle]");
+  const typesPanel = document.getElementById(typesToggle.getAttribute("aria-controls"));
+  const setTypesOpen = (open) => {
+    typesToggle.setAttribute("aria-expanded", String(open));
+    typesMenu.classList.toggle("is-open", open);
+    typesPanel.hidden = !open;
+  };
+  typesToggle.addEventListener("click", () => setTypesOpen(typesPanel.hidden));
+  document.addEventListener("click", (event) => {
+    if (!typesPanel.hidden && !typesMenu.contains(event.target)) setTypesOpen(false);
+  });
+  typesMenu.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || typesPanel.hidden) return;
+    setTypesOpen(false);
+    typesToggle.focus();
   });
 }
