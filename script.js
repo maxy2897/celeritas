@@ -1612,24 +1612,3 @@ if (shippingOptions) {
     });
   });
 }
-
-const typesMenu = document.querySelector("[data-types-menu]");
-if (typesMenu) {
-  const typesToggle = typesMenu.querySelector("[data-types-toggle]");
-  const typesPanel = document.getElementById(typesToggle.getAttribute("aria-controls"));
-  const setTypesOpen = (open) => {
-    typesToggle.setAttribute("aria-expanded", String(open));
-    typesMenu.classList.toggle("is-open", open);
-    typesPanel.hidden = !open;
-  };
-  const armTypesMenu = autoCollapse([typesMenu], () => !typesPanel.hidden, () => setTypesOpen(false));
-  typesToggle.addEventListener("click", () => {
-    setTypesOpen(typesPanel.hidden);
-    armTypesMenu();
-  });
-  typesMenu.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || typesPanel.hidden) return;
-    setTypesOpen(false);
-    typesToggle.focus();
-  });
-}
