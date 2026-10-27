@@ -1531,7 +1531,7 @@ document.querySelector("[data-account-clear]")?.addEventListener("click", () => 
 const shippingOptions = document.querySelector("[data-shipping]");
 if (shippingOptions) {
   const continentTiles = [...shippingOptions.querySelectorAll(".continent-tile")];
-  const idleDelay = 1000;
+  const idleDelay = 2000;
   let openTile = null;
   let idleTimer = null;
   const showContinent = (tile) => {
