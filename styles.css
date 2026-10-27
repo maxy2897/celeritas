@@ -514,6 +514,7 @@
 .budget-options a:focus-visible strong{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.25rem}
 .budget-options a:active{transform:translateY(-.55rem)}
 .budget-car{display:block;aspect-ratio:1.08;background-color:#dddcd9;background-size:315% auto}
+.continent-map{width:100%;height:auto;object-fit:contain}
 .budget-options strong{display:flex;min-height:5.2rem;flex-direction:column;align-items:center;justify-content:center;padding:.9rem .65rem;text-align:center;font-size:.84rem;line-height:1.25}
 .budget-options strong span,.budget-options strong b{display:block}
 .budget-options strong b{font:inherit}
