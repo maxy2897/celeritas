@@ -1531,31 +1531,38 @@ document.querySelector("[data-account-clear]")?.addEventListener("click", () => 
 const shippingOptions = document.querySelector("[data-shipping]");
 if (shippingOptions) {
   const continentTiles = [...shippingOptions.querySelectorAll(".continent-tile")];
-  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
-  let pinned = null;
+  const idleDelay = 5000;
+  let openTile = null;
+  let idleTimer = null;
   const showContinent = (tile) => {
+    openTile = tile;
+    window.clearTimeout(idleTimer);
     continentTiles.forEach((item) => {
       const open = item === tile;
       item.classList.toggle("is-open", open);
       item.querySelector("[data-continent-toggle]")?.setAttribute("aria-expanded", String(open));
       const panel = item.querySelector(".country-panel");
-      if (panel) panel.hidden = !open;
+      if (panel) panel.inert = !open;
     });
+    if (tile) armIdleTimer();
+  };
+  // Collapse the open list after a few seconds without any interaction inside its tile.
+  const armIdleTimer = () => {
+    window.clearTimeout(idleTimer);
+    idleTimer = window.setTimeout(() => {
+      if (openTile && !openTile.querySelector(":focus-visible")) showContinent(null);
+      else if (openTile) armIdleTimer();
+    }, idleDelay);
   };
   continentTiles.forEach((tile) => {
     tile.querySelector("[data-continent-toggle]")?.addEventListener("click", () => {
-      pinned = pinned === tile ? null : tile;
-      showContinent(pinned);
+      showContinent(openTile === tile ? null : tile);
     });
-    tile.addEventListener("mouseenter", () => {
-      if (canHover.matches && !pinned) showContinent(tile);
-    });
-    tile.addEventListener("mouseleave", () => {
-      if (canHover.matches && !pinned) showContinent(null);
-    });
+    const keepOpen = () => { if (openTile === tile) armIdleTimer(); };
+    ["pointermove", "pointerdown", "wheel", "touchstart", "keydown"].forEach((type) => tile.addEventListener(type, keepOpen, { passive: true }));
+    tile.querySelector(".country-panel ul")?.addEventListener("scroll", keepOpen, { passive: true });
     tile.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape" || !tile.classList.contains("is-open")) return;
-      pinned = null;
+      if (event.key !== "Escape" || openTile !== tile) return;
       showContinent(null);
       tile.querySelector("[data-continent-toggle]")?.focus();
     });
