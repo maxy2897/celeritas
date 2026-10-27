@@ -1530,40 +1530,34 @@ document.querySelector("[data-account-clear]")?.addEventListener("click", () => 
 
 const shippingOptions = document.querySelector("[data-shipping]");
 if (shippingOptions) {
-  const shippingArea = shippingOptions.closest(".budget-tool") || shippingOptions.parentElement;
-  const continentButtons = [...shippingOptions.querySelectorAll("button[data-continent]")];
+  const continentTiles = [...shippingOptions.querySelectorAll(".continent-tile")];
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
   let pinned = null;
-  const showContinent = (button) => {
-    continentButtons.forEach((item) => {
-      const open = item === button;
-      item.setAttribute("aria-expanded", String(open));
-      const panel = document.getElementById(item.getAttribute("aria-controls"));
+  const showContinent = (tile) => {
+    continentTiles.forEach((item) => {
+      const open = item === tile;
+      item.classList.toggle("is-open", open);
+      item.querySelector("[data-continent-toggle]")?.setAttribute("aria-expanded", String(open));
+      const panel = item.querySelector(".country-panel");
       if (panel) panel.hidden = !open;
     });
   };
-  continentButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (pinned === button) {
-        pinned = null;
-        showContinent(null);
-      } else {
-        pinned = button;
-        showContinent(button);
-      }
+  continentTiles.forEach((tile) => {
+    tile.querySelector("[data-continent-toggle]")?.addEventListener("click", () => {
+      pinned = pinned === tile ? null : tile;
+      showContinent(pinned);
     });
-    button.addEventListener("mouseenter", () => {
-      if (canHover.matches && !pinned) showContinent(button);
+    tile.addEventListener("mouseenter", () => {
+      if (canHover.matches && !pinned) showContinent(tile);
     });
-  });
-  shippingArea.addEventListener("mouseleave", () => {
-    if (canHover.matches && !pinned) showContinent(null);
-  });
-  shippingArea.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || !continentButtons.some((item) => item.getAttribute("aria-expanded") === "true")) return;
-    const open = continentButtons.find((item) => item.getAttribute("aria-expanded") === "true");
-    pinned = null;
-    showContinent(null);
-    open?.focus();
+    tile.addEventListener("mouseleave", () => {
+      if (canHover.matches && !pinned) showContinent(null);
+    });
+    tile.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !tile.classList.contains("is-open")) return;
+      pinned = null;
+      showContinent(null);
+      tile.querySelector("[data-continent-toggle]")?.focus();
+    });
   });
 }
