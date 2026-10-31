@@ -1156,3 +1156,54 @@ body[data-page="comparar"] .compare-bar{display:none}
   .sell-branch{padding:1.2rem;gap:1.5rem}
 }
 @media(prefers-reduced-motion:reduce){.info-dialog[open]{animation:none}}
+/* Conócenos */
+.about-hero{padding:9rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2)) 5rem;color:#fff;background:linear-gradient(90deg,#071726f7 0%,#071726e0 50%,#07172699 100%),url("assets/celeritas-concesionario.webp") center 60%/cover no-repeat var(--navy)}
+.about-hero h1{max-width:52rem;margin:0;font-size:clamp(2.6rem,6vw,5.4rem);font-weight:900;line-height:1.04;letter-spacing:-.02em}
+.about-hero h1 em{color:var(--green);font-style:normal}
+.about-hero>p:last-child{max-width:34rem;margin:1.5rem 0 0;color:#ffffffc7;font-size:1.05rem;line-height:1.7}
+.about-layout{display:grid;width:var(--page);grid-template-columns:minmax(0,1.6fr) minmax(16rem,.7fr);gap:3rem;margin:4rem auto}
+.about-story h2,.about-values h2,.about-team h2,.about-places h2{margin:2.2rem 0 .8rem;color:var(--navy);font-size:clamp(1.5rem,2.4vw,2rem);font-weight:900}
+.about-story h2:first-child{margin-top:0}
+.about-story p{color:#3d4852;font-size:1.02rem;line-height:1.8}
+.about-photo{min-height:22rem;margin:1.8rem 0;border-radius:.8rem;background:url("assets/celeritas-concesionario.webp") center/cover no-repeat}
+.about-story blockquote{margin:1.6rem 0;padding:.4rem 0 .4rem 1.4rem;color:var(--navy);border-left:3px solid var(--green);font-family:var(--serif);font-size:1.45rem;line-height:1.4}
+.about-aside{position:sticky;top:7.5rem;display:grid;align-self:start;gap:1rem}
+.about-aside-card{padding:1.5rem;background:#fff;border:1px solid #e3ded4;border-radius:.8rem}
+.about-aside-cta{background:#eef4ee;border-color:#d4e6d6}
+.about-aside-card h3{margin:0 0 .5rem;color:var(--navy);font-size:1rem;font-weight:900}
+.about-aside-card p{margin:0 0 1rem;color:var(--muted);line-height:1.6}
+.about-aside-card p:last-child{margin:0}
+.about-aside .button{width:100%;border-radius:.5rem}
+.about-values{padding:4rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2));background:#fff}
+.about-values h2{margin-top:0}
+.about-values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:1.5rem}
+.about-values-grid strong{display:block;margin-bottom:.5rem;color:var(--navy);font-size:1.05rem}
+.about-values-grid p{margin:0;color:var(--muted);line-height:1.65}
+.about-team,.about-places{width:var(--page);margin:4rem auto}
+.about-team>p,.about-places>p{margin:0 0 1.6rem;color:var(--muted)}
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem}
+.team-card{display:grid;justify-items:center;gap:.35rem;padding:1.6rem 1rem;text-align:center;background:#fff;border:1px solid #e3ded4;border-radius:.8rem}
+.team-avatar{display:grid;width:5rem;height:5rem;margin-bottom:.5rem;place-items:center;background:#eef4ee;border-radius:50%}
+.team-avatar img{width:2.8rem;opacity:.7}
+.team-card strong{color:var(--navy)}
+.team-card small{color:var(--muted)}
+.places-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.place-card{display:grid;align-content:start;gap:.4rem;padding:1.6rem;background:#fff;border:1px solid #e3ded4;border-radius:.8rem}
+.place-card .eyebrow{margin:.6rem 0 0}
+.place-card h3{margin:0;color:var(--navy);font-size:1.6rem;font-weight:900}
+.place-card p:not(.eyebrow){margin:0;color:var(--muted);line-height:1.6}
+.place-card a{margin-top:.6rem;color:#37644a;font-weight:800}
+.place-icon{display:grid;width:2.6rem;height:2.6rem;place-items:center;background:#eef4ee;border-radius:50%}
+.place-icon svg{width:1.2rem;fill:none;stroke:var(--navy);stroke-width:1.8}
+@media(max-width:900px){
+  .about-layout{grid-template-columns:1fr}
+  .about-aside{position:static}
+  .about-values-grid{grid-template-columns:1fr 1fr}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .places-grid{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .about-hero{padding:4rem 1rem 3rem}
+  .about-values-grid{grid-template-columns:1fr}
+  .about-photo{min-height:14rem}
+}

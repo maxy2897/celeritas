@@ -27,6 +27,7 @@ export default defineConfig(({ isSsrBuild }) => ({
             favoritos: resolve(import.meta.dirname, "favoritos.html"),
             comparar: resolve(import.meta.dirname, "comparar.html"),
             tienda: resolve(import.meta.dirname, "tienda.html"),
+            conocenos: resolve(import.meta.dirname, "conocenos.html"),
             espacio: resolve(import.meta.dirname, "mi-espacio.html"),
             checkout: resolve(import.meta.dirname, "checkout.html"),
             proceso: resolve(import.meta.dirname, "como-funciona.html"),
