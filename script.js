@@ -167,11 +167,24 @@ function updateCurrencyPrices() {
   document.querySelectorAll("[data-currency-select]").forEach((select) => { select.value = currentCurrency; });
 }
 
+const languageFlags = {
+  es: '<svg viewBox="0 0 3 2" aria-hidden="true"><rect width="3" height="2" fill="#c60b1e"/><rect y=".5" width="3" height="1" fill="#ffc400"/></svg>',
+  en: '<svg viewBox="0 0 19 10" aria-hidden="true"><rect width="19" height="10" fill="#fff"/><path d="M0 0h19v.77H0zm0 1.54h19v.77H0zm0 1.54h19v.77H0zm0 1.54h19v.77H0zm0 1.54h19v.77H0zm0 1.54h19v.77H0zm0 1.54h19v.77H0z" fill="#b22234"/><rect width="7.6" height="5.38" fill="#3c3b6e"/></svg>',
+  fr: '<svg viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#0055a4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#ef4135"/></svg>',
+};
+const languages = [["es", "ES", "Español"], ["en", "EN", "English"], ["fr", "FR", "Français"]];
+
+function languageControlMarkup() {
+  const options = languages.map(([code, , label]) => `<li><button type="button" role="menuitemradio" aria-checked="${code === "es"}" data-lang-option="${code}"><span class="lang-flag">${languageFlags[code]}</span>${label}</button></li>`).join("");
+  return `<div class="lang-control" data-lang-control><button class="lang-toggle" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Idioma: Español" data-lang-toggle><span class="lang-flag">${languageFlags.es}</span><span>ES</span><svg class="lang-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><ul class="lang-menu" role="menu" aria-label="Elegir idioma" hidden>${options}</ul></div>`;
+}
+
 const navMenuItems = {
   "comprar.html": [["Todo el catálogo", "comprar.html"], ["SUV", "comprar.html?tipo=suv"], ["Compactos", "comprar.html?tipo=compacto"], ["Híbridos", "comprar.html?combustible=hibrido"]],
   "financiacion.html": [["Opciones de financiación", "financiacion.html"], ["Solicitar propuesta", "contacto.html?motivo=financiacion"], ["Entregar mi coche", "tasacion.html"]],
   "como-funciona.html": [["Proceso de compra", "como-funciona.html#comprar-proceso"], ["Proceso de venta", "como-funciona.html#vender-proceso"]],
   "contacto.html": [["Formulario de contacto", "contacto.html"], ["WhatsApp y teléfono", "contacto.html?motivo=whatsapp"]],
+  "vender.html": [["Vender mi coche", "vender.html"], ["Tasación gratuita", "tasacion.html"]],
 };
 
 if (nav) {
@@ -192,7 +205,7 @@ if (nav) {
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
   const accountActive = document.body.dataset.page === "mi-espacio" ? " is-active" : "";
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools"><label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools">${languageControlMarkup()}<label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
 }
 
 let scrollWheel = document.querySelector(".scroll-wheel");
@@ -1608,4 +1621,66 @@ if (shippingOptions) {
       tile.querySelector("[data-continent-toggle]")?.focus();
     });
   });
+}
+
+const langControl = document.querySelector("[data-lang-control]");
+if (langControl) {
+  const langToggle = langControl.querySelector("[data-lang-toggle]");
+  const langMenu = langControl.querySelector(".lang-menu");
+  const setLangMenu = (open) => {
+    langMenu.hidden = !open;
+    langToggle.setAttribute("aria-expanded", String(open));
+  };
+  langToggle.addEventListener("click", () => setLangMenu(langMenu.hidden));
+  langMenu.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-lang-option]");
+    if (!option) return;
+    setLangMenu(false);
+    if (option.dataset.langOption !== "es") showToast(option.dataset.langOption === "en" ? "The English version is coming soon." : "La version française arrive bientôt.");
+  });
+  document.addEventListener("click", (event) => { if (!langControl.contains(event.target)) setLangMenu(false); });
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !langMenu.hidden) { setLangMenu(false); langToggle.focus(); } });
+}
+
+// Datos de la tarjeta de contacto de la rueda. Sustituir los marcados como pendientes cuando el cliente los facilite.
+const celeritasContact = {
+  slogan: "La fortuna acompaña a los que se atreven a construir su propio camino.",
+  phones: [["Atención comercial", "91 000 00 00"], ["Asesor Celeritas", "Teléfono pendiente"]],
+  email: "hola@celeritas-motors.com",
+  hours: "Lunes a viernes · 09:00–19:00",
+  addresses: [["España", "Dirección pendiente"], ["Guinea Ecuatorial", "Dirección pendiente"]],
+};
+
+const contactIcons = {
+  phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+};
+
+const wheelButton = document.querySelector(".scroll-wheel");
+if (wheelButton) {
+  const telHref = (number) => /\d{6,}/.test(number.replace(/\s/g, "")) ? `tel:${number.replace(/[^\d+]/g, "")}` : null;
+  const contactRow = (icon, label, value, href) => `<li><span class="contact-card-icon">${contactIcons[icon]}</span><span><small>${label}</small>${href ? `<a href="${href}">${value}</a>` : `<strong>${value}</strong>`}</span></li>`;
+  const rows = [
+    ...celeritasContact.phones.map(([label, number]) => contactRow("phone", label, number, telHref(number))),
+    contactRow("mail", "Correo electrónico", celeritasContact.email, `mailto:${celeritasContact.email}`),
+    contactRow("clock", "Horario", celeritasContact.hours),
+    ...celeritasContact.addresses.map(([country, address]) => contactRow("pin", country, address)),
+  ].join("");
+  document.body.insertAdjacentHTML("beforeend", `<dialog class="contact-card" aria-labelledby="contact-card-title" data-contact-card><div class="contact-card-inner"><div class="contact-card-head"><img src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><button class="contact-card-close" type="button" aria-label="Cerrar" data-contact-close>×</button></div><p class="contact-card-slogan">${celeritasContact.slogan}</p><h2 id="contact-card-title">Información de contacto</h2><ul class="contact-card-list">${rows}</ul><a class="contact-card-cta" href="contacto.html">Contáctanos <b aria-hidden="true">→</b></a></div></dialog>`);
+  const contactCard = document.querySelector("[data-contact-card]");
+  wheelButton.removeAttribute("aria-hidden");
+  wheelButton.setAttribute("role", "button");
+  wheelButton.setAttribute("tabindex", "0");
+  wheelButton.setAttribute("aria-label", "Ver información de contacto de Celeritas");
+  wheelButton.setAttribute("aria-haspopup", "dialog");
+  wheelButton.title = "Contacto Celeritas";
+  const openContactCard = () => { if (!contactCard.open) contactCard.showModal(); };
+  wheelButton.addEventListener("click", openContactCard);
+  wheelButton.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openContactCard(); }
+  });
+  contactCard.querySelector("[data-contact-close]").addEventListener("click", () => contactCard.close());
+  contactCard.addEventListener("click", (event) => { if (event.target === contactCard) contactCard.close(); });
 }
