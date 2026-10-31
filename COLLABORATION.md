@@ -25,6 +25,13 @@ Celeritas es una web española de compraventa de coches de segunda mano. El cód
 - No subir claves, tokens ni contraseñas: el repositorio y la web son públicos.
 - Los formularios todavía no envían datos a ningún servidor. Al conectarlos, usar HTTPS, enlazar la política de privacidad y ampliar la CSP (`connect-src` o `form-action`).
 
+## Contenido editable desde el panel
+
+- Los coches están en `data/coches.json` y los datos de contacto en `data/ajustes.json`. El cliente los edita desde `/admin` (Sveltia CMS, guía en `GUIA-PANEL.md`), que guarda los cambios como commits en `main`.
+- No volver a escribir coches a mano en el HTML ni en `script.js`: el catálogo, la portada, la ficha, el comparador y la cesta se generan a partir de `data/coches.json`.
+- Antes de editar esos JSON, hacer `git pull`: el cliente puede haberlos cambiado desde el panel.
+- Las fotos subidas desde el panel se guardan en `assets/uploads/`.
+
 ## Estado importante
 
 La web pública oficial es `https://maxy2897.github.io/celeritas/`.

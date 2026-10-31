@@ -16,6 +16,143 @@ const menuButton = document.querySelector(".menu-button");
 const nav = document.querySelector("#main-nav");
 let wheelFrame = null;
 
+// Catálogo: se carga desde data/coches.json, que se edita desde el panel /admin.
+const vehicleTypeLabels = { utilitario: "Utilitario", compacto: "Compacto", berlina: "Berlina", familiar: "Familiar", suv: "SUV", "4x4": "4×4", monovolumen: "Monovolumen", deportivo: "Deportivo", furgoneta: "Furgoneta", caravana: "Caravana o camper", moto: "Moto" };
+const vehicleFuelLabels = { gasolina: "Gasolina", diesel: "Diésel", hibrido: "Híbrido", "hibrido-enchufable": "Híbrido enchufable", electrico: "Eléctrico", glp: "GLP" };
+const conditionClassByLabel = { Excelente: "condition-excellent", "Muy bueno": "condition-good", "Buen estado": "condition-fair", Revisado: "condition-reviewed" };
+const plainEuros = (value) => `${Number(value || 0).toLocaleString("es-ES", { useGrouping: "always" })} €`;
+const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+
+async function loadJson(path, fallback) {
+  try {
+    const response = await fetch(`${path}?v=${Date.now().toString().slice(0, -5)}`, { cache: "no-cache" });
+    return response.ok ? await response.json() : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+async function loadCatalogData() {
+  try {
+    const response = await fetch(`data/coches.json?v=${Date.now().toString().slice(0, -5)}`, { cache: "no-cache" });
+    if (!response.ok) throw new Error(String(response.status));
+    return await response.json();
+  } catch {
+    return { serviciosComunes: [], vehiculos: [] };
+  }
+}
+
+const [catalogData, siteSettings] = await Promise.all([loadCatalogData(), loadJson("data/ajustes.json", {})]);
+const vehicleCatalog = {};
+const vehicleReports = {};
+const vehicleRatingById = {};
+const vehicleRecords = {};
+const vehicleImageRules = [];
+const cssUrl = (path) => `url("${String(path).replace(/["\\\n]/g, "")}")`;
+const standardServices = (catalogData.serviciosComunes || []).map((service) => ({ id: service.id, label: service.nombre, description: service.descripcion, price: Number(service.precio) || 0 }));
+
+(catalogData.vehiculos || []).filter((item) => item && item.publicado !== false && /^[a-z0-9-]{2,60}$/.test(item.id || "")).forEach((item) => {
+  const id = item.id;
+  const photos = (item.fotos || []).map((photo) => (typeof photo === "string" ? photo : photo?.foto)).filter(Boolean);
+  const imageClass = `vehicle-img-${id}`;
+  if (photos.length) {
+    ["view-front", "view-side", "view-rear"].forEach((view, index) => {
+      vehicleImageRules.push(`.${imageClass}.${view}{background-image:${cssUrl(photos[index] || photos[0])} !important;background-size:cover !important;background-position:center !important}`);
+    });
+  } else if (item.sprite) {
+    vehicleImageRules.push(`.${imageClass}{background-image:${cssUrl(item.sprite)}}`);
+  }
+  const fuelText = item.combustibleTexto || vehicleFuelLabels[item.combustible] || "";
+  const transmissionText = item.cambio === "automatico" ? "Automático" : "Manual";
+  const dealOpen = item.precioAnterior && (!item.ofertaHasta || new Date(`${item.ofertaHasta}T23:59:59`) > new Date());
+  const specs = { Año: String(item.anio || ""), Kilómetros: `${Number(item.km || 0).toLocaleString("es-ES", { useGrouping: "always" })} km`, Combustible: fuelText, Cambio: transmissionText };
+  if (item.potencia) specs.Potencia = item.potencia;
+  if (item.etiquetaDGT) specs.Etiqueta = item.etiquetaDGT;
+  if (item.puertas) specs.Puertas = String(item.puertas);
+  if (item.plazas) specs.Plazas = String(item.plazas);
+  if (item.propietarios) specs.Propietarios = String(item.propietarios);
+  vehicleRecords[id] = { ...item, photos, dealOpen: Boolean(dealOpen), fuelText, transmissionText };
+  vehicleCatalog[id] = {
+    name: item.nombre,
+    kicker: item.subtitulo || [item.marca, vehicleTypeLabels[item.tipo]].filter(Boolean).join(" · "),
+    summary: [item.anio, specs.Kilómetros, fuelText, `Cambio ${transmissionText.toLowerCase()}`].filter(Boolean).join(" · "),
+    price: plainEuros(item.precio),
+    priceEur: Number(item.precio) || 0,
+    previousPriceEur: dealOpen ? Number(item.precioAnterior) : undefined,
+    dealDeadline: dealOpen && item.ofertaHasta ? `${item.ofertaHasta}T23:59:59+02:00` : null,
+    marketAvg: Number(item.precioMercado) || undefined,
+    location: item.ubicacion || "",
+    imageClass,
+    image: photos[0] || item.sprite || "assets/celeritas-concesionario.webp",
+    mini: item.miniatura || photos[0] || `assets/mini-${id}.webp`,
+    catalog: item.catalogoUrl || "",
+    specs,
+    condition: { Neumáticos: item.estado?.neumaticos || "", Carrocería: item.estado?.carroceria || "", Interior: item.estado?.interior || "" },
+    defects: item.defectos || [],
+    features: item.equipamiento || [],
+  };
+  const rating = item.valoracion || {};
+  vehicleRatingById[id] = Number(rating.general) || 4;
+  vehicleReports[id] = {
+    ratings: { General: Number(rating.general) || 4, Mecánica: Number(rating.mecanica) || 4, Carrocería: Number(rating.carroceria) || 4, Interior: Number(rating.interior) || 4, Neumáticos: Number(rating.neumaticos) || 4 },
+    history: { "Titulares anteriores": item.historial?.titulares || String(item.propietarios || "—"), Llaves: item.historial?.llaves || "—", Mantenimiento: item.historial?.mantenimiento || "Consultar", "Daños estructurales": item.historial?.danos || "No declarados" },
+    roadTest: item.pruebaDinamica?.length ? item.pruebaDinamica : ["Prueba dinámica pendiente de publicar"],
+    services: [...(item.servicios || []).map((service) => ({ id: service.id, label: service.nombre, description: service.descripcion, price: Number(service.precio) || 0 })), ...standardServices],
+  };
+});
+
+if (vehicleImageRules.length) {
+  try {
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(vehicleImageRules.join("\n"));
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+  } catch { /* Old browsers keep the built-in images. */ }
+}
+
+function vehicleCardMarkup(id, extraClass = "") {
+  const vehicle = vehicleCatalog[id];
+  const record = vehicleRecords[id];
+  const name = escapeText(vehicle.name);
+  const flags = `${record.estadoGeneral ? `<span class="condition-pill ${conditionClassByLabel[record.estadoGeneral] || "condition-reviewed"}">${escapeText(record.estadoGeneral)}</span>` : ""}${vehicle.previousPriceEur ? `<span class="discount-pill">−${Math.round((1 - vehicle.priceEur / vehicle.previousPriceEur) * 100)}%</span>` : ""}`;
+  const price = vehicle.previousPriceEur ? `<span class="price-stack"><del data-price-eur="${vehicle.previousPriceEur}">${plainEuros(vehicle.previousPriceEur)}</del><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></span>` : `<strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong>`;
+  const countdown = vehicle.dealDeadline ? `<p class="deal-countdown">Oferta por tiempo limitado · <strong data-countdown data-deal-deadline="${vehicle.dealDeadline}">Calculando…</strong></p>` : "";
+  const search = escapeText(normalizeSearch(`${vehicle.name} ${record.marca || ""} ${record.fuelText} ${vehicleTypeLabels[record.tipo] || ""}`));
+  return `<a class="inventory-card${extraClass}${vehicle.previousPriceEur ? " deal-card" : ""}" data-vehicle data-type="${escapeText(record.tipo || "")}" data-fuel="${escapeText(record.combustible || "")}" data-brand="${escapeText(normalizeSearch(record.marca || ""))}" data-price="${vehicle.priceEur}" data-km="${Number(record.km) || 0}" data-transmission="${escapeText(record.cambio || "")}" data-year="${Number(record.anio) || 0}" data-location="${escapeText(vehicle.location)}" data-search="${search}" href="coche.html?id=${id}">${flags ? `<div class="card-flags">${flags}</div>` : ""}<div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${name}"></div><div class="inventory-card-copy"><p>${name}</p><span>${escapeText([record.anio, record.fuelText, record.transmissionText].filter(Boolean).join(" · "))}</span><div><small>${escapeText(vehicle.specs.Kilómetros)}</small>${price}</div>${countdown}</div></a>`;
+}
+
+function normalizeSearch(value) {
+  return String(value).toLocaleLowerCase("es").normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+function fillSelectFromData(select, values, labels = {}) {
+  if (!select) return;
+  const first = select.options[0];
+  select.replaceChildren(first, ...values.map((value) => new Option(labels[value] || value, value)));
+}
+
+const publishedIds = Object.keys(vehicleCatalog);
+const catalogGrid = document.querySelector("[data-catalog-grid]");
+if (catalogGrid) {
+  catalogGrid.innerHTML = publishedIds.map((id) => vehicleCardMarkup(id, " large")).join("");
+  const unique = (key) => [...new Set(publishedIds.map((id) => vehicleRecords[id][key]).filter(Boolean))];
+  fillSelectFromData(document.querySelector("#filter-type"), unique("tipo"), vehicleTypeLabels);
+  fillSelectFromData(document.querySelector("#filter-fuel"), unique("combustible"), vehicleFuelLabels);
+  fillSelectFromData(document.querySelector("#filter-location"), unique("ubicacion").sort((a, b) => a.localeCompare(b, "es")));
+  fillSelectFromData(document.querySelector("#filter-year"), unique("anio").sort((a, b) => a - b).map(String));
+  const count = document.querySelector("#result-count");
+  if (count) count.textContent = String(publishedIds.length);
+}
+const featuredGrid = document.querySelector("[data-featured-grid]");
+if (featuredGrid) {
+  const featured = publishedIds.filter((id) => vehicleRecords[id].destacado);
+  featuredGrid.innerHTML = (featured.length ? featured : publishedIds).slice(0, 8).map((id) => vehicleCardMarkup(id)).join("");
+}
+document.querySelectorAll('select[name="marca"]').forEach((select) => {
+  const brands = [...new Set(publishedIds.map((id) => vehicleRecords[id].marca).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  const first = select.options[0];
+  select.replaceChildren(first, ...brands.map((brand) => new Option(brand, normalizeSearch(brand))));
+});
+
 function readPreference(key) {
   try { return window.localStorage.getItem(key); } catch { return null; }
 }
@@ -234,7 +371,7 @@ document.querySelectorAll("[data-currency-select]").forEach((select) => {
 
 const siteFooter = document.querySelector(".site-footer");
 const footerBrand = siteFooter?.querySelector(".footer-brand");
-footerBrand?.insertAdjacentHTML("afterend", `<div class="footer-contact"><strong>Contacto</strong><a href="contacto.html?motivo=whatsapp">WhatsApp y teléfono · 91 000 00 00</a><a href="mailto:hola@celeritas-motors.com">hola@celeritas-motors.com</a><span>España · Atención online y con cita previa</span><span>Instagram · Próximamente</span></div>`);
+footerBrand?.insertAdjacentHTML("afterend", `<div class="footer-contact"><strong>Contacto</strong>${(siteSettings.contacto?.telefonos || []).slice(0, 1).map((phone) => `<a href="contacto.html?motivo=whatsapp">WhatsApp y teléfono · ${escapeText(phone.numero)}</a>`).join("")}${siteSettings.contacto?.email ? `<a href="mailto:${escapeText(siteSettings.contacto.email)}">${escapeText(siteSettings.contacto.email)}</a>` : ""}${(siteSettings.contacto?.direcciones || []).map((place) => `<span>${escapeText(place.lugar)} · ${escapeText(place.direccion)}</span>`).join("")}</div>`);
 
 function updateWheel() {
   root.style.setProperty("--wheel-angle", `${window.scrollY * 0.42}deg`);
@@ -261,15 +398,6 @@ function vehicleIdFromCard(card) {
   try { return new URL(card.getAttribute("href"), window.location.href).searchParams.get("id"); } catch { return null; }
 }
 
-const vehicleRatingById = {
-  "porsche-cayenne": 4.5,
-  "seat-ibiza": 4.5,
-  "vw-golf": 4,
-  "renault-clio": 3.5,
-  "toyota-corolla": 4.5,
-  "nissan-qashqai": 3.5,
-  "peugeot-208": 4,
-};
 
 function wheelRatingMarkup(rating, label = "Valoración Celeritas", className = "") {
   const normalizedRating = Math.max(0, Math.min(5, Math.round(Number(rating) * 2) / 2));
@@ -607,171 +735,6 @@ document.querySelectorAll("[data-interest]").forEach((button) => {
   });
 });
 
-const vehicleCatalog = {
-  "porsche-cayenne": {
-    name: "Porsche Cayenne E-Hybrid",
-    kicker: "Porsche · SUV híbrido enchufable · Oferta temporal",
-    summary: "2021 · 64.800 km · Híbrido enchufable · Cambio automático",
-    price: "65.900 €",
-    priceEur: 65900,
-    previousPriceEur: 74900,
-    marketAvg: 70200,
-    location: "Madrid",
-    imageClass: "car-cayenne",
-    image: "assets/vehicle-porsche-cayenne-v1.webp",
-    catalog: "https://autocatalogarchive.com/porsche/",
-    specs: { Año: "2021", Kilómetros: "64.800 km", Combustible: "Híbrido enchufable", Cambio: "Automático", Potencia: "462 CV", Etiqueta: "0", Puertas: "5", Plazas: "5", Propietarios: "1" },
-    condition: { Neumáticos: "Buen estado (80% de vida útil)", Carrocería: "Excelente estado general", Interior: "Muy buen estado, sin desgaste relevante" },
-    defects: ["Leve marca de uso en una llanta trasera"],
-    features: ["Sistema híbrido enchufable", "Tracción total", "Navegación", "Cámara 360°", "Climatizador de cuatro zonas", "Faros LED matriciales"]
-  },
-  "seat-ibiza": {
-    name: "SEAT Ibiza 1.0 TSI FR",
-    kicker: "SEAT · Utilitario",
-    summary: "2022 · 39.800 km · Gasolina · Cambio manual",
-    price: "17.490 €",
-    priceEur: 17490,
-    marketAvg: 18700,
-    location: "Madrid",
-    imageClass: "car-seat",
-    image: "assets/vehicle-seat-ibiza.webp",
-    catalog: "https://autocatalogarchive.com/wp-content/uploads/2022/07/Seat-Ibiza-2022-IE.pdf",
-    specs: { Año: "2022", Kilómetros: "39.800 km", Combustible: "Gasolina", Cambio: "Manual", Potencia: "110 CV", Etiqueta: "C", Puertas: "5", Plazas: "5", Propietarios: "1" },
-    condition: { Neumáticos: "Buen estado (75% de vida útil)", Carrocería: "Sin golpes registrados", Interior: "Muy buen estado, sin desgaste" },
-    defects: [],
-    features: ["Acabado FR", "Pantalla multimedia", "Climatizador", "Sensores de aparcamiento", "Control de crucero", "Faros LED"]
-  },
-  "vw-golf": {
-    name: "Volkswagen Golf 1.5 TSI Style",
-    kicker: "Volkswagen · Compacto",
-    summary: "2021 · 52.400 km · Gasolina · Cambio manual",
-    price: "20.900 €",
-    priceEur: 20900,
-    marketAvg: 22100,
-    location: "Barcelona",
-    imageClass: "car-golf",
-    image: "assets/vehicle-vw-golf.webp",
-    catalog: "https://autocatalogarchive.com/wp-content/uploads/2021/09/VW-Golf-2021-FR.pdf",
-    specs: { Año: "2021", Kilómetros: "52.400 km", Combustible: "Gasolina", Cambio: "Manual", Potencia: "130 CV", Etiqueta: "C", Puertas: "5", Plazas: "5", Propietarios: "1" },
-    condition: { Neumáticos: "Buen estado (80% de vida útil)", Carrocería: "Sin golpes registrados", Interior: "Muy buen estado" },
-    defects: ["Pequeño arañazo en el paragolpes trasero"],
-    features: ["Acabado Style", "Navegación", "Climatizador trizona", "Sensores delanteros y traseros", "Control de crucero adaptativo", "Faros LED"]
-  },
-  "renault-clio": {
-    name: "Renault Clio TCe Zen",
-    kicker: "Renault · Utilitario",
-    summary: "2022 · 34.500 km · Gasolina · Cambio manual",
-    price: "16.250 €",
-    priceEur: 16250,
-    marketAvg: 17400,
-    location: "Valencia",
-    imageClass: "car-clio",
-    image: "assets/vehicle-renault-clio.webp",
-    catalog: "https://autocatalogarchive.com/wp-content/uploads/2023/01/Renault-Clio-2022-UK-.pdf",
-    specs: { Año: "2022", Kilómetros: "34.500 km", Combustible: "Gasolina", Cambio: "Manual", Potencia: "90 CV", Etiqueta: "C", Puertas: "5", Plazas: "5", Propietarios: "2" },
-    condition: { Neumáticos: "Estado aceptable (55% de vida útil)", Carrocería: "Sin golpes registrados", Interior: "Buen estado, ligero desgaste en el asiento del conductor" },
-    defects: ["Ligero desgaste en el asiento del conductor", "Recomendable cambio de neumáticos a medio plazo"],
-    features: ["Pantalla multimedia", "Apple CarPlay y Android Auto", "Cámara trasera", "Ayuda al aparcamiento", "Control de crucero", "Asistente de carril"]
-  },
-  "toyota-corolla": {
-    name: "Toyota Corolla 125H Active Tech",
-    kicker: "Toyota · Compacto híbrido",
-    summary: "2021 · 49.600 km · Híbrido · Cambio automático",
-    price: "22.900 €",
-    priceEur: 22900,
-    marketAvg: 23600,
-    location: "Sevilla",
-    imageClass: "car-corolla",
-    image: "assets/vehicle-toyota-corolla.webp",
-    catalog: "https://autocatalogarchive.com/wp-content/uploads/2021/11/Toyota-Corolla-2021-UK.pdf",
-    specs: { Año: "2021", Kilómetros: "49.600 km", Combustible: "Híbrido", Cambio: "Automático", Potencia: "122 CV", Etiqueta: "ECO", Puertas: "5", Plazas: "5", Propietarios: "1" },
-    condition: { Neumáticos: "Buen estado (85% de vida útil)", Carrocería: "Sin golpes registrados", Interior: "Excelente estado" },
-    defects: [],
-    features: ["Sistema híbrido Toyota", "Cámara trasera", "Climatizador bizona", "Control de crucero adaptativo", "Lectura de señales", "Arranque sin llave"]
-  },
-  "nissan-qashqai": {
-    name: "Nissan Qashqai DIG-T N-Connecta",
-    kicker: "Nissan · SUV",
-    summary: "2021 · 55.200 km · Gasolina · Cambio manual",
-    price: "23.900 €",
-    priceEur: 23900,
-    marketAvg: 24800,
-    location: "Bilbao",
-    imageClass: "car-qashqai",
-    image: "assets/vehicle-nissan-qashqai.webp",
-    catalog: "https://autocatalogarchive.com/wp-content/uploads/2021/04/Nissan-Qashqai-2021-IE.pdf",
-    specs: { Año: "2021", Kilómetros: "55.200 km", Combustible: "Gasolina", Cambio: "Manual", Potencia: "140 CV", Etiqueta: "ECO", Puertas: "5", Plazas: "5", Propietarios: "2" },
-    condition: { Neumáticos: "Buen estado (70% de vida útil)", Carrocería: "Repintado en puerta trasera derecha (golpe leve reparado)", Interior: "Buen estado" },
-    defects: ["Repintado en puerta trasera derecha por golpe leve, ya reparado"],
-    features: ["Acabado N-Connecta", "Cámara de visión 360°", "Navegación", "Llave inteligente", "Sensores de aparcamiento", "Asistente de ángulo muerto"]
-  },
-  "peugeot-208": {
-    name: "Peugeot 208 PureTech Allure",
-    kicker: "Peugeot · Utilitario",
-    summary: "2022 · 31.700 km · Gasolina · Cambio manual",
-    price: "17.800 €",
-    priceEur: 17800,
-    marketAvg: 18500,
-    location: "Zaragoza",
-    imageClass: "car-peugeot",
-    image: "assets/vehicle-peugeot-208.webp",
-    catalog: "https://autocatalogarchive.com/peugeot/",
-    specs: { Año: "2022", Kilómetros: "31.700 km", Combustible: "Gasolina", Cambio: "Manual", Potencia: "100 CV", Etiqueta: "C", Puertas: "5", Plazas: "5", Propietarios: "1" },
-    condition: { Neumáticos: "Buen estado (78% de vida útil)", Carrocería: "Sin golpes registrados", Interior: "Muy buen estado" },
-    defects: [],
-    features: ["Acabado Allure", "Peugeot i-Cockpit", "Pantalla táctil", "Climatizador", "Sensores traseros", "Asistente de carril"]
-  }
-};
-
-const standardServices = [
-  { id: "transfer", label: "Gestión del cambio de titularidad", description: "Preparamos y presentamos toda la documentación a tu nombre.", price: 390 },
-  { id: "maintenance", label: "Mantenimiento preentrega ampliado", description: "Aceite, filtros, niveles y comprobación final antes de la entrega.", price: 260 },
-];
-
-const vehicleReports = {
-  "porsche-cayenne": {
-    ratings: { General: 4.5, Mecánica: 5, Carrocería: 4, Interior: 4.5, Neumáticos: 4 },
-    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Historial digital disponible", "Daños estructurales": "No declarados" },
-    roadTest: ["Arranque en frío y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Dirección, frenada y suspensión: sin ruidos anómalos", "Climatización y sistemas eléctricos: funcionamiento comprobado"],
-    services: [{ id: "wheel-repair", label: "Reparación estética de llanta trasera", description: "Corrección de la marca de uso declarada en el informe.", price: 160 }, ...standardServices],
-  },
-  "seat-ibiza": {
-    ratings: { General: 4.5, Mecánica: 4.5, Carrocería: 4.5, Interior: 4.5, Neumáticos: 4 },
-    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Libro de mantenimiento disponible", "Daños estructurales": "No declarados" },
-    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Cambio, dirección y frenada: respuesta normal", "Climatización y sistemas multimedia: comprobados"],
-    services: [{ id: "detailing", label: "Preparación estética premium", description: "Limpieza técnica interior y protección exterior.", price: 140 }, ...standardServices],
-  },
-  "vw-golf": {
-    ratings: { General: 4, Mecánica: 4.5, Carrocería: 4, Interior: 4, Neumáticos: 4 },
-    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Facturas principales disponibles", "Daños estructurales": "No declarados" },
-    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Cambio manual y embrague: funcionamiento normal", "Sin ruidos anómalos en suspensión o dirección"],
-    services: [{ id: "bumper-repair", label: "Reparar arañazo del paragolpes", description: "Corrección y acabado del defecto estético declarado.", price: 240 }, ...standardServices],
-  },
-  "renault-clio": {
-    ratings: { General: 3.5, Mecánica: 4, Carrocería: 4, Interior: 3.5, Neumáticos: 3 },
-    history: { "Titulares anteriores": "2", Llaves: "2", Mantenimiento: "Documentación parcial disponible", "Daños estructurales": "No declarados" },
-    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y carretera: sin avisos de motor", "Dirección y frenada: funcionamiento normal", "Climatización comprobada; neumáticos con desgaste medio"],
-    services: [{ id: "tyres", label: "Juego de neumáticos nuevos", description: "Sustitución de los cuatro neumáticos antes de la entrega.", price: 520 }, { id: "upholstery", label: "Reparación de tapicería", description: "Corrección del desgaste del asiento del conductor.", price: 180 }, ...standardServices],
-  },
-  "toyota-corolla": {
-    ratings: { General: 4.5, Mecánica: 5, Carrocería: 4.5, Interior: 4.5, Neumáticos: 4.5 },
-    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Historial Toyota disponible", "Daños estructurales": "No declarados" },
-    roadTest: ["Sistema híbrido y arranque: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Transición eléctrica y térmica: funcionamiento normal", "Frenada, dirección y climatización: comprobadas"],
-    services: [{ id: "hybrid-check", label: "Informe ampliado del sistema híbrido", description: "Diagnóstico adicional y certificado del estado de la batería.", price: 120 }, ...standardServices],
-  },
-  "nissan-qashqai": {
-    ratings: { General: 3.5, Mecánica: 4, Carrocería: 3.5, Interior: 4, Neumáticos: 3.5 },
-    history: { "Titulares anteriores": "2", Llaves: "2", Mantenimiento: "Historial disponible para revisión", "Daños estructurales": "No declarados; puerta trasera repintada" },
-    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y autovía hasta 120 km/h: sin avisos", "Dirección, embrague y frenada: funcionamiento normal", "Cámaras, sensores y climatización: comprobados"],
-    services: [{ id: "paint-report", label: "Informe ampliado de pintura", description: "Medición y documentación fotográfica de la reparación declarada.", price: 90 }, ...standardServices],
-  },
-  "peugeot-208": {
-    ratings: { General: 4, Mecánica: 4.5, Carrocería: 4, Interior: 4, Neumáticos: 4 },
-    history: { "Titulares anteriores": "1", Llaves: "2", Mantenimiento: "Libro de mantenimiento disponible", "Daños estructurales": "No declarados" },
-    roadTest: ["Arranque y ralentí: correctos", "Prueba urbana y carretera: sin avisos", "Cambio manual, frenada y dirección: funcionamiento normal", "Climatización, pantalla y ayudas: comprobadas"],
-    services: [{ id: "detailing", label: "Preparación estética premium", description: "Limpieza técnica interior y protección exterior.", price: 140 }, ...standardServices],
-  },
-};
 
 function renderFavoritesPage() {
   const root = document.querySelector("[data-favorites-root]");
@@ -922,7 +885,11 @@ if (detailRoot) {
   const features = document.querySelector("[data-detail-features]");
   features.innerHTML = vehicle.features.map((feature) => `<li>✓ ${feature}</li>`).join("");
   const catalog = document.querySelector("[data-detail-catalog]");
-  catalog.href = vehicle.catalog;
+  if (vehicle.catalog && /^https?:\/\//.test(vehicle.catalog)) catalog.href = vehicle.catalog;
+  else {
+    catalog.nextElementSibling?.remove();
+    catalog.remove();
+  }
   document.querySelectorAll("[data-interest]").forEach((button) => { button.dataset.interestName = vehicle.name; });
 
   const condition = document.querySelector("[data-detail-condition]");
@@ -939,10 +906,11 @@ if (detailRoot) {
   }
   const marketLine = document.querySelector("[data-detail-market]");
   if (marketLine) {
-    const diff = vehicle.marketAvg - vehicle.priceEur;
-    marketLine.textContent = diff > 0
-      ? `${diff.toLocaleString("es-ES")} € por debajo de la media de mercado (${vehicle.marketAvg.toLocaleString("es-ES")} €)`
-      : `En línea con la media de mercado (${vehicle.marketAvg.toLocaleString("es-ES")} €)`;
+    const diff = vehicle.marketAvg ? vehicle.marketAvg - vehicle.priceEur : 0;
+    if (!vehicle.marketAvg) marketLine.textContent = "Precio revisado por nuestro equipo con datos del mercado.";
+    else marketLine.textContent = diff > 0
+      ? `${plainEuros(diff)} por debajo de la media de mercado (${plainEuros(vehicle.marketAvg)})`
+      : `En línea con la media de mercado (${plainEuros(vehicle.marketAvg)})`;
   }
   const locationSpan = document.querySelector("[data-detail-location]");
   if (locationSpan) locationSpan.textContent = vehicle.location;
@@ -955,6 +923,9 @@ if (detailRoot) {
     detailDeal.hidden = false;
     const previousPrice = detailDeal.querySelector("[data-detail-previous-price]");
     previousPrice.dataset.priceEur = String(vehicle.previousPriceEur);
+    const dealCountdown = detailDeal.querySelector("[data-countdown]");
+    if (dealCountdown && vehicle.dealDeadline) dealCountdown.dataset.dealDeadline = vehicle.dealDeadline;
+    else dealCountdown?.remove();
   }
   const detailTabs = document.querySelector(".detail-tabs");
   if (detailTabs) {
@@ -1065,7 +1036,7 @@ if (checkoutRoot) {
     photo.setAttribute("aria-label", `${vehicle.name}, vista frontal`);
     const mini = content.querySelector("[data-checkout-mini]");
     if (mini) {
-      mini.src = `assets/mini-${requestedId}.webp`;
+      mini.src = vehicle.mini;
       mini.alt = vehicle.name;
     }
     const checkoutViews = ["view-front", "view-side", "view-rear"];
@@ -1643,12 +1614,13 @@ if (langControl) {
 }
 
 // Datos de la tarjeta de contacto de la rueda. Sustituir los marcados como pendientes cuando el cliente los facilite.
+const settingsContact = siteSettings.contacto || {};
 const celeritasContact = {
-  slogan: "La fortuna acompaña a los que se atreven a construir su propio camino.",
-  phones: [["Atención comercial", "91 000 00 00"], ["Asesor Celeritas", "Teléfono pendiente"]],
-  email: "hola@celeritas-motors.com",
-  hours: "Lunes a viernes · 09:00–19:00",
-  addresses: [["España", "Dirección pendiente"], ["Guinea Ecuatorial", "Dirección pendiente"]],
+  slogan: escapeText(settingsContact.eslogan || "La fortuna acompaña a los que se atreven a construir su propio camino."),
+  phones: (settingsContact.telefonos || []).map((phone) => [escapeText(phone.etiqueta), escapeText(phone.numero)]),
+  email: escapeText(settingsContact.email || ""),
+  hours: escapeText(settingsContact.horario || ""),
+  addresses: (settingsContact.direcciones || []).map((place) => [escapeText(place.lugar), escapeText(place.direccion)]),
 };
 
 const contactIcons = {
@@ -1664,8 +1636,8 @@ if (wheelButton) {
   const contactRow = (icon, label, value, href) => `<li><span class="contact-card-icon">${contactIcons[icon]}</span><span><small>${label}</small>${href ? `<a href="${href}">${value}</a>` : `<strong>${value}</strong>`}</span></li>`;
   const rows = [
     ...celeritasContact.phones.map(([label, number]) => contactRow("phone", label, number, telHref(number))),
-    contactRow("mail", "Correo electrónico", celeritasContact.email, `mailto:${celeritasContact.email}`),
-    contactRow("clock", "Horario", celeritasContact.hours),
+    celeritasContact.email ? contactRow("mail", "Correo electrónico", celeritasContact.email, `mailto:${celeritasContact.email}`) : "",
+    celeritasContact.hours ? contactRow("clock", "Horario", celeritasContact.hours) : "",
     ...celeritasContact.addresses.map(([country, address]) => contactRow("pin", country, address)),
   ].join("");
   document.body.insertAdjacentHTML("beforeend", `<dialog class="contact-card" aria-labelledby="contact-card-title" data-contact-card><div class="contact-card-inner"><div class="contact-card-head"><img src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><button class="contact-card-close" type="button" aria-label="Cerrar" data-contact-close>×</button></div><p class="contact-card-slogan">${celeritasContact.slogan}</p><h2 id="contact-card-title">Información de contacto</h2><ul class="contact-card-list">${rows}</ul><a class="contact-card-cta" href="contacto.html">Contáctanos <b aria-hidden="true">→</b></a></div></dialog>`);

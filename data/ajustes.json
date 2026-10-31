@@ -1,0 +1,15 @@
+{
+  "contacto": {
+    "eslogan": "La fortuna acompaña a los que se atreven a construir su propio camino.",
+    "telefonos": [
+      { "etiqueta": "Atención comercial", "numero": "91 000 00 00" },
+      { "etiqueta": "Asesor Celeritas", "numero": "Teléfono pendiente" }
+    ],
+    "email": "hola@celeritas-motors.com",
+    "horario": "Lunes a viernes · 09:00–19:00",
+    "direcciones": [
+      { "lugar": "España", "direccion": "Dirección pendiente" },
+      { "lugar": "Guinea Ecuatorial", "direccion": "Dirección pendiente" }
+    ]
+  }
+}

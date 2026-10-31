@@ -1,0 +1,191 @@
+# Panel de administración de Celeritas (Sveltia CMS).
+# Guarda los cambios directamente en el repositorio de GitHub; la web se actualiza en 1-2 minutos.
+backend:
+  name: github
+  repo: maxy2897/celeritas
+  branch: main
+  commit_messages:
+    create: "Panel: crear {{collection}} «{{slug}}»"
+    update: "Panel: actualizar {{collection}} «{{slug}}»"
+    delete: "Panel: borrar {{collection}} «{{slug}}»"
+    uploadMedia: "Panel: subir {{path}}"
+    deleteMedia: "Panel: borrar {{path}}"
+
+site_url: https://maxy2897.github.io/celeritas/
+display_url: https://maxy2897.github.io/celeritas/
+logo:
+  src: ../assets/celeritas-logo-transparent-v2.webp
+
+media_folder: assets/uploads
+public_folder: assets/uploads
+
+media_libraries:
+  default:
+    config:
+      max_file_size: 15000000
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 1800
+          height: 1800
+
+collections:
+  - name: catalogo
+    label: Coches
+    description: Añade, edita, oculta o destaca los coches que aparecen en la web.
+    editor:
+      preview: false
+    files:
+      - name: coches
+        label: Catálogo de coches
+        file: data/coches.json
+        format: json
+        fields:
+          - name: vehiculos
+            label: Coches
+            label_singular: coche
+            widget: list
+            summary: "{{fields.nombre}} · {{fields.precio}} € · {{fields.publicado}}"
+            collapsed: true
+            fields:
+              - { name: nombre, label: "Nombre del coche (marca, modelo y versión)", widget: string, hint: "Ej.: SEAT Ibiza 1.0 TSI FR" }
+              - { name: id, label: "Identificador para la dirección web", widget: string, pattern: ['^[a-z0-9-]{2,60}$', "Solo minúsculas, números y guiones. Ej.: seat-ibiza-2022"], hint: "No lo cambies una vez publicado: es la dirección de la ficha (coche.html?id=…)." }
+              - { name: publicado, label: "Publicado en la web", widget: boolean, default: true }
+              - { name: destacado, label: "Mostrar en la portada", widget: boolean, default: false }
+              - { name: marca, label: Marca, widget: string }
+              - { name: subtitulo, label: "Línea superior de la ficha", widget: string, required: false, hint: "Opcional. Ej.: SEAT · Utilitario" }
+              - name: tipo
+                label: Tipo de vehículo
+                widget: select
+                options:
+                  - { label: Utilitario, value: utilitario }
+                  - { label: Compacto, value: compacto }
+                  - { label: Berlina, value: berlina }
+                  - { label: Familiar, value: familiar }
+                  - { label: SUV, value: suv }
+                  - { label: "4×4", value: 4x4 }
+                  - { label: Monovolumen, value: monovolumen }
+                  - { label: Deportivo, value: deportivo }
+                  - { label: Furgoneta, value: furgoneta }
+                  - { label: "Caravana o camper", value: caravana }
+                  - { label: Moto, value: moto }
+              - name: combustible
+                label: Combustible
+                widget: select
+                options:
+                  - { label: Gasolina, value: gasolina }
+                  - { label: Diésel, value: diesel }
+                  - { label: Híbrido, value: hibrido }
+                  - { label: "Híbrido enchufable", value: hibrido-enchufable }
+                  - { label: Eléctrico, value: electrico }
+                  - { label: GLP, value: glp }
+              - { name: combustibleTexto, label: "Texto del combustible (opcional)", widget: string, required: false, hint: "Si lo dejas vacío se usa el combustible elegido arriba." }
+              - name: cambio
+                label: Cambio
+                widget: select
+                options:
+                  - { label: Manual, value: manual }
+                  - { label: Automático, value: automatico }
+              - { name: anio, label: Año, widget: number, value_type: int, min: 1950, max: 2100 }
+              - { name: km, label: Kilómetros, widget: number, value_type: int, min: 0 }
+              - { name: potencia, label: Potencia, widget: string, required: false, hint: "Ej.: 110 CV" }
+              - { name: etiquetaDGT, label: "Etiqueta DGT", widget: select, required: false, options: ["0", "ECO", "C", "B", "Sin etiqueta"] }
+              - { name: puertas, label: Puertas, widget: number, value_type: int, required: false }
+              - { name: plazas, label: Plazas, widget: number, value_type: int, required: false }
+              - { name: propietarios, label: "Propietarios anteriores", widget: number, value_type: int, required: false }
+              - { name: ubicacion, label: "Dónde está el coche", widget: string, hint: "Ej.: Salamanca" }
+              - { name: precio, label: "Precio (€)", widget: number, value_type: int, min: 0 }
+              - { name: precioAnterior, label: "Precio anterior (€) para mostrarlo en oferta", widget: number, value_type: int, required: false }
+              - { name: ofertaHasta, label: "Oferta válida hasta", widget: datetime, required: false, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD", hint: "Al pasar esta fecha la oferta deja de mostrarse sola." }
+              - { name: precioMercado, label: "Precio medio de mercado (€)", widget: number, value_type: int, required: false, hint: "Para mostrar cuánto ahorra el cliente frente al mercado." }
+              - name: fotos
+                label: Fotos
+                label_singular: foto
+                widget: list
+                required: false
+                hint: "Orden recomendado: frontal, lateral y trasera. Se reducen automáticamente al subirlas."
+                field: { name: foto, label: Foto, widget: image }
+              - { name: sprite, label: "Imagen antigua de 3 vistas (no tocar)", widget: hidden }
+              - { name: miniatura, label: "Miniatura sin fondo para la cinta (opcional)", widget: image, required: false }
+              - name: estadoGeneral
+                label: Estado general
+                widget: select
+                options: [Excelente, Muy bueno, Buen estado, Revisado]
+              - name: estado
+                label: Estado por zonas
+                widget: object
+                fields:
+                  - { name: neumaticos, label: Neumáticos, widget: string, required: false }
+                  - { name: carroceria, label: Carrocería, widget: string, required: false }
+                  - { name: interior, label: Interior, widget: string, required: false }
+              - { name: defectos, label: "Defectos declarados", widget: list, required: false, field: { name: defecto, label: Defecto, widget: string } }
+              - { name: equipamiento, label: Equipamiento, widget: list, required: false, field: { name: elemento, label: Elemento, widget: string } }
+              - name: valoracion
+                label: "Valoración (de 0 a 5 ruedas)"
+                widget: object
+                fields:
+                  - { name: general, label: General, widget: number, value_type: float, min: 0, max: 5, step: 0.5, default: 4 }
+                  - { name: mecanica, label: Mecánica, widget: number, value_type: float, min: 0, max: 5, step: 0.5, default: 4 }
+                  - { name: carroceria, label: Carrocería, widget: number, value_type: float, min: 0, max: 5, step: 0.5, default: 4 }
+                  - { name: interior, label: Interior, widget: number, value_type: float, min: 0, max: 5, step: 0.5, default: 4 }
+                  - { name: neumaticos, label: Neumáticos, widget: number, value_type: float, min: 0, max: 5, step: 0.5, default: 4 }
+              - name: historial
+                label: Historial
+                widget: object
+                fields:
+                  - { name: titulares, label: "Titulares anteriores", widget: string, required: false }
+                  - { name: llaves, label: Llaves, widget: string, required: false }
+                  - { name: mantenimiento, label: Mantenimiento, widget: string, required: false }
+                  - { name: danos, label: "Daños estructurales", widget: string, required: false }
+              - { name: pruebaDinamica, label: "Prueba dinámica", widget: list, required: false, field: { name: resultado, label: Resultado, widget: string } }
+              - name: servicios
+                label: "Servicios opcionales de este coche"
+                label_singular: servicio
+                widget: list
+                required: false
+                fields:
+                  - { name: id, label: "Identificador", widget: string, hint: "Minúsculas y guiones. Ej.: neumaticos-nuevos" }
+                  - { name: nombre, label: Nombre, widget: string }
+                  - { name: descripcion, label: Descripción, widget: string }
+                  - { name: precio, label: "Precio (€)", widget: number, value_type: int }
+              - { name: catalogoUrl, label: "Enlace al catálogo original (opcional)", widget: string, required: false }
+          - name: serviciosComunes
+            label: "Servicios disponibles para todos los coches"
+            label_singular: servicio
+            widget: list
+            fields:
+              - { name: id, label: Identificador, widget: string }
+              - { name: nombre, label: Nombre, widget: string }
+              - { name: descripcion, label: Descripción, widget: string }
+              - { name: precio, label: "Precio (€)", widget: number, value_type: int }
+
+  - name: ajustes
+    label: Ajustes de la web
+    editor:
+      preview: false
+    files:
+      - name: contacto
+        label: Datos de contacto
+        file: data/ajustes.json
+        format: json
+        fields:
+          - name: contacto
+            label: Contacto (tarjeta de la rueda y pie de página)
+            widget: object
+            fields:
+              - { name: eslogan, label: Eslogan, widget: string }
+              - name: telefonos
+                label: Teléfonos
+                widget: list
+                fields:
+                  - { name: etiqueta, label: "Quién atiende", widget: string }
+                  - { name: numero, label: Número, widget: string }
+              - { name: email, label: Correo electrónico, widget: string }
+              - { name: horario, label: Horario, widget: string }
+              - name: direcciones
+                label: Direcciones
+                widget: list
+                fields:
+                  - { name: lugar, label: "País o ciudad", widget: string }
+                  - { name: direccion, label: Dirección, widget: string }

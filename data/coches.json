@@ -1,0 +1,516 @@
+{
+  "serviciosComunes": [
+    {
+      "id": "transfer",
+      "nombre": "Gestión del cambio de titularidad",
+      "descripcion": "Preparamos y presentamos toda la documentación a tu nombre.",
+      "precio": 390
+    },
+    {
+      "id": "maintenance",
+      "nombre": "Mantenimiento preentrega ampliado",
+      "descripcion": "Aceite, filtros, niveles y comprobación final antes de la entrega.",
+      "precio": 260
+    }
+  ],
+  "vehiculos": [
+    {
+      "id": "porsche-cayenne",
+      "publicado": true,
+      "destacado": true,
+      "nombre": "Porsche Cayenne E-Hybrid",
+      "marca": "Porsche",
+      "subtitulo": "Porsche · SUV híbrido enchufable · Oferta temporal",
+      "tipo": "suv",
+      "combustible": "hibrido",
+      "cambio": "automatico",
+      "anio": 2021,
+      "km": 64800,
+      "combustibleTexto": "Híbrido enchufable",
+      "potencia": "462 CV",
+      "etiquetaDGT": "0",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 1,
+      "ubicacion": "Madrid",
+      "precio": 65900,
+      "precioAnterior": 74900,
+      "ofertaHasta": "2026-09-30",
+      "precioMercado": 70200,
+      "fotos": [],
+      "sprite": "assets/vehicle-porsche-cayenne-v1.webp",
+      "estadoGeneral": "Excelente",
+      "estado": {
+        "neumaticos": "Buen estado (80% de vida útil)",
+        "carroceria": "Excelente estado general",
+        "interior": "Muy buen estado, sin desgaste relevante"
+      },
+      "defectos": [
+        "Leve marca de uso en una llanta trasera"
+      ],
+      "equipamiento": [
+        "Sistema híbrido enchufable",
+        "Tracción total",
+        "Navegación",
+        "Cámara 360°",
+        "Climatizador de cuatro zonas",
+        "Faros LED matriciales"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/porsche/",
+      "valoracion": {
+        "general": 4.5,
+        "mecanica": 5,
+        "carroceria": 4,
+        "interior": 4.5,
+        "neumaticos": 4
+      },
+      "historial": {
+        "titulares": "1",
+        "llaves": "2",
+        "mantenimiento": "Historial digital disponible",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Arranque en frío y ralentí: correctos",
+        "Prueba urbana y autovía hasta 120 km/h: sin avisos",
+        "Dirección, frenada y suspensión: sin ruidos anómalos",
+        "Climatización y sistemas eléctricos: funcionamiento comprobado"
+      ],
+      "servicios": [
+        {
+          "id": "wheel-repair",
+          "nombre": "Reparación estética de llanta trasera",
+          "descripcion": "Corrección de la marca de uso declarada en el informe.",
+          "precio": 160
+        }
+      ]
+    },
+    {
+      "id": "seat-ibiza",
+      "publicado": true,
+      "destacado": true,
+      "nombre": "SEAT Ibiza 1.0 TSI FR",
+      "marca": "SEAT",
+      "subtitulo": "SEAT · Utilitario",
+      "tipo": "utilitario",
+      "combustible": "gasolina",
+      "cambio": "manual",
+      "anio": 2022,
+      "km": 39800,
+      "combustibleTexto": "Gasolina",
+      "potencia": "110 CV",
+      "etiquetaDGT": "C",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 1,
+      "ubicacion": "Madrid",
+      "precio": 17490,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 18700,
+      "fotos": [],
+      "sprite": "assets/vehicle-seat-ibiza.webp",
+      "estadoGeneral": "Excelente",
+      "estado": {
+        "neumaticos": "Buen estado (75% de vida útil)",
+        "carroceria": "Sin golpes registrados",
+        "interior": "Muy buen estado, sin desgaste"
+      },
+      "defectos": [],
+      "equipamiento": [
+        "Acabado FR",
+        "Pantalla multimedia",
+        "Climatizador",
+        "Sensores de aparcamiento",
+        "Control de crucero",
+        "Faros LED"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/wp-content/uploads/2022/07/Seat-Ibiza-2022-IE.pdf",
+      "valoracion": {
+        "general": 4.5,
+        "mecanica": 4.5,
+        "carroceria": 4.5,
+        "interior": 4.5,
+        "neumaticos": 4
+      },
+      "historial": {
+        "titulares": "1",
+        "llaves": "2",
+        "mantenimiento": "Libro de mantenimiento disponible",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Arranque y ralentí: correctos",
+        "Prueba urbana y autovía hasta 120 km/h: sin avisos",
+        "Cambio, dirección y frenada: respuesta normal",
+        "Climatización y sistemas multimedia: comprobados"
+      ],
+      "servicios": [
+        {
+          "id": "detailing",
+          "nombre": "Preparación estética premium",
+          "descripcion": "Limpieza técnica interior y protección exterior.",
+          "precio": 140
+        }
+      ]
+    },
+    {
+      "id": "vw-golf",
+      "publicado": true,
+      "destacado": true,
+      "nombre": "Volkswagen Golf 1.5 TSI Style",
+      "marca": "Volkswagen",
+      "subtitulo": "Volkswagen · Compacto",
+      "tipo": "compacto",
+      "combustible": "gasolina",
+      "cambio": "manual",
+      "anio": 2021,
+      "km": 52400,
+      "combustibleTexto": "Gasolina",
+      "potencia": "130 CV",
+      "etiquetaDGT": "C",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 1,
+      "ubicacion": "Barcelona",
+      "precio": 20900,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 22100,
+      "fotos": [],
+      "sprite": "assets/vehicle-vw-golf.webp",
+      "estadoGeneral": "Muy bueno",
+      "estado": {
+        "neumaticos": "Buen estado (80% de vida útil)",
+        "carroceria": "Sin golpes registrados",
+        "interior": "Muy buen estado"
+      },
+      "defectos": [
+        "Pequeño arañazo en el paragolpes trasero"
+      ],
+      "equipamiento": [
+        "Acabado Style",
+        "Navegación",
+        "Climatizador trizona",
+        "Sensores delanteros y traseros",
+        "Control de crucero adaptativo",
+        "Faros LED"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/wp-content/uploads/2021/09/VW-Golf-2021-FR.pdf",
+      "valoracion": {
+        "general": 4,
+        "mecanica": 4.5,
+        "carroceria": 4,
+        "interior": 4,
+        "neumaticos": 4
+      },
+      "historial": {
+        "titulares": "1",
+        "llaves": "2",
+        "mantenimiento": "Facturas principales disponibles",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Arranque y ralentí: correctos",
+        "Prueba urbana y autovía hasta 120 km/h: sin avisos",
+        "Cambio manual y embrague: funcionamiento normal",
+        "Sin ruidos anómalos en suspensión o dirección"
+      ],
+      "servicios": [
+        {
+          "id": "bumper-repair",
+          "nombre": "Reparar arañazo del paragolpes",
+          "descripcion": "Corrección y acabado del defecto estético declarado.",
+          "precio": 240
+        }
+      ]
+    },
+    {
+      "id": "renault-clio",
+      "publicado": true,
+      "destacado": false,
+      "nombre": "Renault Clio TCe Zen",
+      "marca": "Renault",
+      "subtitulo": "Renault · Utilitario",
+      "tipo": "utilitario",
+      "combustible": "gasolina",
+      "cambio": "manual",
+      "anio": 2022,
+      "km": 34500,
+      "combustibleTexto": "Gasolina",
+      "potencia": "90 CV",
+      "etiquetaDGT": "C",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 2,
+      "ubicacion": "Valencia",
+      "precio": 16250,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 17400,
+      "fotos": [],
+      "sprite": "assets/vehicle-renault-clio.webp",
+      "estadoGeneral": "Buen estado",
+      "estado": {
+        "neumaticos": "Estado aceptable (55% de vida útil)",
+        "carroceria": "Sin golpes registrados",
+        "interior": "Buen estado, ligero desgaste en el asiento del conductor"
+      },
+      "defectos": [
+        "Ligero desgaste en el asiento del conductor",
+        "Recomendable cambio de neumáticos a medio plazo"
+      ],
+      "equipamiento": [
+        "Pantalla multimedia",
+        "Apple CarPlay y Android Auto",
+        "Cámara trasera",
+        "Ayuda al aparcamiento",
+        "Control de crucero",
+        "Asistente de carril"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/wp-content/uploads/2023/01/Renault-Clio-2022-UK-.pdf",
+      "valoracion": {
+        "general": 3.5,
+        "mecanica": 4,
+        "carroceria": 4,
+        "interior": 3.5,
+        "neumaticos": 3
+      },
+      "historial": {
+        "titulares": "2",
+        "llaves": "2",
+        "mantenimiento": "Documentación parcial disponible",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Arranque y ralentí: correctos",
+        "Prueba urbana y carretera: sin avisos de motor",
+        "Dirección y frenada: funcionamiento normal",
+        "Climatización comprobada; neumáticos con desgaste medio"
+      ],
+      "servicios": [
+        {
+          "id": "tyres",
+          "nombre": "Juego de neumáticos nuevos",
+          "descripcion": "Sustitución de los cuatro neumáticos antes de la entrega.",
+          "precio": 520
+        },
+        {
+          "id": "upholstery",
+          "nombre": "Reparación de tapicería",
+          "descripcion": "Corrección del desgaste del asiento del conductor.",
+          "precio": 180
+        }
+      ]
+    },
+    {
+      "id": "toyota-corolla",
+      "publicado": true,
+      "destacado": true,
+      "nombre": "Toyota Corolla 125H Active Tech",
+      "marca": "Toyota",
+      "subtitulo": "Toyota · Compacto híbrido",
+      "tipo": "compacto",
+      "combustible": "hibrido",
+      "cambio": "automatico",
+      "anio": 2021,
+      "km": 49600,
+      "combustibleTexto": "Híbrido",
+      "potencia": "122 CV",
+      "etiquetaDGT": "ECO",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 1,
+      "ubicacion": "Sevilla",
+      "precio": 22900,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 23600,
+      "fotos": [],
+      "sprite": "assets/vehicle-toyota-corolla.webp",
+      "estadoGeneral": "Excelente",
+      "estado": {
+        "neumaticos": "Buen estado (85% de vida útil)",
+        "carroceria": "Sin golpes registrados",
+        "interior": "Excelente estado"
+      },
+      "defectos": [],
+      "equipamiento": [
+        "Sistema híbrido Toyota",
+        "Cámara trasera",
+        "Climatizador bizona",
+        "Control de crucero adaptativo",
+        "Lectura de señales",
+        "Arranque sin llave"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/wp-content/uploads/2021/11/Toyota-Corolla-2021-UK.pdf",
+      "valoracion": {
+        "general": 4.5,
+        "mecanica": 5,
+        "carroceria": 4.5,
+        "interior": 4.5,
+        "neumaticos": 4.5
+      },
+      "historial": {
+        "titulares": "1",
+        "llaves": "2",
+        "mantenimiento": "Historial Toyota disponible",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Sistema híbrido y arranque: correctos",
+        "Prueba urbana y autovía hasta 120 km/h: sin avisos",
+        "Transición eléctrica y térmica: funcionamiento normal",
+        "Frenada, dirección y climatización: comprobadas"
+      ],
+      "servicios": [
+        {
+          "id": "hybrid-check",
+          "nombre": "Informe ampliado del sistema híbrido",
+          "descripcion": "Diagnóstico adicional y certificado del estado de la batería.",
+          "precio": 120
+        }
+      ]
+    },
+    {
+      "id": "nissan-qashqai",
+      "publicado": true,
+      "destacado": true,
+      "nombre": "Nissan Qashqai DIG-T N-Connecta",
+      "marca": "Nissan",
+      "subtitulo": "Nissan · SUV",
+      "tipo": "suv",
+      "combustible": "gasolina",
+      "cambio": "manual",
+      "anio": 2021,
+      "km": 55200,
+      "combustibleTexto": "Gasolina",
+      "potencia": "140 CV",
+      "etiquetaDGT": "ECO",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 2,
+      "ubicacion": "Bilbao",
+      "precio": 23900,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 24800,
+      "fotos": [],
+      "sprite": "assets/vehicle-nissan-qashqai.webp",
+      "estadoGeneral": "Revisado",
+      "estado": {
+        "neumaticos": "Buen estado (70% de vida útil)",
+        "carroceria": "Repintado en puerta trasera derecha (golpe leve reparado)",
+        "interior": "Buen estado"
+      },
+      "defectos": [
+        "Repintado en puerta trasera derecha por golpe leve, ya reparado"
+      ],
+      "equipamiento": [
+        "Acabado N-Connecta",
+        "Cámara de visión 360°",
+        "Navegación",
+        "Llave inteligente",
+        "Sensores de aparcamiento",
+        "Asistente de ángulo muerto"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/wp-content/uploads/2021/04/Nissan-Qashqai-2021-IE.pdf",
+      "valoracion": {
+        "general": 3.5,
+        "mecanica": 4,
+        "carroceria": 3.5,
+        "interior": 4,
+        "neumaticos": 3.5
+      },
+      "historial": {
+        "titulares": "2",
+        "llaves": "2",
+        "mantenimiento": "Historial disponible para revisión",
+        "danos": "No declarados; puerta trasera repintada"
+      },
+      "pruebaDinamica": [
+        "Arranque y ralentí: correctos",
+        "Prueba urbana y autovía hasta 120 km/h: sin avisos",
+        "Dirección, embrague y frenada: funcionamiento normal",
+        "Cámaras, sensores y climatización: comprobados"
+      ],
+      "servicios": [
+        {
+          "id": "paint-report",
+          "nombre": "Informe ampliado de pintura",
+          "descripcion": "Medición y documentación fotográfica de la reparación declarada.",
+          "precio": 90
+        }
+      ]
+    },
+    {
+      "id": "peugeot-208",
+      "publicado": true,
+      "destacado": false,
+      "nombre": "Peugeot 208 PureTech Allure",
+      "marca": "Peugeot",
+      "subtitulo": "Peugeot · Utilitario",
+      "tipo": "utilitario",
+      "combustible": "gasolina",
+      "cambio": "manual",
+      "anio": 2022,
+      "km": 31700,
+      "combustibleTexto": "Gasolina",
+      "potencia": "100 CV",
+      "etiquetaDGT": "C",
+      "puertas": 5,
+      "plazas": 5,
+      "propietarios": 1,
+      "ubicacion": "Zaragoza",
+      "precio": 17800,
+      "precioAnterior": null,
+      "ofertaHasta": null,
+      "precioMercado": 18500,
+      "fotos": [],
+      "sprite": "assets/vehicle-peugeot-208.webp",
+      "estadoGeneral": "Muy bueno",
+      "estado": {
+        "neumaticos": "Buen estado (78% de vida útil)",
+        "carroceria": "Sin golpes registrados",
+        "interior": "Muy buen estado"
+      },
+      "defectos": [],
+      "equipamiento": [
+        "Acabado Allure",
+        "Peugeot i-Cockpit",
+        "Pantalla táctil",
+        "Climatizador",
+        "Sensores traseros",
+        "Asistente de carril"
+      ],
+      "catalogoUrl": "https://autocatalogarchive.com/peugeot/",
+      "valoracion": {
+        "general": 4,
+        "mecanica": 4.5,
+        "carroceria": 4,
+        "interior": 4,
+        "neumaticos": 4
+      },
+      "historial": {
+        "titulares": "1",
+        "llaves": "2",
+        "mantenimiento": "Libro de mantenimiento disponible",
+        "danos": "No declarados"
+      },
+      "pruebaDinamica": [
+        "Arranque y ralentí: correctos",
+        "Prueba urbana y carretera: sin avisos",
+        "Cambio manual, frenada y dirección: funcionamiento normal",
+        "Climatización, pantalla y ayudas: comprobadas"
+      ],
+      "servicios": [
+        {
+          "id": "detailing",
+          "nombre": "Preparación estética premium",
+          "descripcion": "Limpieza técnica interior y protección exterior.",
+          "precio": 140
+        }
+      ]
+    }
+  ]
+}

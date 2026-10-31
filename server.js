@@ -14,7 +14,9 @@ const types = {
   ".png": "image/png",
   ".svg": "image/svg+xml",
   ".webp": "image/webp",
-  ".woff2": "font/woff2"
+  ".woff2": "font/woff2",
+  ".json": "application/json; charset=utf-8",
+  ".yml": "text/yaml; charset=utf-8"
 };
 
 const securityHeaders = {
@@ -32,7 +34,7 @@ http.createServer((request, response) => {
     response.end("Petición no válida");
     return;
   }
-  const name = pathname === "/" ? "index.html" : pathname.slice(1);
+  const name = pathname.endsWith("/") ? `${pathname.slice(1)}index.html` : pathname.slice(1);
   const file = path.resolve(root, name);
   const relative = path.relative(root, file);
   const outsideRoot = !relative || relative.startsWith("..") || path.isAbsolute(relative);
