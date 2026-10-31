@@ -1684,3 +1684,23 @@ if (wheelButton) {
   contactCard.querySelector("[data-contact-close]").addEventListener("click", () => contactCard.close());
   contactCard.addEventListener("click", (event) => { if (event.target === contactCard) contactCard.close(); });
 }
+
+document.querySelectorAll("[data-open-dialog]").forEach((button) => {
+  const dialog = document.getElementById(button.dataset.openDialog);
+  if (!(dialog instanceof HTMLDialogElement)) return;
+  button.addEventListener("click", () => dialog.showModal());
+  dialog.querySelector("[data-close-dialog]")?.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+});
+
+const feePrice = document.querySelector("[data-fee-price]");
+if (feePrice) {
+  const euros = (value) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0, useGrouping: "always" }).format(value);
+  const updateFee = () => {
+    const price = Math.max(0, Math.min(Number(feePrice.value) || 0, 10000000));
+    document.querySelector("[data-fee-commission]").textContent = euros(price * 0.2);
+    document.querySelector("[data-fee-net]").textContent = euros(price * 0.8);
+  };
+  feePrice.addEventListener("input", updateFee);
+  updateFee();
+}

@@ -1089,3 +1089,70 @@ body[data-page="comparar"] .compare-bar{display:none}
 .contact-card-cta:hover b{translate:.3rem 0}
 @media(max-width:700px){.contact-card{margin:auto}.lang-toggle{height:2.2rem;padding:0 .55rem}}
 @media(prefers-reduced-motion:reduce){.contact-card[open]{animation:none}}
+/* Vender: dos caminos, ventajas, pasos, sede y Venta segura */
+.sell-paths{display:grid;width:var(--page);grid-template-columns:1fr 1fr;gap:1.2rem;margin:0 auto 5rem}
+.sell-path{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:.9rem;padding:clamp(1.6rem,3vw,2.6rem);background:#fff;border:1px solid #e3ded4;border-radius:.9rem;box-shadow:0 1.2rem 3rem #0b203612}
+.sell-path h2{margin:0;font-family:var(--serif);font-size:clamp(2rem,3vw,2.9rem);font-weight:400;line-height:1.02}
+.sell-path>p:not(.eyebrow){margin:0;color:var(--muted);line-height:1.65}
+.sell-path .eyebrow{margin:0}
+.sell-path .button{margin-top:auto;min-height:3.2rem;border-radius:.5rem;font-size:.78rem;cursor:pointer}
+.sell-path-featured{color:#fff;background:var(--navy);border-color:var(--navy)}
+.sell-path-featured>p:not(.eyebrow){color:#ffffffbf}
+.sell-path-badge{position:absolute;top:-.8rem;right:1.4rem;padding:.35rem .8rem;color:var(--navy);background:var(--green);border-radius:2rem;font-size:.66rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.sell-path-points{display:grid;gap:.55rem;margin:.3rem 0 1rem;padding:0;list-style:none;font-size:.88rem;font-weight:600}
+.sell-path-points li,.sell-step-checks li{display:flex;align-items:center;gap:.55rem}
+.sell-path-points svg,.sell-step-checks svg{flex:0 0 auto;width:1.15rem;fill:none;stroke:#37644a;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.sell-path-featured .sell-path-points svg{stroke:var(--green)}
+.sell-benefits{display:grid;justify-items:center;gap:2.4rem;padding:5rem max(1.5rem,calc((100vw - min(86rem,calc(100vw - 3rem)))/2));text-align:center;background:#fff}
+.sell-benefits h2,.sell-steps h2{margin:0;color:var(--navy);font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:900;letter-spacing:-.02em}
+.sell-benefits-grid{display:grid;width:100%;grid-template-columns:repeat(3,1fr);gap:2rem}
+.sell-benefits-grid article{display:grid;justify-items:center;gap:1.4rem}
+.benefit-icon{display:grid;width:8rem;height:8rem;place-items:center;background:#e4efe5;border-radius:50%}
+.benefit-icon svg{width:4.2rem;fill:none;stroke:var(--navy);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sell-benefits-grid ul{display:grid;gap:.7rem;margin:0;padding:0;list-style:none;text-align:left;font-size:1rem}
+.sell-benefits-grid li::before{margin-right:.6rem;color:#37644a;font-weight:900;content:"›"}
+.sell-benefits .button,.sell-steps>.button{min-height:3.3rem;padding:0 1.8rem;border-radius:.5rem;font-size:.82rem}
+.sell-steps{display:grid;justify-items:center;gap:2.5rem;width:var(--page);margin:0 auto;padding:5rem 0}
+.sell-steps ol{display:grid;width:min(56rem,100%);gap:1.6rem;margin:0;padding:0;list-style:none}
+.sell-steps ol>li{display:grid;grid-template-columns:3.2rem 1fr;gap:1.3rem;padding:1.6rem;background:#fff;border:1px solid #e3ded4;border-radius:.8rem}
+.sell-steps ol>li>span{display:grid;width:3.2rem;height:3.2rem;place-items:center;color:var(--navy);background:var(--green);border-radius:50%;font-size:1.2rem;font-weight:900}
+.sell-steps h3{margin:.3rem 0 .5rem;color:var(--navy);font-size:1.25rem;font-weight:800}
+.sell-steps ol>li p{margin:0;color:var(--muted);line-height:1.7}
+.sell-step-checks{display:grid;gap:.45rem;margin:1rem 0 0;padding:0;list-style:none;font-weight:700}
+.sell-branch{display:grid;width:var(--page);grid-template-columns:1fr 1.2fr;align-items:center;gap:3rem;margin:0 auto 6rem;padding:2rem;background:#fff;border:1px solid #e3ded4;border-radius:.9rem}
+.sell-branch h2{margin:0 0 .8rem;font-family:var(--serif);font-size:clamp(2rem,3vw,2.8rem);font-weight:400}
+.sell-branch p:not(.eyebrow){margin:0 0 1.5rem;color:var(--muted);line-height:1.7}
+.sell-branch .button{border-radius:.5rem}
+.sell-branch-photo{min-height:16rem;border-radius:.6rem;background:url("assets/celeritas-concesionario.webp") center/cover no-repeat}
+.info-dialog{width:min(36rem,calc(100% - 2rem));max-height:calc(100svh - 2rem);padding:0;color:var(--ink);background:#fff;border:0;border-radius:1rem;box-shadow:0 2rem 4rem #03101d59}
+.info-dialog::backdrop{background:#03101d8c}
+.info-dialog[open]{animation:contact-pop .35s cubic-bezier(.2,.7,.2,1)}
+.info-dialog-inner{position:relative;display:grid;gap:.9rem;padding:clamp(1.5rem,4vw,2.4rem)}
+.info-dialog-inner>.contact-card-close{position:absolute;top:1rem;right:1rem}
+.info-dialog h2{margin:0;font-family:var(--serif);font-size:clamp(1.9rem,4vw,2.5rem);font-weight:400}
+.info-dialog h3{margin:.6rem 0 0;color:var(--navy);font-size:1rem;font-weight:900}
+.info-dialog p{margin:0;color:var(--muted);line-height:1.65}
+.info-dialog .eyebrow{margin:0}
+.info-dialog .sell-path-points{margin:0}
+.info-note{font-size:.8rem}
+.fee-box{display:flex;align-items:baseline;gap:.8rem;padding:1rem 1.2rem;background:#eef4ee;border-radius:.6rem}
+.fee-box strong{white-space:nowrap;color:#37644a;font-size:2.6rem;font-weight:900;line-height:1}
+.fee-rules{display:grid;gap:.5rem;margin:0;padding:0 0 0 1.1rem;color:var(--ink);font-size:.88rem;line-height:1.55}
+.fee-calc{display:grid;gap:.6rem;padding:1.2rem;color:#fff;background:var(--navy);border-radius:.7rem}
+.fee-calc label{color:#ffffffbf;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.fee-calc-row{display:flex;align-items:center;gap:.5rem}
+.fee-calc input{width:100%;padding:.7rem .9rem;color:var(--navy);background:#fff;border:0;border-radius:.45rem;font-size:1.1rem;font-weight:800}
+.fee-calc p{display:flex;justify-content:space-between;margin:0;color:#ffffffd9}
+.fee-calc strong{color:var(--green);font-family:var(--serif);font-size:1.3rem;font-weight:400}
+.fee-net strong{font-size:1.7rem}
+.fee-calc small{color:#ffffff8c;font-size:.7rem}
+.info-dialog .button{border-radius:.5rem}
+@media(max-width:800px){
+  .sell-paths,.sell-branch{grid-template-columns:1fr}
+  .sell-benefits-grid{grid-template-columns:1fr;gap:2.4rem}
+  .benefit-icon{width:6.5rem;height:6.5rem}
+  .sell-steps ol>li{grid-template-columns:2.6rem 1fr;gap:1rem;padding:1.2rem}
+  .sell-steps ol>li>span{width:2.6rem;height:2.6rem;font-size:1rem}
+  .sell-branch{padding:1.2rem;gap:1.5rem}
+}
+@media(prefers-reduced-motion:reduce){.info-dialog[open]{animation:none}}
