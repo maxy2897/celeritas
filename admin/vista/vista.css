@@ -1,0 +1,2 @@
+.preview-banner{position:fixed;right:1rem;bottom:1rem;z-index:2147483647;max-width:min(30rem,calc(100% - 2rem));padding:.75rem 1rem;color:#0b2036;background:#fff4d6;border:1px solid #e9c46a;border-radius:.6rem;box-shadow:0 .6rem 1.6rem #0b203633;font:500 .85rem/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+.preview-banner a{margin-left:.3rem;color:#0b2036;font-weight:700}

@@ -6,12 +6,12 @@
     <meta name="robots" content="noindex, nofollow" />
     <meta name="referrer" content="no-referrer" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.goatcounter.com; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'" />
-    <link rel="stylesheet" href="admin.css?v=2" />
+    <link rel="stylesheet" href="admin.css?v=3" />
     <script src="admin.js?v=2" type="module"></script>
     <title>Administración — Celeritas</title>
   </head>
   <body data-admin-page="inicio">
-    <header class="adm-header"><a href="./" class="adm-brand"><img src="../assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><span>Administración</span></a><nav><a class="is-active" href="./">Inicio</a><a href="editor/">Contenido</a><a href="estadisticas.html">Estadísticas</a><a href="../index.html" target="_blank" rel="noopener">Ver la web ↗</a></nav></header>
+    <header class="adm-header"><a href="./" class="adm-brand"><img src="../assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><span>Administración</span></a><nav><a class="is-active" href="./">Inicio</a><a href="vista/">Contenido</a><a href="estadisticas.html">Estadísticas</a><a href="../index.html" target="_blank" rel="noopener">Ver la web ↗</a></nav></header>
     <main class="adm-main">
       <section class="adm-hello"><h1>Panel de Celeritas</h1><p>Desde aquí se gestiona todo lo que aparece en la web y se consulta cómo la usan los visitantes.</p></section>
       <section class="adm-kpis" aria-label="Resumen de la web">
@@ -24,14 +24,15 @@
       <section class="adm-actions">
         <h2>¿Qué quieres hacer?</h2>
         <div class="adm-grid">
-          <a class="adm-card" href="editor/#/collections/catalogo"><b>🚗</b><strong>Publicar y editar coches</strong><p>Añade coches, fotos, precios, ofertas, estado, imperfecciones y equipamiento. Oculta los vendidos.</p></a>
+          <a class="adm-card" href="vista/#/collections/catalogo"><b>🚗</b><strong>Publicar y editar coches</strong><p>Añade coches, fotos, precios, ofertas, estado, imperfecciones y equipamiento. Oculta los vendidos.</p></a>
           <a class="adm-card" href="estadisticas.html"><b>📈</b><strong>Ver estadísticas</strong><p>Visitas, coches más vistos, países, dispositivos, de dónde llegan y qué botones se pulsan.</p></a>
-          <a class="adm-card" href="editor/#/collections/seguimiento"><b>🚢</b><strong>Seguimiento de envíos</strong><p>Crea un envío, dale la referencia al cliente y actualiza en qué paso está.</p></a>
-          <a class="adm-card" href="editor/#/collections/tienda"><b>🛒</b><strong>Productos de la tienda</strong><p>Aceites, filtros, radios y demás: precio, foto, categoría y compatibilidad.</p></a>
-          <a class="adm-card" href="editor/#/collections/ajustes"><b>⚙️</b><strong>Contacto, tarifas y ajustes</strong><p>Teléfonos, correo, direcciones, costes de envío por destino, moneda y estadísticas.</p></a>
+          <a class="adm-card" href="vista/#/collections/seguimiento"><b>🚢</b><strong>Seguimiento de envíos</strong><p>Crea un envío, dale la referencia al cliente y actualiza en qué paso está.</p></a>
+          <a class="adm-card" href="vista/#/collections/tienda"><b>🛒</b><strong>Productos de la tienda</strong><p>Aceites, filtros, radios y demás: precio, foto, categoría y compatibilidad.</p></a>
+          <a class="adm-card" href="vista/#/collections/ajustes"><b>⚙️</b><strong>Contacto, tarifas y ajustes</strong><p>Teléfonos, correo, direcciones, costes de envío por destino, moneda y estadísticas.</p></a>
           <a class="adm-card" href="https://github.com/maxy2897/celeritas/blob/main/GUIA-PANEL.md" target="_blank" rel="noopener"><b>📘</b><strong>Guía de uso</strong><p>Cómo entrar al editor y cómo publicar paso a paso.</p></a>
         </div>
       </section>
+      <section class="adm-note adm-note-info"><div><strong>Ahora mismo el contenido se abre en modo vista previa</strong><p>Puedes ver y probar todo sin iniciar sesión, pero los cambios no se publican en la web. Para publicar de verdad se usa el <a href="editor/">editor con llave de acceso</a>; más adelante lo cambiaremos por usuarios con contraseña.</p></div></section>
       <section class="adm-note"><div><strong>No contar mis propias visitas</strong><p>Actívalo en cada navegador que uses para revisar la web, para que tus visitas no se mezclen con las de los clientes.</p></div><button type="button" class="adm-toggle" data-skip-toggle aria-pressed="false">Desactivado</button></section>
     </main>
   </body>

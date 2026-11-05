@@ -1,0 +1,15 @@
+{
+  "files": [
+    "data/coches.json",
+    "data/ajustes.json",
+    "data/envios.json",
+    "data/tienda.json",
+    "assets/vehicle-nissan-qashqai.webp",
+    "assets/vehicle-peugeot-208.webp",
+    "assets/vehicle-porsche-cayenne-v1.webp",
+    "assets/vehicle-renault-clio.webp",
+    "assets/vehicle-seat-ibiza.webp",
+    "assets/vehicle-toyota-corolla.webp",
+    "assets/vehicle-vw-golf.webp"
+  ]
+}

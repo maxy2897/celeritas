@@ -62,3 +62,5 @@ a{color:inherit}
 .adm-bars b{color:var(--navy)}
 .adm-bars .adm-empty{display:block;color:var(--muted)}
 @media(max-width:700px){.adm-chart small{display:none}.adm-two{grid-template-columns:1fr}.adm-bars li{grid-template-columns:minmax(0,1fr) 4rem auto}}
+.adm-note-info{background:#fff8e6;border:1px solid #f0d78c}
+.adm-note-info a{font-weight:700}
