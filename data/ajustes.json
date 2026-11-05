@@ -2,14 +2,92 @@
   "contacto": {
     "eslogan": "La fortuna acompaña a los que se atreven a construir su propio camino.",
     "telefonos": [
-      { "etiqueta": "Atención comercial", "numero": "91 000 00 00" },
-      { "etiqueta": "Asesor Celeritas", "numero": "Teléfono pendiente" }
+      {
+        "etiqueta": "Atención comercial",
+        "numero": "91 000 00 00"
+      },
+      {
+        "etiqueta": "Asesor Celeritas",
+        "numero": "Teléfono pendiente"
+      }
     ],
     "email": "hola@celeritas-motors.com",
     "horario": "Lunes a viernes · 09:00–19:00",
     "direcciones": [
-      { "lugar": "España", "direccion": "Dirección pendiente" },
-      { "lugar": "Guinea Ecuatorial", "direccion": "Dirección pendiente" }
+      {
+        "lugar": "España",
+        "direccion": "Dirección pendiente"
+      },
+      {
+        "lugar": "Guinea Ecuatorial",
+        "direccion": "Dirección pendiente"
+      }
     ]
+  },
+  "envios": {
+    "nota": "Importes orientativos. Le confirmaremos el coste final antes de la reserva.",
+    "destinos": [
+      {
+        "id": "peninsula",
+        "region": "España",
+        "nombre": "Península",
+        "entrega": [
+          "Entrega a domicilio",
+          "Visita y recogida en Salamanca"
+        ],
+        "transporte": 350,
+        "gestion": 0,
+        "impuestos": 0,
+        "domicilio": 0,
+        "seguro": 0,
+        "moneda": "EUR"
+      },
+      {
+        "id": "baleares-canarias",
+        "region": "España",
+        "nombre": "Baleares y Canarias",
+        "entrega": [
+          "Recogida en el puerto",
+          "O en su domicilio"
+        ],
+        "transporte": 900,
+        "gestion": null,
+        "impuestos": null,
+        "domicilio": null,
+        "seguro": null,
+        "moneda": "EUR"
+      },
+      {
+        "id": "ceuta-melilla",
+        "region": "España",
+        "nombre": "Ceuta y Melilla",
+        "entrega": [
+          "Recogida en el puerto",
+          "O en su domicilio"
+        ],
+        "transporte": null,
+        "gestion": null,
+        "impuestos": null,
+        "domicilio": null,
+        "seguro": null,
+        "moneda": "EUR"
+      },
+      {
+        "id": "guinea-ecuatorial",
+        "region": "África",
+        "nombre": "Guinea Ecuatorial",
+        "entrega": [
+          "Recogida en el puerto de Bata o Malabo",
+          "O en su domicilio"
+        ],
+        "transporte": null,
+        "gestion": null,
+        "impuestos": null,
+        "domicilio": null,
+        "seguro": null,
+        "moneda": "XAF"
+      }
+    ],
+    "formasPago": "Transferencia bancaria · Pago en la entrega · Financiación"
   }
 }

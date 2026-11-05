@@ -302,12 +302,14 @@ function animateVehicleToTarget(sourceButton, target) {
   });
 }
 
-const currencyRates = { EUR: 1, USD: 1.16, GBP: 0.87, CHF: 0.94 };
+const currencyRates = { EUR: 1, XAF: 655.957, USD: 1.16, GBP: 0.87, CHF: 0.94 };
 const savedCurrency = readPreference("celeritas-currency");
 let currentCurrency = savedCurrency && hasOwnKey(currencyRates, savedCurrency) ? savedCurrency : "EUR";
 
 function formatMoney(euros, currency = currentCurrency) {
   const rate = currencyRates[currency] || 1;
+  if (currency === "XAF") return `${groupThousands(euros * rate)} FCFA`;
+  if (currency === "EUR") return plainEuros(euros);
   return new Intl.NumberFormat("es-ES", { style: "currency", currency, maximumFractionDigits: 0 }).format(euros * rate);
 }
 
@@ -331,6 +333,7 @@ function languageControlMarkup() {
 }
 
 const navMenuItems = {
+  "envios.html": [["Envíos y costes", "envios.html"], ["Seguir mi envío", "mi-envio.html"]],
   "comprar.html": [["Todo el catálogo", "comprar.html"], ["SUV", "comprar.html?tipo=suv"], ["Compactos", "comprar.html?tipo=compacto"], ["Híbridos", "comprar.html?combustible=hibrido"]],
   "financiacion.html": [["Opciones de financiación", "financiacion.html"], ["Solicitar propuesta", "contacto.html?motivo=financiacion"], ["Entregar mi coche", "tasacion.html"]],
   "como-funciona.html": [["Proceso de compra", "como-funciona.html#comprar-proceso"], ["Proceso de venta", "como-funciona.html#vender-proceso"]],
@@ -356,7 +359,7 @@ if (nav) {
 const siteHeader = document.querySelector(".site-header");
 if (siteHeader) {
   const accountActive = document.body.dataset.page === "mi-espacio" ? " is-active" : "";
-  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools">${languageControlMarkup()}<label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
+  siteHeader.insertAdjacentHTML("beforeend", `<div class="header-tools">${languageControlMarkup()}<label class="currency-control"><span class="sr-only">Moneda orientativa</span><select data-currency-select aria-label="Mostrar precios en otra moneda" title="Conversión orientativa; el precio final se confirmará en euros"><option value="EUR">EUR €</option><option value="XAF">FCFA</option><option value="USD">USD $</option><option value="GBP">GBP £</option><option value="CHF">CHF</option></select></label><a class="header-icon${accountActive}" href="mi-espacio.html" aria-label="Abrir mi espacio Celeritas" title="Mi espacio Celeritas"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></a></div>`);
 }
 
 let scrollWheel = document.querySelector(".scroll-wheel");
@@ -1654,7 +1657,7 @@ if (wheelButton) {
     celeritasContact.hours ? contactRow("clock", "Horario", celeritasContact.hours) : "",
     ...celeritasContact.addresses.map(([country, address]) => contactRow("pin", country, address)),
   ].join("");
-  document.body.insertAdjacentHTML("beforeend", `<dialog class="contact-card" aria-labelledby="contact-card-title" data-contact-card><div class="contact-card-inner"><div class="contact-card-head"><img src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><button class="contact-card-close" type="button" aria-label="Cerrar" data-contact-close>×</button></div><p class="contact-card-slogan">${celeritasContact.slogan}</p><h2 id="contact-card-title">Información de contacto</h2><ul class="contact-card-list">${rows}</ul><a class="contact-card-cta" href="contacto.html">Contáctanos <b aria-hidden="true">→</b></a></div></dialog>`);
+  document.body.insertAdjacentHTML("beforeend", `<dialog class="contact-card" aria-labelledby="contact-card-title" data-contact-card><div class="contact-card-inner"><div class="contact-card-head"><img src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><button class="contact-card-close" type="button" aria-label="Cerrar" data-contact-close>×</button></div><p class="contact-card-slogan">${celeritasContact.slogan}</p><h2 id="contact-card-title">Información de contacto</h2><ul class="contact-card-list">${rows}</ul><a class="contact-card-cta" href="contacto.html">Contáctanos <b aria-hidden="true">→</b></a><a class="contact-card-secondary" href="contacto.html?motivo=llamada">Solicitar una llamada</a><a class="contact-card-secondary" href="mi-envio.html">Seguir mi envío</a></div></dialog>`);
   const contactCard = document.querySelector("[data-contact-card]");
   wheelButton.removeAttribute("aria-hidden");
   wheelButton.setAttribute("role", "button");
@@ -1689,4 +1692,129 @@ if (feePrice) {
   };
   feePrice.addEventListener("input", updateFee);
   updateFee();
+}
+
+// Envíos: destinos y calculadora en la moneda del destino (datos en data/ajustes.json).
+const shippingSettings = siteSettings.envios || {};
+const shippingDestinations = (shippingSettings.destinos || []).filter((destination) => destination && destination.id);
+const destinationCards = document.querySelector("[data-ship-destinations]");
+if (destinationCards) {
+  destinationCards.innerHTML = shippingDestinations.map((destination) => `<article><small>${escapeText(destination.region)}</small><strong>${escapeText(destination.nombre)}</strong><ul>${(destination.entrega || []).map((option) => `<li>${escapeText(option)}</li>`).join("")}</ul></article>`).join("");
+}
+
+const shippingCalc = document.querySelector("[data-shipping-calc]");
+if (shippingCalc) {
+  const params = new URLSearchParams(window.location.search);
+  const vehicleSelect = shippingCalc.querySelector("[data-ship-vehicle]");
+  const destinationSelect = shippingCalc.querySelector("[data-ship-destination]");
+  const deliverySelect = shippingCalc.querySelector("[data-ship-delivery]");
+  const currencySelect = shippingCalc.querySelector("[data-ship-currency]");
+  const insuranceInput = shippingCalc.querySelector("[data-ship-insurance]");
+  const lines = shippingCalc.querySelector("[data-ship-lines]");
+  const total = shippingCalc.querySelector("[data-ship-total]");
+  const totalEur = shippingCalc.querySelector("[data-ship-total-eur]");
+  const note = shippingCalc.querySelector("[data-ship-note]");
+  const cta = shippingCalc.querySelector("[data-ship-cta]");
+  const payments = document.querySelector("[data-ship-payments]");
+  if (payments && shippingSettings.formasPago) payments.textContent = shippingSettings.formasPago;
+  publishedIds.forEach((id) => vehicleSelect.append(new Option(`${vehicleCatalog[id].name} · ${vehicleCatalog[id].price}`, id)));
+  shippingDestinations.forEach((destination) => destinationSelect.append(new Option(`${destination.nombre} (${destination.region})`, destination.id)));
+  if (isVehicleId(params.get("id"))) vehicleSelect.value = params.get("id");
+  if (shippingDestinations.some((destination) => destination.id === params.get("destino"))) destinationSelect.value = params.get("destino");
+
+  const currentDestination = () => shippingDestinations.find((destination) => destination.id === destinationSelect.value) || shippingDestinations[0];
+  const fillDelivery = () => {
+    const destination = currentDestination();
+    deliverySelect.replaceChildren(...(destination?.entrega || ["Entrega a acordar"]).map((option) => new Option(option, option)));
+    const currency = destination?.moneda;
+    if (currency && hasOwnKey(currencyRates, currency)) currencySelect.value = currency;
+  };
+
+  const renderEstimate = () => {
+    const destination = currentDestination();
+    if (!destination) return;
+    const currency = currencySelect.value;
+    const money = (euros) => formatMoney(euros, currency);
+    const vehicle = vehicleCatalog[vehicleSelect.value];
+    const toHome = /domicilio/i.test(deliverySelect.value);
+    const rows = [
+      vehicle ? ["Vehículo", vehicle.priceEur, vehicle.name] : null,
+      ["Transporte hasta el destino", destination.transporte],
+      ["Impuestos y aduana", destination.impuestos],
+      ["Gestión y documentación", destination.gestion],
+      toHome ? ["Entrega a domicilio", destination.domicilio] : null,
+      insuranceInput.checked ? ["Seguro de transporte", destination.seguro] : null,
+    ].filter(Boolean);
+    let sum = 0;
+    let pending = 0;
+    lines.innerHTML = rows.map(([label, value, hint]) => {
+      const known = typeof value === "number";
+      if (known) sum += value; else pending += 1;
+      return `<div><dt>${escapeText(label)}${hint ? `<small>${escapeText(hint)}</small>` : ""}</dt><dd>${known ? (value === 0 ? "Incluido" : money(value)) : "A consultar"}</dd></div>`;
+    }).join("");
+    total.textContent = money(sum) + (pending ? " + a consultar" : "");
+    totalEur.textContent = currency === "EUR" ? "" : `≈ ${formatMoney(sum, "EUR")}${pending ? " + conceptos a consultar" : ""}`;
+    note.textContent = `${shippingSettings.nota || "Importes orientativos."}${currency !== "EUR" ? " La conversión de moneda es orientativa; el pago se formaliza en euros." : ""}`;
+    total.classList.remove("is-updated");
+    void total.offsetWidth;
+    total.classList.add("is-updated");
+    const ctaParams = new URLSearchParams({ motivo: "comprar" });
+    if (vehicle) ctaParams.set("coche", vehicle.name);
+    cta.href = `contacto.html?${ctaParams.toString()}`;
+  };
+
+  destinationSelect.addEventListener("change", () => { fillDelivery(); renderEstimate(); });
+  [vehicleSelect, deliverySelect, currencySelect, insuranceInput].forEach((control) => control.addEventListener("change", renderEstimate));
+  fillDelivery();
+  renderEstimate();
+}
+
+// Mi envío: seguimiento por referencia (datos en data/envios.json, editables desde el panel).
+const trackForm = document.querySelector("[data-track-form]");
+if (trackForm) {
+  const shipmentsData = await loadJson("data/envios.json", { envios: [] });
+  const shipments = (shipmentsData.envios || []).filter((item) => item && item.publicado !== false && item.referencia);
+  const result = document.querySelector("[data-track-result]");
+  const message = document.querySelector("[data-track-message]");
+  const formatDate = (value) => {
+    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(value || ""));
+    return match ? `${match[3]}/${match[2]}/${match[1]}` : "";
+  };
+  const showShipment = (reference) => {
+    const clean = String(reference || "").trim().toUpperCase();
+    const shipment = shipments.find((item) => String(item.referencia).trim().toUpperCase() === clean);
+    result.hidden = !shipment;
+    message.hidden = Boolean(shipment) || !clean;
+    if (!shipment) {
+      message.textContent = "No encontramos ningún envío con esa referencia. Revise que esté bien escrita o escríbanos y le ayudamos.";
+      return;
+    }
+    const set = (key, value) => { result.querySelector(`[data-track="${key}"]`).textContent = value || "—"; };
+    set("referencia", shipment.referencia);
+    set("coche", shipment.coche);
+    set("destino", shipment.destino);
+    set("metodo", shipment.metodo);
+    set("llegada", formatDate(shipment.llegadaEstimada));
+    set("asesor", shipment.asesor || "Equipo Celeritas");
+    set("documentos", (shipment.documentos || []).join(" · "));
+    const step = Math.min(7, Math.max(1, Number(shipment.paso) || 1));
+    result.querySelectorAll("[data-track-steps] li").forEach((item, index) => {
+      item.classList.toggle("is-done", index + 1 < step);
+      item.classList.toggle("is-current", index + 1 === step);
+      item.querySelector("small").textContent = index + 1 <= step ? formatDate(shipment.fechasPasos?.[index]) || (index + 1 === step ? "En curso" : "") : "Pendiente";
+    });
+    result.querySelector("[data-track-news]").innerHTML = (shipment.novedades || []).map((news) => `<li><small>${escapeText(formatDate(news.fecha))}</small><p>${escapeText(news.texto)}</p></li>`).join("") || "<li><p>Todavía no hay novedades.</p></li>";
+    result.scrollIntoView({ block: "start", behavior: prefersReducedMotion ? "auto" : "smooth" });
+  };
+  trackForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const reference = trackForm.elements.namedItem("ref").value;
+    history.replaceState(null, "", `?ref=${encodeURIComponent(reference.trim())}`);
+    showShipment(reference);
+  });
+  const initialRef = new URLSearchParams(window.location.search).get("ref");
+  if (initialRef) {
+    trackForm.elements.namedItem("ref").value = initialRef;
+    showShipment(initialRef);
+  }
 }

@@ -1,0 +1,39 @@
+{
+  "envios": [
+    {
+      "referencia": "DEMO-0001",
+      "publicado": true,
+      "coche": "Toyota Corolla 125H",
+      "destino": "Puerto de Malabo · Guinea Ecuatorial",
+      "metodo": "Marítimo",
+      "llegadaEstimada": "2026-12-10",
+      "paso": 4,
+      "fechasPasos": [
+        "2026-11-02",
+        "2026-11-04",
+        "2026-11-12",
+        "2026-11-20"
+      ],
+      "novedades": [
+        {
+          "fecha": "2026-11-20",
+          "texto": "El coche ha sido embarcado en el puerto de salida."
+        },
+        {
+          "fecha": "2026-11-12",
+          "texto": "Documentación de exportación completada."
+        },
+        {
+          "fecha": "2026-11-04",
+          "texto": "Pago confirmado."
+        }
+      ],
+      "asesor": "Equipo Celeritas",
+      "documentos": [
+        "Contrato de compraventa",
+        "Factura",
+        "Documento de embarque"
+      ]
+    }
+  ]
+}

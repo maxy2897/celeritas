@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; base-uri 'self'; form-action 'self'" /><meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="description" content="Entregamos su coche en la Península, Baleares, Canarias, Ceuta, Melilla y Guinea Ecuatorial. Calcule el coste total del envío en su moneda." />
+    <meta name="theme-color" content="#f6f3ec" />
+    <title>Envíos — Celeritas</title>
+    <link rel="stylesheet" href="styles.css?v=68" />
+    <script src="script.js?v=68" type="module"></script>
+  </head>
+  <body data-page="envios">
+    <header class="site-header header-light"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a href="comprar.html">Comprar</a><a class="active" href="envios.html">Envíos</a><a href="vender.html">Vender</a><a href="tienda.html">Tienda</a><a href="conocenos.html">Conócenos</a><a href="contacto.html">Contacto</a></nav></header>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt="" /><span>CELERITAS</span></aside>
+    <main data-shipping-page>
+      <section class="ship-hero">
+        <p class="eyebrow">Envíos Celeritas</p>
+        <h1>Entregamos allí<br /><em>donde se encuentre.</em></h1>
+        <p>En toda España y en Guinea Ecuatorial: recójalo en el puerto o recíbalo en su domicilio, con el coste total detallado desde el primer momento.</p>
+        <div class="ship-destinations" data-ship-destinations></div>
+      </section>
+
+      <section class="ship-calc-section" id="calculadora" aria-labelledby="calc-title">
+        <p class="eyebrow dark">Entrega en detalle</p>
+        <h2 id="calc-title">¿Cuánto cuesta recibirlo?</h2>
+        <div class="ship-calc" data-shipping-calc>
+          <form class="ship-calc-form" data-ship-form>
+            <label><span>Vehículo</span><select data-ship-vehicle><option value="">Sin elegir (solo el envío)</option></select></label>
+            <label><span>País o territorio de destino</span><select data-ship-destination></select></label>
+            <label><span>Entrega</span><select data-ship-delivery></select></label>
+            <label><span>Moneda</span><select data-ship-currency><option value="EUR">Euro (€)</option><option value="XAF">Franco CFA (FCFA)</option><option value="USD">Dólar (US$)</option><option value="GBP">Libra (£)</option><option value="CHF">Franco suizo (CHF)</option></select></label>
+            <label class="ship-check"><input type="checkbox" data-ship-insurance checked /><span>Incluir seguro de transporte</span></label>
+          </form>
+          <div class="ship-breakdown" aria-live="polite">
+            <p class="ship-breakdown-title">Desglose del coste</p>
+            <dl data-ship-lines></dl>
+            <div class="ship-total"><span>Total estimado</span><strong data-ship-total>—</strong><small data-ship-total-eur></small></div>
+            <p class="ship-note" data-ship-note></p>
+            <a class="button button-accent" href="contacto.html?motivo=comprar" data-ship-cta>Solicitar presupuesto cerrado →</a>
+          </div>
+        </div>
+        <div class="ship-facts">
+          <article><strong>Coste total detallado</strong><p>Vehículo, transporte, trámites e impuestos desde el primer momento.</p></article>
+          <article><strong>Estado verificado</strong><p>Fotografías, historial e informe antes de abonar el importe.</p></article>
+          <article><strong>Formas de pago</strong><p data-ship-payments>Consúltenos las opciones disponibles.</p></article>
+          <article><strong>Seguimiento</strong><p>Siga su vehículo paso a paso hasta la entrega.</p></article>
+        </div>
+      </section>
+
+      <section class="ship-world">
+        <div><h2>También enviamos a otros países</h2><p>Consulte los continentes y países a los que llevamos su coche.</p></div>
+        <a class="button button-dark" href="index.html#envios">Ver destinos →</a>
+      </section>
+
+      <section class="ship-track-cta">
+        <div><h2>¿Tiene un envío en camino?</h2><p>Siga su vehículo paso a paso y hable con su asesor en cualquier momento.</p></div>
+        <a class="button button-accent" href="mi-envio.html">Consultar seguimiento →</a>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
+  </body>
+</html>

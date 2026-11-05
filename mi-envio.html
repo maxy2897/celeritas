@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'; base-uri 'self'; form-action 'self'" /><meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="description" content="Siga su envío Celeritas paso a paso con la referencia de su pedido." />
+    <meta name="theme-color" content="#f6f3ec" />
+    <title>Seguir mi envío — Celeritas</title>
+    <link rel="stylesheet" href="styles.css?v=68" />
+    <script src="script.js?v=68" type="module"></script>
+  </head>
+  <body data-page="mi-envio">
+    <header class="site-header header-light"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a href="comprar.html">Comprar</a><a class="active" href="envios.html">Envíos</a><a href="vender.html">Vender</a><a href="tienda.html">Tienda</a><a href="conocenos.html">Conócenos</a><a href="contacto.html">Contacto</a></nav></header>
+    <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt="" /><span>CELERITAS</span></aside>
+    <main>
+      <section class="track-head"><div><p class="eyebrow dark">Mi envío</p><h1>Siga su envío</h1><p>Sabrá en todo momento en qué punto se encuentra su vehículo.</p></div>
+        <form class="track-form" data-track-form><label><span>Referencia del pedido</span><input name="ref" required autocomplete="off" placeholder="Ej.: CEL-7Q4K-2931" maxlength="40" /></label><button class="button button-dark" type="submit">Consultar →</button></form>
+      </section>
+      <p class="track-message" data-track-message hidden></p>
+      <section class="track-result" data-track-result hidden>
+        <dl class="track-summary"><div><dt>Pedido</dt><dd data-track="referencia"></dd></div><div><dt>Coche</dt><dd data-track="coche"></dd></div><div><dt>Destino</dt><dd data-track="destino"></dd></div><div><dt>Método</dt><dd data-track="metodo"></dd></div><div><dt>Llegada estimada</dt><dd data-track="llegada"></dd></div></dl>
+        <ol class="track-steps" data-track-steps><li><span>1</span><strong>Reservado</strong><small></small></li><li><span>2</span><strong>Pago confirmado</strong><small></small></li><li><span>3</span><strong>Documentación</strong><small></small></li><li><span>4</span><strong>Embarcado</strong><small></small></li><li><span>5</span><strong>En tránsito</strong><small></small></li><li><span>6</span><strong>En puerto de destino</strong><small></small></li><li><span>7</span><strong>Entregado</strong><small></small></li></ol>
+        <div class="track-columns">
+          <div><h2>Últimas novedades</h2><ul class="track-news" data-track-news></ul></div>
+          <div><div class="track-advisor"><p class="eyebrow">Su asesor</p><strong data-track="asesor">Equipo Celeritas</strong><p>Le atiende siempre la misma persona, por WhatsApp o llamada.</p><div><a class="button button-accent" href="contacto.html?motivo=whatsapp">Hablar ahora</a><a class="button button-outline-light" href="contacto.html?motivo=llamada">Solicitar una llamada</a></div></div>
+          <div class="track-docs"><h3>Documentos del envío</h3><p data-track="documentos"></p></div></div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="footer-brand"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><p>La fortuna acompaña a los que se atreven a construir su propio camino.</p></div><nav><a href="comprar.html">Comprar</a><a href="vender.html">Vender</a><a href="financiacion.html">Financiación</a><a href="como-funciona.html">Cómo funciona</a><a href="contacto.html">Contacto</a></nav><small>© <span id="year"></span> Celeritas</small></footer>
+  </body>
+</html>

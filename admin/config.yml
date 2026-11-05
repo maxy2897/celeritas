@@ -150,6 +150,46 @@ collections:
                   - { name: descripcion, label: Descripción, widget: string }
                   - { name: precio, label: "Precio (€)", widget: number, value_type: int }
               - { name: catalogoUrl, label: "Enlace al catálogo original (opcional)", widget: string, required: false }
+              - name: origen
+                label: Origen del coche
+                widget: select
+                required: false
+                options:
+                  - { label: "Stock propio", value: stock-propio }
+                  - { label: "Comprado a particular", value: particular }
+                  - { label: "En intermediación (Venta segura)", value: intermediacion }
+              - name: disponibilidad
+                label: Disponibilidad
+                widget: select
+                required: false
+                options: ["Disponible · en España", "Consultar disponibilidad", "Reservado", "Próximamente"]
+              - name: ficha
+                label: "Datos técnicos de la ficha"
+                widget: object
+                required: false
+                collapsed: true
+                fields:
+                  - { name: referencia, label: Referencia, widget: string, required: false }
+                  - { name: matriculacion, label: "1ª matriculación (MM/AAAA)", widget: string, required: false }
+                  - { name: cilindrada, label: "Cilindrada (cc)", widget: string, required: false }
+                  - { name: carroceria, label: Carrocería, widget: string, required: false }
+                  - { name: itv, label: "Vencimiento ITV (MM/AAAA)", widget: string, required: false }
+                  - { name: emisiones, label: "Emisiones (Euro)", widget: string, required: false }
+                  - { name: paisOrigen, label: "País de origen", widget: string, required: false }
+                  - { name: coc, label: "COC", widget: select, required: false, options: ["Sí", "No"] }
+                  - { name: color, label: Color, widget: string, required: false }
+                  - { name: tapiceria, label: Tapicería, widget: string, required: false }
+                  - { name: danosPrevios, label: "Daños previos / accidente", widget: select, required: false, options: ["No", "Sí"] }
+              - name: imperfecciones
+                label: Imperfecciones con foto
+                label_singular: imperfección
+                widget: list
+                required: false
+                fields:
+                  - { name: foto, label: Foto, widget: image, required: false }
+                  - { name: zona, label: "Zona (ej.: Parachoques delantero)", widget: string }
+                  - { name: descripcion, label: "Descripción (ej.: Arañazo)", widget: string }
+              - { name: datosBastidor, label: "Datos según bastidor", widget: list, required: false, field: { name: dato, label: Dato, widget: string } }
           - name: serviciosComunes
             label: "Servicios disponibles para todos los coches"
             label_singular: servicio
@@ -189,3 +229,115 @@ collections:
                 fields:
                   - { name: lugar, label: "País o ciudad", widget: string }
                   - { name: direccion, label: Dirección, widget: string }
+          - name: envios
+            label: Envíos (calculadora y destinos)
+            widget: object
+            fields:
+              - { name: nota, label: "Nota bajo la calculadora", widget: string }
+              - { name: formasPago, label: "Formas de pago", widget: string }
+              - name: destinos
+                label: Destinos
+                label_singular: destino
+                widget: list
+                fields:
+                  - { name: id, label: Identificador, widget: string, hint: "Minúsculas y guiones" }
+                  - { name: region, label: "Región (ej.: España, África)", widget: string }
+                  - { name: nombre, label: Nombre, widget: string }
+                  - { name: entrega, label: "Opciones de entrega", widget: list, field: { name: opcion, label: Opción, widget: string } }
+                  - name: moneda
+                    label: "Moneda del destino (para la calculadora)"
+                    widget: select
+                    default: EUR
+                    options:
+                      - { label: "Euro (€)", value: EUR }
+                      - { label: "Franco CFA (FCFA)", value: XAF }
+                      - { label: "Dólar (US$)", value: USD }
+                      - { label: "Libra (£)", value: GBP }
+                      - { label: "Franco suizo (CHF)", value: CHF }
+                  - { name: transporte, label: "Transporte (€, vacío = a consultar)", widget: number, value_type: int, required: false }
+                  - { name: gestion, label: "Gestión y documentación (€, vacío = a consultar)", widget: number, value_type: int, required: false }
+                  - { name: impuestos, label: "Impuestos y aduana (€, vacío = a consultar)", widget: number, value_type: int, required: false }
+                  - { name: domicilio, label: "Entrega a domicilio (€, vacío = a consultar)", widget: number, value_type: int, required: false }
+                  - { name: seguro, label: "Seguro (€, vacío = a consultar)", widget: number, value_type: int, required: false }
+
+  - name: seguimiento
+    label: Seguimiento de envíos
+    editor:
+      preview: false
+    files:
+      - name: envios
+        label: Envíos de clientes
+        file: data/envios.json
+        format: json
+        fields:
+          - name: envios
+            label: Envíos
+            label_singular: envío
+            widget: list
+            summary: "{{fields.referencia}} · {{fields.coche}} · paso {{fields.paso}}"
+            hint: "No pongas nombres ni datos personales: esta información es visible para quien tenga la referencia."
+            fields:
+              - { name: referencia, label: "Referencia que darás al cliente", widget: string, hint: "Usa algo difícil de adivinar. Ej.: CEL-7Q4K-2931" }
+              - { name: publicado, label: "Visible", widget: boolean, default: true }
+              - { name: coche, label: Coche, widget: string }
+              - { name: destino, label: "Destino (puerto / país)", widget: string }
+              - { name: metodo, label: Método, widget: select, options: ["Marítimo", "Terrestre", "Aéreo"] }
+              - { name: llegadaEstimada, label: "Llegada estimada", widget: datetime, required: false, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+              - name: paso
+                label: "Paso actual"
+                widget: select
+                options:
+                  - { label: "1 · Reservado", value: 1 }
+                  - { label: "2 · Pago confirmado", value: 2 }
+                  - { label: "3 · Documentación", value: 3 }
+                  - { label: "4 · Embarcado", value: 4 }
+                  - { label: "5 · En tránsito", value: 5 }
+                  - { label: "6 · En puerto de destino", value: 6 }
+                  - { label: "7 · Entregado", value: 7 }
+              - { name: fechasPasos, label: "Fecha de cada paso completado (en orden)", widget: list, required: false, field: { name: fecha, label: Fecha, widget: datetime, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" } }
+              - name: novedades
+                label: Últimas novedades
+                widget: list
+                required: false
+                fields:
+                  - { name: fecha, label: Fecha, widget: datetime, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD" }
+                  - { name: texto, label: Novedad, widget: string }
+              - { name: asesor, label: "Asesor asignado (nombre de pila)", widget: string, required: false }
+              - { name: documentos, label: "Documentos del envío", widget: list, required: false, field: { name: documento, label: Documento, widget: string } }
+
+  - name: tienda
+    label: Tienda
+    editor:
+      preview: false
+    files:
+      - name: productos
+        label: Productos
+        file: data/tienda.json
+        format: json
+        fields:
+          - name: productos
+            label: Productos
+            label_singular: producto
+            widget: list
+            summary: "{{fields.nombre}} · {{fields.precio}} €"
+            fields:
+              - { name: nombre, label: Nombre, widget: string }
+              - { name: id, label: Identificador, widget: string, pattern: ['^[a-z0-9-]{2,60}$', "Minúsculas, números y guiones"] }
+              - { name: publicado, label: Publicado, widget: boolean, default: true }
+              - name: categoria
+                label: Categoría
+                widget: select
+                options:
+                  - { label: "Aceites y lubricantes", value: aceites }
+                  - { label: Filtros, value: filtros }
+                  - { label: "Radios y Bluetooth", value: radios }
+                  - { label: "Baterías y electricidad", value: baterias }
+                  - { label: "Frenos y neumáticos", value: frenos }
+                  - { label: "Limpieza y cuidado", value: limpieza }
+                  - { label: Herramientas, value: herramientas }
+              - { name: marca, label: Marca, widget: string, required: false }
+              - { name: compatibilidad, label: "Formato / compatibilidad", widget: string, required: false, hint: "Ej.: 5L · Toyota, Nissan" }
+              - { name: precio, label: "Precio (€)", widget: number, value_type: float, min: 0 }
+              - { name: foto, label: Foto, widget: image, required: false }
+              - { name: etiqueta, label: "Etiqueta", widget: select, required: false, options: ["Más vendido", "Pack", "Novedad", "Oferta"] }
+              - { name: masVendido, label: "Mostrar en Más vendidos", widget: boolean, default: false }
