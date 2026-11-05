@@ -83,7 +83,9 @@
           "descripcion": "Corrección de la marca de uso declarada en el informe.",
           "precio": 160
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "seat-ibiza",
@@ -152,7 +154,9 @@
           "descripcion": "Limpieza técnica interior y protección exterior.",
           "precio": 140
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "vw-golf",
@@ -223,7 +227,9 @@
           "descripcion": "Corrección y acabado del defecto estético declarado.",
           "precio": 240
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "renault-clio",
@@ -301,7 +307,9 @@
           "descripcion": "Corrección del desgaste del asiento del conductor.",
           "precio": 180
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "toyota-corolla",
@@ -370,7 +378,9 @@
           "descripcion": "Diagnóstico adicional y certificado del estado de la batería.",
           "precio": 120
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "nissan-qashqai",
@@ -441,7 +451,9 @@
           "descripcion": "Medición y documentación fotográfica de la reparación declarada.",
           "precio": 90
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     },
     {
       "id": "peugeot-208",
@@ -510,7 +522,9 @@
           "descripcion": "Limpieza técnica interior y protección exterior.",
           "precio": 140
         }
-      ]
+      ],
+      "origen": "stock-propio",
+      "disponibilidad": "Disponible · en España"
     }
   ]
 }

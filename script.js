@@ -126,7 +126,15 @@ function vehicleCardMarkup(id, extraClass = "") {
   const price = vehicle.previousPriceEur ? `<span class="price-stack"><del data-price-eur="${vehicle.previousPriceEur}">${plainEuros(vehicle.previousPriceEur)}</del><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong></span>` : `<strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong>`;
   const countdown = vehicle.dealDeadline ? `<p class="deal-countdown">Oferta por tiempo limitado · <strong data-countdown data-deal-deadline="${vehicle.dealDeadline}">Calculando…</strong></p>` : "";
   const search = escapeText(normalizeSearch(`${vehicle.name} ${record.marca || ""} ${record.fuelText} ${vehicleTypeLabels[record.tipo] || ""}`));
-  return `<a class="inventory-card${extraClass}${vehicle.previousPriceEur ? " deal-card" : ""}" data-vehicle data-type="${escapeText(record.tipo || "")}" data-fuel="${escapeText(record.combustible || "")}" data-brand="${escapeText(normalizeSearch(record.marca || ""))}" data-price="${vehicle.priceEur}" data-km="${Number(record.km) || 0}" data-transmission="${escapeText(record.cambio || "")}" data-year="${Number(record.anio) || 0}" data-location="${escapeText(vehicle.location)}" data-search="${search}" href="coche.html?id=${id}">${flags ? `<div class="card-flags">${flags}</div>` : ""}<div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${name}"></div><div class="inventory-card-copy"><p>${name}</p><span>${escapeText([record.anio, record.fuelText, record.transmissionText].filter(Boolean).join(" · "))}</span><div><small>${escapeText(vehicle.specs.Kilómetros)}</small>${price}</div>${countdown}</div></a>`;
+  return `<a class="inventory-card${extraClass}${vehicle.previousPriceEur ? " deal-card" : ""}" data-vehicle data-type="${escapeText(record.tipo || "")}" data-fuel="${escapeText(record.combustible || "")}" data-brand="${escapeText(normalizeSearch(record.marca || ""))}" data-price="${vehicle.priceEur}" data-km="${Number(record.km) || 0}" data-transmission="${escapeText(record.cambio || "")}" data-year="${Number(record.anio) || 0}" data-location="${escapeText(vehicle.location)}" data-search="${search}" href="coche.html?id=${id}">${flags ? `<div class="card-flags">${flags}</div>` : ""}<div class="single-car-photo ${vehicle.imageClass} view-front" role="img" aria-label="${name}"></div><div class="inventory-card-copy">${originBadge(record)}<p>${name}</p><span>${escapeText([record.anio, record.fuelText, record.transmissionText].filter(Boolean).join(" · "))}</span><div><small>${escapeText(vehicle.specs.Kilómetros)}</small>${price}</div>${countdown}</div></a>`;
+}
+
+const originLabels = { "stock-propio": "Stock propio", particular: "Comprado a particular", intermediacion: "En intermediación" };
+function originBadge(record) {
+  const origin = originLabels[record.origen];
+  const availability = record.disponibilidad;
+  if (!origin && !availability) return "";
+  return `<span class="card-badges">${origin ? `<b class="origin-badge">${origin}</b>` : ""}${availability ? `<b class="availability-badge">${escapeText(availability)}</b>` : ""}</span>`;
 }
 
 function normalizeSearch(value) {
@@ -648,6 +656,7 @@ function normalize(value) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
+let catalogGroup = "all";
 function updateCatalog() {
   const search = normalize(filterSearch?.value.trim() || "");
   const type = filterType?.value || "all";
@@ -658,8 +667,10 @@ function updateCatalog() {
   const location = filterLocation?.value || "all";
   let visible = 0;
 
+  const groupTypes = { suv: ["suv", "4x4"], furgoneta: ["furgoneta"], caravana: ["caravana"], moto: ["moto"] }[catalogGroup];
   vehicleItems.forEach((item) => {
-    const show = (!search || normalize(item.dataset.search).includes(search)) &&
+    const show = (!groupTypes || groupTypes.includes(item.dataset.type)) &&
+      (!search || normalize(item.dataset.search).includes(search)) &&
       (type === "all" || item.dataset.type === type) &&
       (fuel === "all" || item.dataset.fuel === fuel) &&
       (transmission === "all" || item.dataset.transmission === transmission) &&
@@ -1865,3 +1876,19 @@ if (shopGrid) {
   document.querySelector("[data-shop-search]").addEventListener("submit", (event) => { event.preventDefault(); render(); });
   render();
 }
+
+document.querySelectorAll("[data-catalog-group]").forEach((button) => {
+  const types = { suv: ["suv", "4x4"], furgoneta: ["furgoneta"], caravana: ["caravana"], moto: ["moto"] }[button.dataset.catalogGroup];
+  const total = types ? publishedIds.filter((id) => types.includes(vehicleRecords[id].tipo)).length : publishedIds.length;
+  const label = button.querySelector("[data-group-count]");
+  if (label) label.textContent = total === 1 ? "1 vehículo" : `${total} vehículos`;
+  button.addEventListener("click", () => {
+    catalogGroup = button.dataset.catalogGroup;
+    document.querySelectorAll("[data-catalog-group]").forEach((other) => {
+      other.classList.toggle("is-active", other === button);
+      other.setAttribute("aria-pressed", String(other === button));
+    });
+    if (filterType) filterType.value = "all";
+    updateCatalog();
+  });
+});
