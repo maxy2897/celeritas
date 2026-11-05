@@ -14,7 +14,7 @@ backend:
 site_url: https://maxy2897.github.io/celeritas/
 display_url: https://maxy2897.github.io/celeritas/
 logo:
-  src: ../assets/celeritas-logo-transparent-v2.webp
+  src: ../../assets/celeritas-logo-transparent-v2.webp
 
 media_folder: assets/uploads
 public_folder: assets/uploads
@@ -229,6 +229,11 @@ collections:
                 fields:
                   - { name: lugar, label: "País o ciudad", widget: string }
                   - { name: direccion, label: Dirección, widget: string }
+          - name: analitica
+            label: Estadísticas
+            widget: object
+            fields:
+              - { name: goatcounter, label: "Código de GoatCounter", widget: string, required: false, hint: "La parte inicial de tu dirección de GoatCounter. Si es https://celeritas.goatcounter.com, escribe celeritas. Vacío = no se registran visitas." }
           - name: envios
             label: Envíos (calculadora y destinos)
             widget: object

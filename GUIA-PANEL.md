@@ -2,6 +2,12 @@
 
 Dirección: **https://maxy2897.github.io/celeritas/admin/**
 
+La sección de administración tiene tres partes:
+
+- **Inicio** (`/admin/`): resumen (coches publicados, en portada, envíos en curso, productos, visitas) y accesos directos.
+- **Contenido** (`/admin/editor/`): el editor donde se suben coches, precios, fotos, envíos, productos y ajustes.
+- **Estadísticas** (`/admin/estadisticas.html`): visitas, coches más vistos, países, dispositivos, de dónde llega la gente, qué botones pulsan e ideas para mejorar.
+
 Desde el panel puedes añadir, editar, ocultar y destacar coches, subir sus fotos y cambiar los datos de contacto. Al pulsar **Guardar**, el cambio queda guardado en GitHub y la web se actualiza sola en 1–2 minutos.
 
 ## Entrar por primera vez
@@ -35,3 +41,11 @@ Guarda la llave como una contraseña: quien la tenga puede cambiar la web. Si se
 - **Ajustes de la web → Envíos:** destinos, opciones de entrega, moneda de cada destino (la calculadora se muestra en esa moneda; Guinea Ecuatorial en FCFA) y costes de transporte, impuestos, gestión, entrega a domicilio y seguro. Deja vacío lo que todavía no sepas y saldrá como «A consultar».
 - **Seguimiento de envíos:** crea un envío con una referencia difícil de adivinar (p. ej. `CEL-7Q4K-2931`), dásela al cliente y actualiza el paso (1 Reservado … 7 Entregado), las fechas y las novedades. El cliente lo consulta en *Mi envío*. No pongas nombres ni datos personales. Borra el envío de ejemplo `DEMO-0001` cuando empieces.
 - **Tienda → Productos:** nombre, categoría, marca, compatibilidad (marca/modelo de coche o «Universal»), precio, foto y si sale en *Más vendidos*.
+
+## Activar las estadísticas (una sola vez)
+
+1. Crea una cuenta gratuita en https://www.goatcounter.com/signup y elige un código (por ejemplo `celeritas`; tu panel quedará en `https://celeritas.goatcounter.com`).
+2. En **Contenido → Ajustes de la web → Estadísticas** escribe ese código y guarda. Desde ese momento la web cuenta las visitas (sin cookies, no hace falta aviso de cookies).
+3. En GoatCounter: **Settings → API → New API key**, marca solo **Read statistics** y copia la clave.
+4. Abre **Administración → Estadísticas**, pega la clave y guárdala. Se queda guardada solo en ese navegador.
+5. En **Administración → Inicio**, activa **No contar mis propias visitas** en cada navegador que uses para revisar la web.

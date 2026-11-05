@@ -27,10 +27,11 @@ Celeritas es una web española de compraventa de coches de segunda mano. El cód
 
 ## Contenido editable desde el panel
 
-- Los coches están en `data/coches.json` y los datos de contacto en `data/ajustes.json`. El cliente los edita desde `/admin` (Sveltia CMS, guía en `GUIA-PANEL.md`), que guarda los cambios como commits en `main`.
+- Los coches están en `data/coches.json` y los datos de contacto en `data/ajustes.json`. El cliente los edita desde `/admin/editor/` (Sveltia CMS, guía en `GUIA-PANEL.md`); `/admin/` es el inicio del panel y `/admin/estadisticas.html` muestra las estadísticas de GoatCounter, que guarda los cambios como commits en `main`.
 - No volver a escribir coches a mano en el HTML ni en `script.js`: el catálogo, la portada, la ficha, el comparador y la cesta se generan a partir de `data/coches.json`.
 - Antes de editar esos JSON, hacer `git pull`: el cliente puede haberlos cambiado desde el panel.
 - Las fotos subidas desde el panel se guardan en `assets/uploads/`.
+- Estadísticas: `assets/vendor/goatcounter-count.js` (ISC) solo se carga si `data/ajustes.json` tiene `analitica.goatcounter`. Los eventos se envían con `trackEvent()` en `script.js`. La CSP de las páginas permite `https://*.goatcounter.com` en `img-src` y `connect-src`.
 
 ## Estado importante
 

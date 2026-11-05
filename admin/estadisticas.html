@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.goatcounter.com; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="stylesheet" href="admin.css?v=2" />
+    <script src="admin.js?v=2" type="module"></script>
+    <title>Estadísticas — Celeritas</title>
+  </head>
+  <body data-admin-page="estadisticas">
+    <header class="adm-header"><a href="./" class="adm-brand"><img src="../assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><span>Administración</span></a><nav><a href="./">Inicio</a><a href="editor/">Contenido</a><a class="is-active" href="estadisticas.html">Estadísticas</a><a href="../index.html" target="_blank" rel="noopener">Ver la web ↗</a></nav></header>
+    <main class="adm-main">
+      <section class="adm-hello adm-hello-row"><div><h1>Estadísticas de la web</h1><p>Cómo llegan y qué hacen los visitantes, para decidir qué mejorar.</p></div>
+        <div class="adm-period" role="group" aria-label="Periodo"><button type="button" data-period="1">Hoy</button><button type="button" data-period="7" class="is-active">7 días</button><button type="button" data-period="30">30 días</button><button type="button" data-period="90">90 días</button></div>
+      </section>
+
+      <section class="adm-setup" data-stats-setup hidden>
+        <h2>Conecta las estadísticas</h2>
+        <ol>
+          <li>Crea una cuenta gratuita en <a href="https://www.goatcounter.com/signup" target="_blank" rel="noopener">goatcounter.com</a>. Elige un código, por ejemplo <code>celeritas</code>.</li>
+          <li>En <a href="editor/#/collections/ajustes">Contenido → Ajustes de la web → Estadísticas</a>, escribe ese código y guarda. Desde ese momento la web registra las visitas.</li>
+          <li>En GoatCounter ve a <em>Settings → API</em>, crea una clave con el permiso <em>Read statistics</em> y pégala aquí abajo.</li>
+        </ol>
+        <form class="adm-token" data-token-form><label><span>Clave de la API de GoatCounter</span><input type="password" name="token" autocomplete="off" required /></label><button class="adm-button" type="submit">Guardar en este navegador</button></form>
+        <p class="adm-small" data-setup-status></p>
+      </section>
+
+      <p class="adm-error" data-stats-error hidden></p>
+
+      <div data-stats-body hidden>
+        <section class="adm-kpis">
+          <article><span>Visitas</span><strong data-stat="visits">—</strong><small data-stat-note="visits"></small></article>
+          <article><span>Acciones</span><strong data-stat="events">—</strong><small>clics en botones clave</small></article>
+          <article><span>Coche más visto</span><strong class="adm-kpi-text" data-stat="topcar">—</strong><small data-stat-note="topcar"></small></article>
+          <article><span>País principal</span><strong class="adm-kpi-text" data-stat="topcountry">—</strong><small data-stat-note="topcountry"></small></article>
+        </section>
+        <section class="adm-panel"><h2>Visitas por día</h2><div class="adm-chart" data-stats-chart></div></section>
+        <section class="adm-panel adm-insights"><h2>Ideas para mejorar</h2><ul data-stats-insights></ul></section>
+        <div class="adm-two">
+          <section class="adm-panel"><h2>Páginas más vistas</h2><ol class="adm-bars" data-list="pages"></ol></section>
+          <section class="adm-panel"><h2>Qué hacen los visitantes</h2><ol class="adm-bars" data-list="events"></ol></section>
+          <section class="adm-panel"><h2>De dónde llegan</h2><ol class="adm-bars" data-list="toprefs"></ol></section>
+          <section class="adm-panel"><h2>Países</h2><ol class="adm-bars" data-list="locations"></ol></section>
+          <section class="adm-panel"><h2>Dispositivos (tamaño de pantalla)</h2><ol class="adm-bars" data-list="sizes"></ol></section>
+          <section class="adm-panel"><h2>Sistemas</h2><ol class="adm-bars" data-list="systems"></ol></section>
+        </div>
+        <p class="adm-small">Datos de GoatCounter, sin cookies. <button type="button" class="adm-link" data-token-reset>Cambiar la clave de la API</button></p>
+      </div>
+    </main>
+  </body>
+</html>

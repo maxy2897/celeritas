@@ -1987,3 +1987,57 @@ document.querySelectorAll("[data-catalog-group]").forEach((button) => {
     updateCatalog();
   });
 });
+
+// Estadísticas (GoatCounter, sin cookies). Se activa poniendo el código en Ajustes de la web → Estadísticas.
+const analyticsCode = String(siteSettings.analitica?.goatcounter || "").trim().toLowerCase();
+const analyticsEnabled = /^[a-z0-9-]{2,50}$/.test(analyticsCode) && window.location.protocol === "https:";
+const pendingEvents = [];
+function trackEvent(name, title = "") {
+  if (!analyticsEnabled) return;
+  const event = { path: `evento/${name}`, title: title || name, event: true };
+  if (window.goatcounter?.count) window.goatcounter.count(event);
+  else pendingEvents.push(event);
+}
+if (analyticsEnabled) {
+  window.goatcounter = {
+    path: () => {
+      const page = window.location.pathname.replace(/\/celeritas/, "") || "/";
+      const id = new URLSearchParams(window.location.search).get("id");
+      return page.endsWith("coche.html") && isVehicleId(id) ? `/coche.html?id=${id}` : page;
+    },
+  };
+  const counter = document.createElement("script");
+  counter.async = true;
+  counter.src = "assets/vendor/goatcounter-count.js";
+  counter.dataset.goatcounter = `https://${analyticsCode}.goatcounter.com/count`;
+  counter.addEventListener("load", () => {
+    const flush = () => {
+      if (!window.goatcounter?.count) return void window.setTimeout(flush, 200);
+      pendingEvents.splice(0).forEach((event) => window.goatcounter.count(event));
+    };
+    flush();
+  });
+  document.head.append(counter);
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest("a, button, .scroll-wheel");
+    if (!target) return;
+    if (target.matches("[data-checkout-link], [data-card-buy]")) trackEvent("comprar-o-reservar", "Clic en Comprar o reservar");
+    else if (target.matches("[data-favorite-vehicle]")) trackEvent("favorito", "Guardar en favoritos");
+    else if (target.matches("[data-compare-vehicle]")) trackEvent("comparar", "Añadir al comparador");
+    else if (target.matches("[data-share-vehicle]")) trackEvent("compartir", "Compartir coche");
+    else if (target.matches(".scroll-wheel")) trackEvent("tarjeta-contacto", "Abrir tarjeta de contacto (rueda)");
+    else if (target.matches("[data-open-dialog='venta-segura']")) trackEvent("venta-segura", "Ver Venta segura");
+    else if (target.matches("[data-lang-option]")) trackEvent(`idioma-${target.dataset.langOption}`, "Cambio de idioma");
+    else if (target.matches("[data-detail-visit]")) trackEvent("reservar-visita", "Reservar visita en Salamanca");
+    else if (target.matches("[data-detail-alert]")) trackEvent("aviso-precio", "Avíseme si baja de precio");
+    else if (target.matches("[data-shop-cat]")) trackEvent(`tienda-${target.dataset.shopCat}`, "Categoría de la tienda");
+    else if (target.matches("a[href^='tel:'], a[href^='mailto:']")) trackEvent("llamada-o-email", "Clic en teléfono o email");
+  });
+  document.addEventListener("submit", (event) => {
+    const page = document.body.dataset.page || "web";
+    if (event.target.matches("[data-success-form]")) trackEvent(`formulario-${page}`, `Formulario enviado (${page})`);
+    if (event.target.matches("[data-track-form]")) trackEvent("seguimiento-envio", "Consulta de seguimiento");
+    if (event.target.matches("[data-detail-ship]")) trackEvent("calcular-envio-ficha", "Calcular envío desde la ficha");
+  }, true);
+  document.querySelector("[data-ship-destination]")?.addEventListener("change", (event) => trackEvent(`calculadora-${event.target.value}`, "Calculadora de envío"));
+}

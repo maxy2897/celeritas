@@ -5,11 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://avatars.githubusercontent.com https://raw.githubusercontent.com; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' data: https://api.github.com https://raw.githubusercontent.com https://unpkg.com https://www.githubstatus.com; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'" />
-    <title>Panel de administración — Celeritas</title>
-    <link href="config.yml" type="application/yaml" rel="cms-config-url" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.goatcounter.com; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'" />
+    <link rel="stylesheet" href="admin.css?v=2" />
+    <script src="admin.js?v=2" type="module"></script>
+    <title>Administración — Celeritas</title>
   </head>
-  <body>
-    <script src="sveltia-cms.js"></script>
+  <body data-admin-page="inicio">
+    <header class="adm-header"><a href="./" class="adm-brand"><img src="../assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" width="512" height="341" /><span>Administración</span></a><nav><a class="is-active" href="./">Inicio</a><a href="editor/">Contenido</a><a href="estadisticas.html">Estadísticas</a><a href="../index.html" target="_blank" rel="noopener">Ver la web ↗</a></nav></header>
+    <main class="adm-main">
+      <section class="adm-hello"><h1>Panel de Celeritas</h1><p>Desde aquí se gestiona todo lo que aparece en la web y se consulta cómo la usan los visitantes.</p></section>
+      <section class="adm-kpis" aria-label="Resumen de la web">
+        <article><span>Coches publicados</span><strong data-kpi="published">—</strong><small data-kpi-note="published"></small></article>
+        <article><span>En portada</span><strong data-kpi="featured">—</strong><small>coches destacados</small></article>
+        <article><span>Envíos en curso</span><strong data-kpi="shipments">—</strong><small>seguimientos activos</small></article>
+        <article><span>Productos en tienda</span><strong data-kpi="products">—</strong><small>publicados</small></article>
+        <article class="adm-kpi-stats"><span>Visitas (7 días)</span><strong data-kpi="visits">—</strong><small data-kpi-note="visits">Configura las estadísticas</small></article>
+      </section>
+      <section class="adm-actions">
+        <h2>¿Qué quieres hacer?</h2>
+        <div class="adm-grid">
+          <a class="adm-card" href="editor/#/collections/catalogo"><b>🚗</b><strong>Publicar y editar coches</strong><p>Añade coches, fotos, precios, ofertas, estado, imperfecciones y equipamiento. Oculta los vendidos.</p></a>
+          <a class="adm-card" href="estadisticas.html"><b>📈</b><strong>Ver estadísticas</strong><p>Visitas, coches más vistos, países, dispositivos, de dónde llegan y qué botones se pulsan.</p></a>
+          <a class="adm-card" href="editor/#/collections/seguimiento"><b>🚢</b><strong>Seguimiento de envíos</strong><p>Crea un envío, dale la referencia al cliente y actualiza en qué paso está.</p></a>
+          <a class="adm-card" href="editor/#/collections/tienda"><b>🛒</b><strong>Productos de la tienda</strong><p>Aceites, filtros, radios y demás: precio, foto, categoría y compatibilidad.</p></a>
+          <a class="adm-card" href="editor/#/collections/ajustes"><b>⚙️</b><strong>Contacto, tarifas y ajustes</strong><p>Teléfonos, correo, direcciones, costes de envío por destino, moneda y estadísticas.</p></a>
+          <a class="adm-card" href="https://github.com/maxy2897/celeritas/blob/main/GUIA-PANEL.md" target="_blank" rel="noopener"><b>📘</b><strong>Guía de uso</strong><p>Cómo entrar al editor y cómo publicar paso a paso.</p></a>
+        </div>
+      </section>
+      <section class="adm-note"><div><strong>No contar mis propias visitas</strong><p>Actívalo en cada navegador que uses para revisar la web, para que tus visitas no se mezclen con las de los clientes.</p></div><button type="button" class="adm-toggle" data-skip-toggle aria-pressed="false">Desactivado</button></section>
+    </main>
   </body>
 </html>
