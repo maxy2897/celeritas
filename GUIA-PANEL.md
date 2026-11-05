@@ -28,3 +28,10 @@ Guarda la llave como una contraseña: quien la tenga puede cambiar la web. Si se
 - **Ocultar un coche vendido:** desmarca *Publicado en la web* y guarda (no se borra).
 - **Poner una oferta:** rellena *Precio anterior* y *Oferta válida hasta*. Al pasar la fecha, la oferta desaparece sola.
 - **Datos de contacto:** *Ajustes de la web → Datos de contacto* (tarjeta de la rueda y pie de página).
+
+## Más cosas que se gestionan desde el panel
+
+- **Ficha completa de cada coche:** origen (stock propio, comprado a particular, en intermediación), disponibilidad, datos técnicos (referencia, matriculación, cilindrada, ITV, color…), **imperfecciones con foto** (salen en la pestaña *Imperfecciones* de la galería) y *datos según bastidor*. Puedes subir todas las fotos que quieras.
+- **Ajustes de la web → Envíos:** destinos, opciones de entrega, moneda de cada destino (la calculadora se muestra en esa moneda; Guinea Ecuatorial en FCFA) y costes de transporte, impuestos, gestión, entrega a domicilio y seguro. Deja vacío lo que todavía no sepas y saldrá como «A consultar».
+- **Seguimiento de envíos:** crea un envío con una referencia difícil de adivinar (p. ej. `CEL-7Q4K-2931`), dásela al cliente y actualiza el paso (1 Reservado … 7 Entregado), las fechas y las novedades. El cliente lo consulta en *Mi envío*. No pongas nombres ni datos personales. Borra el envío de ejemplo `DEMO-0001` cuando empieces.
+- **Tienda → Productos:** nombre, categoría, marca, compatibilidad (marca/modelo de coche o «Universal»), precio, foto y si sale en *Más vendidos*.

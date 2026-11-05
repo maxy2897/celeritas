@@ -75,6 +75,10 @@ const standardServices = (catalogData.serviciosComunes || []).map((service) => (
   if (item.puertas) specs.Puertas = String(item.puertas);
   if (item.plazas) specs.Plazas = String(item.plazas);
   if (item.propietarios) specs.Propietarios = String(item.propietarios);
+  const sheet = item.ficha || {};
+  [["Referencia", sheet.referencia], ["1ª matriculación", sheet.matriculacion], ["Cilindrada", sheet.cilindrada && `${sheet.cilindrada}`.replace(/\s*cc$/i, "") + " cc"], ["Carrocería", sheet.carroceria], ["Llaves", item.historial?.llaves], ["Daños previos / accidente", sheet.danosPrevios], ["País de origen", sheet.paisOrigen], ["Emisiones", sheet.emisiones], ["Vencimiento ITV", sheet.itv], ["COC", sheet.coc], ["Color", sheet.color], ["Tapicería", sheet.tapiceria]].forEach(([label, value]) => {
+    if (value) specs[label] = String(value);
+  });
   vehicleRecords[id] = { ...item, photos, dealOpen: Boolean(dealOpen), fuelText, transmissionText };
   vehicleCatalog[id] = {
     name: item.nombre,
@@ -135,6 +139,10 @@ function originBadge(record) {
   const availability = record.disponibilidad;
   if (!origin && !availability) return "";
   return `<span class="card-badges">${origin ? `<b class="origin-badge">${origin}</b>` : ""}${availability ? `<b class="availability-badge">${escapeText(availability)}</b>` : ""}</span>`;
+}
+
+function shippingDestinationsList() {
+  return (siteSettings.envios?.destinos || []).filter((destination) => destination && destination.id);
 }
 
 function normalizeSearch(value) {
@@ -582,7 +590,11 @@ if (contactReason) {
     const term = contactParams.get("plazo") || "";
     const validEntry = Number.isFinite(entry) && entry > 0 && entry <= 1000000;
     const validTerm = /^\d{1,3} meses$/.test(term);
-    contactMessage.value = `Me interesa financiar el ${requestedVehicle}.${validEntry ? ` Entrada aproximada: ${entry.toLocaleString("es-ES")} €.` : ""}${validTerm ? ` Plazo orientativo: ${term}.` : ""}`;
+    const requestType = contactParams.get("tipo");
+    if (requestType === "visita") contactMessage.value = `Quiero reservar una visita en Salamanca para ver el ${requestedVehicle}.`;
+    else if (requestType === "aviso") contactMessage.value = `Avísenme si baja el precio del ${requestedVehicle}.`;
+    else if (requestedReason === "financiacion") contactMessage.value = `Me interesa financiar el ${requestedVehicle}.${validEntry ? ` Entrada aproximada: ${entry.toLocaleString("es-ES")} €.` : ""}${validTerm ? ` Plazo orientativo: ${term}.` : ""}`;
+    else contactMessage.value = `Me interesa el ${requestedVehicle}.`;
   }
 }
 
@@ -1486,22 +1498,69 @@ if (detailRoot) {
 
   const stage = document.querySelector("[data-detail-stage]");
   const stagePhoto = stage?.querySelector("[data-stage-photo]");
-  const stageThumbs = [...document.querySelectorAll("[data-stage-thumb]")];
+  const thumbsRoot = document.querySelector(".detail-thumbs");
+  const detailRecord = vehicleRecords[detailId] || {};
   const viewLabels = ["Vista frontal", "Vista lateral", "Vista trasera"];
+  const gallerySlides = detailRecord.photos?.length
+    ? detailRecord.photos.map((src, index) => ({ src, label: `Foto ${index + 1} del ${detailVehicle.name}` }))
+    : vehicleViews.map((view, index) => ({ view, label: `${viewLabels[index]} del ${detailVehicle.name}` }));
+  const imperfectionSlides = (detailRecord.imperfecciones || []).filter((item) => item && item.foto).map((item) => ({ src: item.foto, caption: [item.zona, item.descripcion].filter(Boolean).join(" | "), label: `Imperfección: ${item.zona || ""}` }));
+  let slides = gallerySlides;
   let stageIndex = 0;
+  const paintSlide = (element, slide) => {
+    element.classList.remove(detailVehicle.imageClass, ...vehicleViews);
+    if (slide.view) {
+      element.style.removeProperty("background-image");
+      element.style.removeProperty("background-size");
+      element.style.removeProperty("background-position");
+      element.classList.add(detailVehicle.imageClass, slide.view);
+    } else {
+      element.style.backgroundImage = cssUrl(slide.src);
+      element.style.backgroundSize = "cover";
+      element.style.backgroundPosition = "center";
+    }
+  };
+  const buildThumbs = () => {
+    if (!thumbsRoot) return;
+    thumbsRoot.replaceChildren(...slides.map((slide, index) => {
+      const thumb = document.createElement("button");
+      thumb.type = "button";
+      thumb.className = "detail-photo";
+      thumb.setAttribute("aria-label", `Ver ${slide.caption || slide.label}`);
+      paintSlide(thumb, slide);
+      thumb.addEventListener("click", () => showStageView(index));
+      return thumb;
+    }));
+    thumbsRoot.classList.toggle("is-scrollable", slides.length > 3);
+  };
   const showStageView = (index) => {
-    stageIndex = (index + vehicleViews.length) % vehicleViews.length;
-    stagePhoto.classList.remove(...vehicleViews);
-    stagePhoto.classList.add(vehicleViews[stageIndex]);
-    stagePhoto.setAttribute("aria-label", `${viewLabels[stageIndex]} del ${detailVehicle.name}`);
-    stage.querySelector("[data-stage-count]").textContent = `${stageIndex + 1} / ${vehicleViews.length}`;
-    stageThumbs.forEach((thumb, thumbIndex) => {
+    if (!slides.length) return;
+    stageIndex = (index + slides.length) % slides.length;
+    const slide = slides[stageIndex];
+    paintSlide(stagePhoto, slide);
+    stagePhoto.setAttribute("aria-label", slide.caption ? `Imperfección: ${slide.caption}` : slide.label);
+    stage.querySelector("[data-stage-count]").textContent = `${stageIndex + 1} / ${slides.length}`;
+    const caption = stage.querySelector("[data-stage-caption]");
+    caption.hidden = !slide.caption;
+    caption.textContent = slide.caption || "";
+    [...(thumbsRoot?.children || [])].forEach((thumb, thumbIndex) => {
       thumb.classList.toggle("is-active", thumbIndex === stageIndex);
       thumb.setAttribute("aria-pressed", String(thumbIndex === stageIndex));
     });
+    thumbsRoot?.children[stageIndex]?.scrollIntoView({ block: "nearest", inline: "nearest" });
   };
   if (stage && stagePhoto) {
-    stageThumbs.forEach((thumb) => thumb.addEventListener("click", () => showStageView(Number(thumb.dataset.stageThumb))));
+    const tabs = stage.querySelector("[data-stage-tabs]");
+    tabs.hidden = imperfectionSlides.length === 0;
+    tabs.querySelectorAll("[data-stage-tab]").forEach((tab) => tab.addEventListener("click", () => {
+      slides = tab.dataset.stageTab === "imperfecciones" ? imperfectionSlides : gallerySlides;
+      tabs.querySelectorAll("[data-stage-tab]").forEach((other) => {
+        other.classList.toggle("is-active", other === tab);
+        other.setAttribute("aria-pressed", String(other === tab));
+      });
+      buildThumbs();
+      showStageView(0);
+    }));
     stage.querySelectorAll("[data-stage-step]").forEach((button) => button.addEventListener("click", () => showStageView(stageIndex + Number(button.dataset.stageStep))));
     stage.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") showStageView(stageIndex + 1);
@@ -1516,7 +1575,43 @@ if (detailRoot) {
       stageStart = null;
     });
     stage.addEventListener("pointercancel", () => { stageStart = null; });
+    buildThumbs();
     showStageView(0);
+  }
+
+  const localPrice = document.querySelector("[data-detail-local-price]");
+  if (localPrice) localPrice.textContent = `≈ ${formatMoney(detailVehicle.priceEur, "XAF")} · ${formatMoney(detailVehicle.priceEur, "USD")}`;
+  const shipForm = document.querySelector("[data-detail-ship]");
+  if (shipForm) {
+    shipForm.querySelector("[data-detail-ship-id]").value = detailId;
+    const select = shipForm.querySelector("[data-detail-ship-destination]");
+    shippingDestinationsList().forEach((destination) => select.append(new Option(destination.nombre, destination.id)));
+    shipForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      window.location.href = `envios.html?id=${encodeURIComponent(detailId)}&destino=${encodeURIComponent(select.value)}#calculadora`;
+    });
+  }
+  const visitLink = document.querySelector("[data-detail-visit]");
+  if (visitLink) visitLink.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name, tipo: "visita" })}`;
+  const alertLink = document.querySelector("[data-detail-alert]");
+  if (alertLink) alertLink.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name, tipo: "aviso" })}`;
+  const imperfectionList = document.querySelector("[data-detail-imperfections]");
+  if (imperfectionList && detailRecord.imperfecciones?.length) {
+    imperfectionList.hidden = false;
+    imperfectionList.innerHTML = detailRecord.imperfecciones.map((item, index) => `<button type="button" class="imperfection-item" data-imperfection="${index}">${item.foto ? `<img src="${escapeText(item.foto)}" alt="" loading="lazy" />` : ""}<span><strong>${escapeText(item.zona)}</strong><small>${escapeText(item.descripcion)}</small></span></button>`).join("");
+    imperfectionList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-imperfection]");
+      if (!button || !imperfectionSlides.length) return;
+      stage.querySelector('[data-stage-tab="imperfecciones"]').click();
+      const position = imperfectionSlides.findIndex((slide) => slide.src === detailRecord.imperfecciones[Number(button.dataset.imperfection)].foto);
+      showStageView(Math.max(0, position));
+      stage.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
+    });
+  }
+  const chassis = document.querySelector("[data-detail-chassis]");
+  if (chassis && detailRecord.datosBastidor?.length) {
+    chassis.hidden = false;
+    chassis.querySelector("ul").innerHTML = detailRecord.datosBastidor.map((item) => `<li>${escapeText(item)}</li>`).join("");
   }
 
   const stickyBar = document.querySelector("[data-detail-sticky-bar]");

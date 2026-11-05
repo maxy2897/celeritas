@@ -15,8 +15,8 @@
     <meta name="twitter:description" content="Consulta fotografías, características y disponibilidad." />
     <meta name="twitter:image" content="" />
     <title>Vehículo de ocasión — Celeritas</title>
-    <link rel="stylesheet" href="styles.css?v=70" />
-    <script src="script.js?v=70" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=71" />
+    <script src="script.js?v=71" type="module"></script>
   </head>
   <body data-page="coche">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
@@ -30,7 +30,7 @@
             <div class="detail-photo view-front" data-detail-photo data-stage-photo role="img" aria-label="Vista frontal"></div>
             <button class="stage-arrow stage-prev" type="button" data-stage-step="-1" aria-label="Vista anterior">‹</button>
             <button class="stage-arrow stage-next" type="button" data-stage-step="1" aria-label="Vista siguiente">›</button>
-            <span class="stage-count" data-stage-count>1 / 3</span>
+            <span class="stage-count" data-stage-count>1 / 3</span><div class="stage-tabs" data-stage-tabs hidden><button type="button" class="is-active" data-stage-tab="galeria" aria-pressed="true">Galería</button><button type="button" data-stage-tab="imperfecciones" aria-pressed="false">Imperfecciones</button></div><p class="stage-caption" data-stage-caption hidden></p>
           </div>
           <div class="detail-thumbs" aria-label="Vistas del coche"><button class="detail-photo view-front is-active" type="button" data-detail-photo data-stage-thumb="0" aria-label="Ver vista frontal" aria-pressed="true"></button><button class="detail-photo view-side" type="button" data-detail-photo data-stage-thumb="1" aria-label="Ver vista lateral" aria-pressed="false"></button><button class="detail-photo view-rear" type="button" data-detail-photo data-stage-thumb="2" aria-label="Ver vista trasera" aria-pressed="false"></button></div>
         </div>
@@ -39,8 +39,9 @@
           <h1 data-detail-name>Cargando vehículo…</h1>
           <p class="detail-summary-line" data-detail-summary></p>
           <ul class="detail-keyspecs" data-detail-keyspecs></ul>
-          <div class="detail-price"><span>Precio al contado</span><strong data-detail-price>—</strong><small>Garantía de 12 meses como mínimo incluida</small></div>
+          <div class="detail-price"><span>Precio al contado</span><strong data-detail-price>—</strong><small>Garantía de 12 meses como mínimo incluida</small><em class="detail-local-price" data-detail-local-price></em></div>
           <div class="detail-deal" data-detail-deal hidden><span>Oferta temporal · antes <del data-detail-previous-price>—</del></span><strong data-countdown data-deal-deadline="2026-09-30T23:59:59+02:00">Calculando…</strong></div>
+          <form class="detail-ship" data-detail-ship action="envios.html"><p>¿Cuánto cuesta recibirlo?</p><input type="hidden" name="id" data-detail-ship-id /><label><span>Destino</span><select name="destino" data-detail-ship-destination></select></label><button class="button button-dark" type="submit">Calcular el coste total →</button></form>
           <div class="detail-actions">
             <a class="button button-buy" href="checkout.html" data-checkout-link data-detail-main-cta>Comprar o reservar</a>
             <div>
@@ -49,6 +50,7 @@
             </div>
           </div>
           <div class="detail-quick-actions" data-detail-quick-actions></div>
+          <div class="detail-links"><a data-detail-visit href="contacto.html">Reservar una visita en Salamanca <b>›</b></a><a data-detail-alert href="contacto.html">Avíseme si baja de precio <b>›</b></a><a href="financiacion.html">Planes de financiación <b>›</b></a><a href="envios.html">Formas de pago y envío <b>›</b></a></div>
           <ul class="detail-trust"><li>Revisión de 100 puntos</li><li>Garantía mínima de 12 meses</li><li>Entrega nacional e internacional</li></ul>
         </aside>
       </section>
@@ -64,7 +66,7 @@
       </section>
       <section class="detail-content" id="caracteristicas">
         <div class="specification-panel"><p class="eyebrow dark">Características</p><h2>Todo lo importante, a la vista.</h2><dl data-detail-specs></dl></div>
-        <div class="equipment-panel"><p class="eyebrow">Equipamiento</p><h2>Preparado para disfrutar.</h2><ul data-detail-features></ul><a data-detail-catalog target="_blank" rel="noopener noreferrer">Consultar catálogo original del modelo ↗</a><small>Catálogo histórico de referencia alojado en Auto Catalog Archive. El equipamiento exacto de esta unidad es el indicado arriba.</small></div>
+        <div class="equipment-panel"><p class="eyebrow">Equipamiento</p><h2>Preparado para disfrutar.</h2><ul data-detail-features></ul><div class="chassis-data" data-detail-chassis hidden><h3>Datos según bastidor</h3><ul></ul></div><a data-detail-catalog target="_blank" rel="noopener noreferrer">Consultar catálogo original del modelo ↗</a><small>Catálogo histórico de referencia alojado en Auto Catalog Archive. El equipamiento exacto de esta unidad es el indicado arriba.</small></div>
       </section>
       <section class="detail-content transparency-content">
         <div class="specification-panel">
@@ -72,7 +74,7 @@
           <h2>Nada que ocultar.</h2>
           <dl data-detail-condition></dl>
           <p class="defects-heading">Defectos declarados</p>
-          <ul class="defects-list" data-detail-defects></ul>
+          <ul class="defects-list" data-detail-defects></ul><div class="imperfection-list" data-detail-imperfections hidden></div>
         </div>
         <div class="equipment-panel market-panel">
           <p class="eyebrow">Precio justo</p>
