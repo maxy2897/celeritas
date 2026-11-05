@@ -20,7 +20,10 @@ let wheelFrame = null;
 const vehicleTypeLabels = { utilitario: "Utilitario", compacto: "Compacto", berlina: "Berlina", familiar: "Familiar", suv: "SUV", "4x4": "4×4", monovolumen: "Monovolumen", deportivo: "Deportivo", furgoneta: "Furgoneta", caravana: "Caravana o camper", moto: "Moto" };
 const vehicleFuelLabels = { gasolina: "Gasolina", diesel: "Diésel", hibrido: "Híbrido", "hibrido-enchufable": "Híbrido enchufable", electrico: "Eléctrico", glp: "GLP" };
 const conditionClassByLabel = { Excelente: "condition-excellent", "Muy bueno": "condition-good", "Buen estado": "condition-fair", Revisado: "condition-reviewed" };
-const plainEuros = (value) => `${Number(value || 0).toLocaleString("es-ES", { useGrouping: "always" })} €`;
+const hasOwnKey = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+// Agrupa los miles con punto sin depender de opciones de Intl que algunos Safari de iOS no admiten.
+const groupThousands = (value) => String(Math.round(Number(value) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const plainEuros = (value) => `${groupThousands(value)} €`;
 const escapeText = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 
 async function loadJson(path, fallback) {
@@ -52,6 +55,7 @@ const cssUrl = (path) => `url("${String(path).replace(/["\\\n]/g, "")}")`;
 const standardServices = (catalogData.serviciosComunes || []).map((service) => ({ id: service.id, label: service.nombre, description: service.descripcion, price: Number(service.precio) || 0 }));
 
 (catalogData.vehiculos || []).filter((item) => item && item.publicado !== false && /^[a-z0-9-]{2,60}$/.test(item.id || "")).forEach((item) => {
+  try {
   const id = item.id;
   const photos = (item.fotos || []).map((photo) => (typeof photo === "string" ? photo : photo?.foto)).filter(Boolean);
   const imageClass = `vehicle-img-${id}`;
@@ -65,7 +69,7 @@ const standardServices = (catalogData.serviciosComunes || []).map((service) => (
   const fuelText = item.combustibleTexto || vehicleFuelLabels[item.combustible] || "";
   const transmissionText = item.cambio === "automatico" ? "Automático" : "Manual";
   const dealOpen = item.precioAnterior && (!item.ofertaHasta || new Date(`${item.ofertaHasta}T23:59:59`) > new Date());
-  const specs = { Año: String(item.anio || ""), Kilómetros: `${Number(item.km || 0).toLocaleString("es-ES", { useGrouping: "always" })} km`, Combustible: fuelText, Cambio: transmissionText };
+  const specs = { Año: String(item.anio || ""), Kilómetros: `${groupThousands(item.km)} km`, Combustible: fuelText, Cambio: transmissionText };
   if (item.potencia) specs.Potencia = item.potencia;
   if (item.etiquetaDGT) specs.Etiqueta = item.etiquetaDGT;
   if (item.puertas) specs.Puertas = String(item.puertas);
@@ -99,6 +103,11 @@ const standardServices = (catalogData.serviciosComunes || []).map((service) => (
     roadTest: item.pruebaDinamica?.length ? item.pruebaDinamica : ["Prueba dinámica pendiente de publicar"],
     services: [...(item.servicios || []).map((service) => ({ id: service.id, label: service.nombre, description: service.descripcion, price: Number(service.precio) || 0 })), ...standardServices],
   };
+  } catch {
+    delete vehicleCatalog[item.id];
+    delete vehicleReports[item.id];
+    delete vehicleRecords[item.id];
+  }
 });
 
 if (vehicleImageRules.length) {
@@ -141,6 +150,11 @@ if (catalogGrid) {
   fillSelectFromData(document.querySelector("#filter-year"), unique("anio").sort((a, b) => a - b).map(String));
   const count = document.querySelector("#result-count");
   if (count) count.textContent = String(publishedIds.length);
+}
+if (!publishedIds.length) {
+  document.querySelectorAll("[data-catalog-grid], [data-featured-grid]").forEach((grid) => {
+    grid.innerHTML = '<p class="catalog-empty">No hemos podido cargar los coches. Recarga la página o escríbenos y te ayudamos.</p>';
+  });
 }
 const featuredGrid = document.querySelector("[data-featured-grid]");
 if (featuredGrid) {
@@ -189,7 +203,7 @@ function saveAccountProfile(profile) {
 }
 
 function isVehicleId(id) {
-  return typeof id === "string" && Object.hasOwn(vehicleCatalog, id);
+  return typeof id === "string" && hasOwnKey(vehicleCatalog, id);
 }
 
 function uniqueVehicleIds(ids) {
@@ -290,7 +304,7 @@ function animateVehicleToTarget(sourceButton, target) {
 
 const currencyRates = { EUR: 1, USD: 1.16, GBP: 0.87, CHF: 0.94 };
 const savedCurrency = readPreference("celeritas-currency");
-let currentCurrency = savedCurrency && Object.hasOwn(currencyRates, savedCurrency) ? savedCurrency : "EUR";
+let currentCurrency = savedCurrency && hasOwnKey(currencyRates, savedCurrency) ? savedCurrency : "EUR";
 
 function formatMoney(euros, currency = currentCurrency) {
   const rate = currencyRates[currency] || 1;
@@ -851,7 +865,7 @@ function renderAccountPage() {
       newCars: form.elements.namedItem("newCars").checked,
       priceChanges: form.elements.namedItem("priceChanges").checked,
     });
-    currentCurrency = Object.hasOwn(currencyRates, profile.currency) ? profile.currency : "EUR";
+    currentCurrency = hasOwnKey(currencyRates, profile.currency) ? profile.currency : "EUR";
     savePreference("celeritas-currency", currentCurrency);
     root.querySelector("[data-account-currency]").textContent = currentCurrency;
     updateAccountIdentity(profile);
@@ -868,7 +882,7 @@ fillFormFromAccount(getAccountProfile());
 const detailRoot = document.querySelector("[data-vehicle-detail]");
 if (detailRoot) {
   const requestedId = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
-  const id = Object.hasOwn(vehicleCatalog, requestedId) ? requestedId : "seat-ibiza";
+  const id = hasOwnKey(vehicleCatalog, requestedId) ? requestedId : "seat-ibiza";
   const vehicle = vehicleCatalog[id];
   const report = vehicleReports[id];
   document.querySelector("[data-detail-name]").textContent = vehicle.name;
@@ -1436,7 +1450,7 @@ if (heroSection && !prefersReducedMotion) {
 if (detailRoot) {
   const detailId = (() => {
     const requested = new URLSearchParams(window.location.search).get("id") || "seat-ibiza";
-    return Object.hasOwn(vehicleCatalog, requested) ? requested : "seat-ibiza";
+    return hasOwnKey(vehicleCatalog, requested) ? requested : "seat-ibiza";
   })();
   const detailVehicle = vehicleCatalog[detailId];
 
@@ -1667,7 +1681,7 @@ document.querySelectorAll("[data-open-dialog]").forEach((button) => {
 
 const feePrice = document.querySelector("[data-fee-price]");
 if (feePrice) {
-  const euros = (value) => new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0, useGrouping: "always" }).format(value);
+  const euros = (value) => plainEuros(value);
   const updateFee = () => {
     const price = Math.max(0, Math.min(Number(feePrice.value) || 0, 10000000));
     document.querySelector("[data-fee-commission]").textContent = euros(price * 0.2);
