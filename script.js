@@ -566,6 +566,8 @@ if (contactReason) {
   const contactParams = new URLSearchParams(window.location.search);
   const requestedReason = contactParams.get("motivo");
   if ([...contactReason.options].some((option) => option.value === requestedReason)) contactReason.value = requestedReason;
+  const requestedProduct = contactParams.get("producto") || "";
+  if (contactMessage && /^[\p{L}\p{N} .,\-()/]{2,80}$/u.test(requestedProduct)) contactMessage.value = `Me interesa el producto ${requestedProduct}. ¿Es compatible con mi coche y cuál sería el plazo de entrega?`;
   const requestedVehicle = contactParams.get("coche") || "";
   if (contactMessage && /^[\p{L}\p{N} .\-]{2,60}$/u.test(requestedVehicle)) {
     const entry = Number(contactParams.get("entrada"));
@@ -1817,4 +1819,49 @@ if (trackForm) {
     trackForm.elements.namedItem("ref").value = initialRef;
     showShipment(initialRef);
   }
+}
+
+// Tienda: productos en data/tienda.json, editables desde el panel.
+const shopGrid = document.querySelector("[data-shop-grid]");
+if (shopGrid) {
+  const shopData = await loadJson("data/tienda.json", { productos: [] });
+  const products = (shopData.productos || []).filter((item) => item && item.publicado !== false && item.nombre);
+  const catLabels = Object.fromEntries([...document.querySelectorAll("[data-shop-cat]")].map((button) => [button.dataset.shopCat, button.textContent.trim()]));
+  const brandSelect = document.querySelector("[data-shop-brand]");
+  const modelInput = document.querySelector("[data-shop-model]");
+  const title = document.querySelector("[data-shop-title]");
+  const count = document.querySelector("[data-shop-count]");
+  const empty = document.querySelector("[data-shop-empty]");
+  const payments = document.querySelector("[data-ship-payments]");
+  if (payments && siteSettings.envios?.formasPago) payments.textContent = siteSettings.envios.formasPago;
+  [...new Set(publishedIds.map((id) => vehicleRecords[id].marca).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).forEach((brand) => brandSelect.append(new Option(brand, brand)));
+  let category = "all";
+  const render = () => {
+    const brand = normalizeSearch(brandSelect.value);
+    const model = normalizeSearch(modelInput.value.trim());
+    const filtered = products.filter((item) => {
+      const compat = normalizeSearch(`${item.compatibilidad || ""} ${item.nombre}`);
+      return (category === "all" || item.categoria === category) && (!brand || compat.includes(brand) || /universal|todas/.test(compat)) && (!model || compat.includes(model));
+    });
+    const showBestsellers = category === "all" && !brand && !model;
+    const list = showBestsellers && products.some((item) => item.masVendido) ? filtered.filter((item) => item.masVendido) : filtered;
+    title.textContent = showBestsellers ? "Más vendidos" : category === "all" ? "Productos compatibles" : catLabels[category];
+    count.textContent = products.length ? `${list.length} ${list.length === 1 ? "producto" : "productos"}` : "";
+    empty.hidden = list.length > 0;
+    if (products.length && !list.length) {
+      empty.querySelector("h3").textContent = "No tenemos productos que coincidan.";
+      empty.querySelector("p:not(.eyebrow)").textContent = "Pruebe otra categoría o díganos qué necesita y se lo buscamos.";
+    }
+    shopGrid.innerHTML = list.map((item) => `<article class="shop-card">${item.etiqueta ? `<span class="shop-badge">${escapeText(item.etiqueta)}</span>` : ""}<div class="shop-photo">${item.foto ? `<img src="${escapeText(item.foto)}" alt="" loading="lazy" />` : `<span>${escapeText(catLabels[item.categoria] || "Producto")}</span>`}</div><div class="shop-copy"><small>${escapeText(item.marca || catLabels[item.categoria] || "")}</small><h3>${escapeText(item.nombre)}</h3>${item.compatibilidad ? `<p>${escapeText(item.compatibilidad)}</p>` : ""}<strong data-price-eur="${Number(item.precio) || 0}">${formatMoney(Number(item.precio) || 0)}</strong><a class="button button-dark" href="contacto.html?motivo=tienda&producto=${encodeURIComponent(item.nombre)}">Pedir este producto</a></div></article>`).join("");
+  };
+  document.querySelectorAll("[data-shop-cat]").forEach((button) => button.addEventListener("click", () => {
+    category = button.dataset.shopCat;
+    document.querySelectorAll("[data-shop-cat]").forEach((other) => {
+      other.classList.toggle("is-active", other === button);
+      other.setAttribute("aria-pressed", String(other === button));
+    });
+    render();
+  }));
+  document.querySelector("[data-shop-search]").addEventListener("submit", (event) => { event.preventDefault(); render(); });
+  render();
 }
