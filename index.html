@@ -17,8 +17,8 @@
     <meta name="twitter:image" content="https://maxy2897.github.io/celeritas/og.png" />
     <link rel="canonical" href="https://maxy2897.github.io/celeritas/" />
     <title>Celeritas — Compraventa de coches de ocasión</title>
-    <link rel="stylesheet" href="styles.css?v=77" />
-    <script src="script.js?v=77" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=78" />
+    <script src="script.js?v=78" type="module"></script>
   </head>
   <body data-page="inicio">
     <a class="skip-link" href="#contenido">Ir al contenido</a>
@@ -44,7 +44,7 @@
           <label class="quick-search"><span>Búsqueda rápida</span><input name="q" type="search" placeholder="Escribe marca o modelo" /></label>
           <label><span>Tipo de coche</span><select name="tipo"><option value="all">Todos los tipos</option><option value="utilitario">Utilitario</option><option value="compacto">Compacto</option><option value="suv">SUV</option></select></label>
           <label><span>Marca</span><select name="marca"><option value="all">Todas las marcas</option><option value="seat">SEAT</option><option value="volkswagen">Volkswagen</option><option value="renault">Renault</option><option value="toyota">Toyota</option><option value="nissan">Nissan</option><option value="peugeot">Peugeot</option></select></label>
-          <label><span>Combustible</span><select name="combustible"><option value="all">Todos</option><option value="gasolina">Gasolina</option><option value="hibrido">Híbrido</option></select></label>
+          <label><span>Recíbalo en</span><select name="destino" data-destination-fill><option value="">Cualquier destino</option></select></label>
           <label><span>Precio máximo</span><select name="precio"><option value="999999">Sin límite</option><option value="18000">18.000 €</option><option value="22000">22.000 €</option><option value="25000">25.000 €</option></select></label>
           <button type="submit">Buscar coches →</button>
         </form>
@@ -52,6 +52,18 @@
 
       <section class="brand-marquee" aria-label="Marcas disponibles en Celeritas"><div class="marquee-track" data-marquee><span><img src="assets/mini-seat-ibiza.webp" alt="" width="360" height="146" decoding="async" />SEAT</span><span><img src="assets/mini-vw-golf.webp" alt="" width="360" height="130" decoding="async" />Volkswagen</span><span><img src="assets/mini-renault-clio.webp" alt="" width="360" height="148" decoding="async" />Renault</span><span><img src="assets/mini-toyota-corolla.webp" alt="" width="360" height="127" decoding="async" />Toyota</span><span><img src="assets/mini-nissan-qashqai.webp" alt="" width="360" height="139" decoding="async" />Nissan</span><span><img src="assets/mini-peugeot-208.webp" alt="" width="360" height="151" decoding="async" />Peugeot</span><span><img src="assets/mini-porsche-cayenne.webp" alt="" width="360" height="133" decoding="async" />Porsche</span></div></section>
 
+      <section class="home-help" aria-labelledby="help-title"><h2 id="help-title">¿En qué podemos ayudarle?</h2><div>
+        <a href="comprar.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v-3l2-1 3-4h8l4 4 1 1v3h-2M7 15h10"/><circle cx="6" cy="16" r="1.8"/><circle cx="18" cy="16" r="1.8"/></svg><strong>Comprar un automóvil</strong><p>Catálogo con fotografías, historial y garantía. Visítelo en España o recíbalo en el destino que prefiera.</p><span>Ver catálogo →</span></a>
+        <a href="envios.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg><strong>Recibirlo en su domicilio</strong><p>Entrega a domicilio o recogida en puerto, en la Península, las islas, Ceuta, Melilla y Guinea Ecuatorial.</p><span>Calcular el coste →</span></a>
+        <a href="vender.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3S9.5 10.5 12 11s4.5 1.3 4.5 3.5-2 3-4.5 3-4.5-1.3-4.5-3"/></svg><strong>Vender mi vehículo</strong><p>Lo adquirimos nosotros o lo vendemos por usted. Tasación gratuita y sin compromiso.</p><span>Solicitar tasación →</span></a>
+        <a href="tienda.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg><strong>Accesorios y recambios</strong><p>Aceites, filtros, radios Bluetooth y accesorios para su vehículo.</p><span>Ir a la tienda →</span></a>
+      </div></section>
+      <section class="featured-inventory" aria-label="Vehículos destacados">
+        <div class="featured-grid" data-featured-grid></div>
+        <div class="trust-intro"><p class="eyebrow">Garantía Celeritas</p><h3>Seguridad y claridad en cada paso.</h3></div>
+        <div class="trust-strip"><p><b>✓</b><span><strong>Garantía Celeritas</strong>12 meses como mínimo</span></p><p><b>✓</b><span><strong>Precio claro</strong>Sin intermediarios ni costes ocultos</span></p><p><b>✓</b><span><strong>Garantía de devolución</strong>Según las condiciones de compra</span></p><p><b>✓</b><span><strong>Te ayudamos a vender tu coche</strong>Nos ocupamos de todos los trámites</span></p></div>
+      </section>
+      <section class="home-deliver"><div><h2>Entregamos allí donde se encuentre</h2><p>En toda España y en Guinea Ecuatorial: recójalo en el puerto o recíbalo en su domicilio.</p><ul data-home-destinations></ul></div><a class="button button-dark" href="envios.html#calculadora">Consultar envíos y calcular el coste</a></section>
       <section class="decision-tools" id="envios" aria-label="¿A dónde te lo enviamos?">
         <article class="budget-tool">
           <div class="budget-heading">
@@ -68,37 +80,20 @@
         </article>
       </section>
 
-      <section class="featured-inventory" aria-label="Vehículos destacados">
-        <div class="featured-grid" data-featured-grid></div>
-        <div class="trust-intro"><p class="eyebrow">Garantía Celeritas</p><h3>Seguridad y claridad en cada paso.</h3></div>
-        <div class="trust-strip"><p><b>✓</b><span><strong>Garantía Celeritas</strong>12 meses como mínimo</span></p><p><b>✓</b><span><strong>Precio claro</strong>Sin intermediarios ni costes ocultos</span></p><p><b>✓</b><span><strong>Garantía de devolución</strong>Según las condiciones de compra</span></p><p><b>✓</b><span><strong>Te ayudamos a vender tu coche</strong>Nos ocupamos de todos los trámites</span></p></div>
-      </section>
+      
 
 
-      <section class="stats-band" aria-label="Celeritas en cifras">
-        <div class="stat-item"><strong><span data-count-to="100">100</span></strong><p>puntos de revisión en cada coche</p></div>
-        <div class="stat-item"><strong><span data-count-to="12">12</span><small>meses</small></strong><p>de garantía como mínimo</p></div>
-        <div class="stat-item"><strong><span data-count-to="7" data-count-source="vehicles">7</span></strong><p>coches disponibles ahora mismo</p></div>
-        <div class="stat-item"><strong><span data-count-to="6" data-count-source="cities">6</span></strong><p>ciudades con unidades en exposición</p></div>
-      </section>
+      
 
-      <section class="choice-section home-paths" aria-labelledby="home-paths-title">
-        <div class="choice-copy">
-          <p class="eyebrow dark">Todo en Celeritas</p>
-          <h2 id="home-paths-title">Cambia de coche sin cambiar de equipo.</h2>
-          <p>Empieza por el punto que necesites. Nuestros expertos te acompañarán durante todo el proceso.</p>
-        </div>
-        <div class="choice-links">
-          <a href="comprar.html"><span>01</span><div><h3>Encontrar un coche</h3><p>Compara unidades revisadas, consulta su historial y entra en la ficha completa antes de decidir.</p></div><b>→</b></a>
-          <a href="financiacion.html"><span>02</span><div><h3>Financiar la compra</h3><p>Solicita una propuesta adaptada al coche, la entrada y la cuota que mejor encajen contigo.</p></div><b>→</b></a>
-          <a href="tasacion.html"><span>03</span><div><h3>Vender tu coche</h3><p>Recibe una primera valoración, entrega la documentación y deja que gestionemos los trámites.</p></div><b>→</b></a>
-        </div>
-      </section>
+      
 
-      <section class="home-service compact-service home-service-photo"><div><p class="eyebrow dark">También compramos</p><h2>Vende tu coche con Celeritas y ayuda a otros a construir su camino.</h2></div><div><p>Lo valoramos, lo revisamos y nos ocupamos de la documentación. Tú decides si nuestra oferta te encaja.</p><a class="button button-accent" href="tasacion.html">Solicitar tasación</a></div></section>
+      
 
-      <section class="reviews-section editorial-section"><div class="reviews-heading"><p class="eyebrow dark">Guía Celeritas</p><h2>Decide con<br />información.</h2><p>Respuestas claras para comparar, financiar y comprar un coche de ocasión con seguridad.</p></div><div class="reviews-grid"><article><span>Compra</span><strong>Qué revisamos antes de publicar un coche</strong><p>Conoce los controles, la documentación y la información que verás en cada ficha.</p><a href="como-funciona.html">Ver el proceso →</a></article><article><span>Financiación</span><strong>Encuentra una cuota que encaje contigo</strong><p>Consulta las opciones disponibles y prepara una propuesta según tus necesidades.</p><a href="financiacion.html">Ver opciones →</a></article><article><span>Tu coche</span><strong>Cómo funciona la tasación</strong><p>Cuéntanos qué coche tienes y recibe una primera valoración sin compromiso.</p><a href="tasacion.html">Tasar mi coche →</a></article></div></section>
+      <section class="home-news" data-home-news hidden aria-labelledby="news-title"><div class="home-news-head"><h2 id="news-title">Noticias del motor</h2><a href="conocenos.html#blog" data-news-all hidden>Ver todas las noticias →</a></div><div class="home-fuel" data-home-fuel></div><div class="home-news-grid"><div data-news-main></div><div class="home-news-list" data-news-list></div></div></section>
+      <section class="reviews-section editorial-section" data-home-guide><div class="reviews-heading"><p class="eyebrow dark">Guía Celeritas</p><h2>Decide con<br />información.</h2><p>Respuestas claras para comparar, financiar y comprar un coche de ocasión con seguridad.</p></div><div class="reviews-grid"><article><span>Compra</span><strong>Qué revisamos antes de publicar un coche</strong><p>Conoce los controles, la documentación y la información que verás en cada ficha.</p><a href="como-funciona.html">Ver el proceso →</a></article><article><span>Financiación</span><strong>Encuentra una cuota que encaje contigo</strong><p>Consulta las opciones disponibles y prepara una propuesta según tus necesidades.</p><a href="financiacion.html">Ver opciones →</a></article><article><span>Tu coche</span><strong>Cómo funciona la tasación</strong><p>Cuéntanos qué coche tienes y recibe una primera valoración sin compromiso.</p><a href="tasacion.html">Tasar mi coche →</a></article></div></section>
 
+      <section class="home-sell-cta"><div><h2>¿Desea vender su vehículo?</h2><p>Lo adquirimos directamente o lo vendemos por usted. Reciba una tasación gratuita y sin compromiso.</p></div><a class="button button-accent" href="vender.html">Tasación gratuita</a></section>
+      <section class="home-shop" aria-labelledby="home-shop-title"><h2 id="home-shop-title">Tienda para su vehículo</h2><div><a href="tienda.html?categoria=aceites"><strong>Aceites y filtros</strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></a><a href="tienda.html?categoria=radios"><strong>Radios y Bluetooth</strong><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="m7 8 9-5"/><circle cx="15" cy="14" r="2.5"/><path d="M6 12h4M6 16h4"/></svg></a><a href="tienda.html"><strong>Ver todo →</strong><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></section>
       <section class="home-faq" aria-labelledby="faq-title">
         <div class="home-faq-heading"><p class="eyebrow">Antes de decidir</p><h2 id="faq-title">Preguntas frecuentes.</h2><p>Si necesitas una respuesta más concreta, nuestro equipo puede ayudarte personalmente.</p><a class="text-link" href="contacto.html">Hablar con Celeritas →</a></div>
         <div class="faq-list">

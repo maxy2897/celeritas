@@ -41,6 +41,11 @@ Guarda la llave como una contraseña: quien la tenga puede cambiar la web. Si se
 - **Ajustes de la web → Envíos:** destinos, opciones de entrega, moneda de cada destino (la calculadora se muestra en esa moneda; Guinea Ecuatorial en FCFA) y costes de transporte, impuestos, gestión, entrega a domicilio y seguro. Deja vacío lo que todavía no sepas y saldrá como «A consultar».
 - **Seguimiento de envíos:** crea un envío con una referencia difícil de adivinar (p. ej. `CEL-7Q4K-2931`), dásela al cliente y actualiza el paso (1 Reservado … 7 Entregado), las fechas y las novedades. El cliente lo consulta en *Mi envío*. No pongas nombres ni datos personales. Borra el envío de ejemplo `DEMO-0001` cuando empieces.
 - **Tienda → Productos:** nombre, categoría, marca, compatibilidad (marca/modelo de coche o «Universal»), precio, foto y si sale en *Más vendidos*.
+- **Más datos de cada coche:** modelo y versión (filtro *Modelo* de Comprar y línea bajo el nombre), precio financiado, descripción (pestaña *Descripción*), documentos (pestaña *Documentos*; se pueden subir en PDF) y *Se puede enviar a* (si lo dejas vacío, se muestran todos los destinos).
+- **Ajustes de la web → Asesor:** nombre, cargo, sede, idiomas, foto, WhatsApp (con prefijo, p. ej. `34600000000`) y teléfono. Sale en la ficha de cada coche. Con el WhatsApp puesto, los formularios de Vender abren WhatsApp con los datos escritos; si no, abren el correo.
+- **Ajustes de la web → Equipo:** las personas de *Conócenos*. Marca a una como director para que salga destacada con su mensaje.
+- **Ajustes de la web → Citas:** sedes, horas de cita, días de la semana cerrados y festivos del calendario de *Vender*.
+- **Noticias y blog:** precios del combustible y noticias del motor (portada) y entradas del blog (*Conócenos*). Mientras esté vacío, esas secciones no aparecen.
 
 ## Activar las estadísticas (una sola vez)
 

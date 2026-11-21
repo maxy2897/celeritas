@@ -2288,6 +2288,57 @@ if (shopGrid) {
   }));
   document.querySelector("[data-shop-search]").addEventListener("submit", (event) => { event.preventDefault(); render(); });
   render();
+  const requestedCategory = new URLSearchParams(window.location.search).get("categoria");
+  document.querySelector(`[data-shop-cat="${CSS.escape(requestedCategory || "")}"]`)?.click();
+}
+
+const teamRoot = document.querySelector("[data-team]");
+const teamMembers = (siteSettings.equipo || []).filter((member) => member?.cargo || member?.nombre);
+if (teamRoot && teamMembers.length) {
+  teamRoot.innerHTML = teamMembers.map((member) => {
+    const photo = member.foto && /^assets\//.test(member.foto) ? `<img src="${escapeText(member.foto)}" alt="" loading="lazy" />` : '<img src="assets/celeritas-wheel-icon-outlined.svg" alt="" />';
+    return `<article class="team-card${member.director ? " team-lead" : ""}"><span class="team-avatar${member.foto ? " has-photo" : ""}" aria-hidden="true">${photo}</span><div><strong>${escapeText(member.nombre || member.cargo)}</strong><small>${escapeText([member.nombre ? member.cargo : "", member.sede].filter(Boolean).join(" · "))}</small>${member.director && member.mensaje ? `<p>${escapeText(member.mensaje)}</p>` : ""}</div></article>`;
+  }).join("");
+}
+
+// Portada y Conócenos: destinos, noticias del motor y blog (data/noticias.json, editable en el panel).
+document.querySelectorAll("[data-destination-fill]").forEach((select) => {
+  shippingDestinationsList().forEach((destination) => select.append(new Option(destination.nombre, destination.id)));
+  const saved = readPreference("celeritas-destination");
+  if ([...select.options].some((option) => option.value === saved)) select.value = saved;
+});
+const homeDestinations = document.querySelector("[data-home-destinations]");
+if (homeDestinations) homeDestinations.innerHTML = shippingDestinationsList().map((destination) => `<li><a href="envios.html?destino=${encodeURIComponent(destination.id)}#calculadora">${escapeText(destination.nombre)}</a></li>`).join("");
+const newsRoot = document.querySelector("[data-home-news]");
+const blogRoot = document.querySelector("[data-blog]");
+if (newsRoot || blogRoot) {
+  const newsData = await loadJson("data/noticias.json", {});
+  const safeImage = (src) => (src && /^(assets\/|https:\/\/)/.test(src) ? src : "");
+  const safeLink = (href) => (href && /^(https:\/\/|[a-z0-9-]+\.html)/i.test(href) ? href : "");
+  const entries = (newsData.entradas || []).filter((item) => item?.titulo && item.publicado !== false);
+  const formatDate = (value) => { const date = value ? new Date(`${value}T12:00:00`) : null; return date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""; };
+  const meta = (item) => escapeText([formatDate(item.fecha), item.fuente].filter(Boolean).join(" · "));
+  const linkOpen = (item) => { const href = safeLink(item.enlace); return href ? `<a href="${escapeText(href)}"${/^https:/.test(href) ? ' target="_blank" rel="noopener noreferrer"' : ""}>` : "<span>"; };
+  const linkClose = (item) => (safeLink(item.enlace) ? "</a>" : "</span>");
+  if (newsRoot) {
+    const news = entries.filter((item) => item.seccion !== "blog");
+    const fuel = (newsData.combustible || []).filter((item) => item?.nombre && item.precio);
+    if (news.length || fuel.length) {
+      newsRoot.hidden = false;
+      document.querySelector("[data-home-guide]")?.setAttribute("hidden", "");
+      newsRoot.querySelector("[data-home-fuel]").innerHTML = fuel.map((item) => `<p><small>${escapeText([item.nombre, item.pais].filter(Boolean).join(" · "))}</small><strong>${escapeText(item.precio)}</strong></p>`).join("");
+      const [main, ...rest] = news;
+      newsRoot.querySelector("[data-news-main]").innerHTML = main ? `<article class="news-main">${safeImage(main.foto) ? `<img src="${escapeText(safeImage(main.foto))}" alt="" loading="lazy" />` : ""}${main.categoria ? `<small>${escapeText(main.categoria)}</small>` : ""}<h3>${linkOpen(main)}${escapeText(main.titulo)}${linkClose(main)}</h3>${main.resumen ? `<p>${escapeText(main.resumen)}</p>` : ""}${main.lista?.length ? `<ol>${main.lista.map((item) => `<li>${escapeText(typeof item === "string" ? item : item?.elemento || "")}</li>`).join("")}</ol>` : ""}<em>${meta(main)}</em></article>` : "";
+      newsRoot.querySelector("[data-news-list]").innerHTML = rest.slice(0, 4).map((item) => `<article class="news-item">${safeImage(item.foto) ? `<img src="${escapeText(safeImage(item.foto))}" alt="" loading="lazy" />` : '<span class="news-thumb" aria-hidden="true"></span>'}<div>${item.categoria ? `<small>${escapeText(item.categoria)}</small>` : ""}<h3>${linkOpen(item)}${escapeText(item.titulo)}${linkClose(item)}</h3><em>${meta(item)}</em></div></article>`).join("");
+    }
+  }
+  if (blogRoot) {
+    const posts = entries.filter((item) => item.seccion === "blog").slice(0, 3);
+    if (posts.length) {
+      blogRoot.hidden = false;
+      blogRoot.querySelector("[data-blog-grid]").innerHTML = posts.map((item) => `<article class="blog-card">${safeImage(item.foto) ? `<img src="${escapeText(safeImage(item.foto))}" alt="" loading="lazy" />` : '<span class="news-thumb" aria-hidden="true"></span>'}<div><em>${meta(item)}</em><h3>${linkOpen(item)}${escapeText(item.titulo)}${linkClose(item)}</h3>${item.resumen ? `<p>${escapeText(item.resumen)}</p>` : ""}</div></article>`).join("");
+    }
+  }
 }
 
 document.querySelectorAll("[data-catalog-group]").forEach((button) => {

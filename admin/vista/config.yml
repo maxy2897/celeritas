@@ -252,6 +252,19 @@ collections:
               - { name: foto, label: Foto, widget: image, required: false }
               - { name: whatsapp, label: "WhatsApp con prefijo de país", widget: string, required: false, hint: "Ej.: 34600000000 (sin espacios ni +)" }
               - { name: telefono, label: "Teléfono para llamar", widget: string, required: false }
+          - name: equipo
+            label: "Equipo (página Conócenos)"
+            label_singular: persona
+            widget: list
+            required: false
+            hint: "Si lo dejas vacío se muestran los puestos sin nombres."
+            fields:
+              - { name: nombre, label: "Nombre y apellidos", widget: string, required: false }
+              - { name: cargo, label: "Cargo (ej.: Comercial)", widget: string }
+              - { name: sede, label: "Sede (ej.: Bata)", widget: string, required: false }
+              - { name: foto, label: Foto, widget: image, required: false }
+              - { name: director, label: "Destacar como director", widget: boolean, default: false }
+              - { name: mensaje, label: "Mensaje del director (una o dos frases)", widget: text, required: false }
           - name: citas
             label: "Citas de inspección (página Vender)"
             widget: object
@@ -382,3 +395,42 @@ collections:
               - { name: foto, label: Foto, widget: image, required: false }
               - { name: etiqueta, label: "Etiqueta", widget: select, required: false, options: ["Más vendido", "Pack", "Novedad", "Oferta"] }
               - { name: masVendido, label: "Mostrar en Más vendidos", widget: boolean, default: false }
+  - name: noticias
+    label: Noticias y blog
+    description: Precios del combustible, noticias del motor (portada) y entradas del blog (Conócenos).
+    editor:
+      preview: false
+    files:
+      - name: noticias
+        label: Noticias y blog
+        file: data/noticias.json
+        format: json
+        fields:
+          - name: combustible
+            label: "Precios del combustible (portada)"
+            label_singular: precio
+            widget: list
+            required: false
+            summary: "{{fields.nombre}} · {{fields.pais}} · {{fields.precio}}"
+            fields:
+              - { name: nombre, label: "Combustible (ej.: Gasolina 95)", widget: string }
+              - { name: pais, label: "País (ej.: España)", widget: string, required: false }
+              - { name: precio, label: "Precio (ej.: 1,59 €/l)", widget: string }
+          - name: entradas
+            label: Noticias y entradas del blog
+            label_singular: entrada
+            widget: list
+            required: false
+            summary: "{{fields.titulo}} · {{fields.seccion}} · {{fields.fecha}}"
+            hint: "La primera noticia aparece grande en la portada. Las entradas del blog salen en Conócenos."
+            fields:
+              - { name: titulo, label: Titular, widget: string }
+              - { name: seccion, label: "Dónde aparece", widget: select, default: noticias, options: [{ label: "Noticias del motor (portada)", value: noticias }, { label: "Blog (Conócenos)", value: blog }] }
+              - { name: publicado, label: Publicado, widget: boolean, default: true }
+              - { name: categoria, label: "Categoría (ej.: Aranceles, Normativa, Mercado)", widget: string, required: false }
+              - { name: fecha, label: Fecha, widget: datetime, time_format: false, date_format: "DD/MM/YYYY", format: "YYYY-MM-DD", required: false }
+              - { name: fuente, label: Fuente, widget: string, required: false }
+              - { name: resumen, label: Resumen, widget: text, required: false }
+              - { name: foto, label: Foto, widget: image, required: false }
+              - { name: enlace, label: "Enlace a la noticia completa (https://…)", widget: string, required: false }
+              - { name: lista, label: "Lista numerada (opcional, ej.: ranking de marcas)", widget: list, required: false, field: { name: elemento, label: Elemento, widget: string } }
