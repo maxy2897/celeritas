@@ -1707,6 +1707,103 @@ if (detailRoot) {
   if (visitLink) visitLink.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name, tipo: "visita" })}`;
   const alertLink = document.querySelector("[data-detail-alert]");
   if (alertLink) alertLink.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name, tipo: "aviso" })}`;
+  // Ficha (maqueta del cliente): pestañas, versión, precio financiado, entrega, coste, documentos y asesor.
+  const carTabs = document.querySelector("[data-car-tabs]");
+  if (carTabs) {
+    const tabs = [...carTabs.querySelectorAll('[role="tab"]')];
+    const selectTab = (tab, focus = false) => {
+      tabs.forEach((other) => {
+        const selected = other === tab;
+        other.setAttribute("aria-selected", String(selected));
+        other.tabIndex = selected ? 0 : -1;
+        document.getElementById(other.getAttribute("aria-controls")).hidden = !selected;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => selectTab(tab));
+      tab.addEventListener("keydown", (event) => {
+        const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+        if (!step) return;
+        event.preventDefault();
+        selectTab(tabs[(index + step + tabs.length) % tabs.length], true);
+      });
+    });
+    if (window.location.hash === "#configura") selectTab(tabs[2]);
+  }
+  if (detailRecord.descripcion) document.querySelector("[data-detail-summary]").textContent = detailRecord.descripcion;
+  const availabilityBadge = document.querySelector("[data-car-availability]");
+  if (availabilityBadge && detailRecord.disponibilidad) { availabilityBadge.textContent = detailRecord.disponibilidad; availabilityBadge.hidden = false; }
+  const versionLine = document.querySelector("[data-car-version]");
+  if (versionLine) versionLine.textContent = detailRecord.version || detailVehicle.summary;
+  const financed = Number(detailRecord.precioFinanciado) || 0;
+  if (financed > 0) {
+    const financedBox = document.querySelector("[data-car-financed]");
+    const financedPrice = document.querySelector("[data-car-financed-price]");
+    if (financedBox && financedPrice) { financedBox.hidden = false; financedPrice.dataset.priceEur = String(financed); financedPrice.textContent = formatMoney(financed); }
+  }
+  const shipDestinationSelect = document.querySelector("[data-detail-ship-destination]");
+  const deliverySelect = document.querySelector("[data-car-ship-delivery]");
+  const costRoot = document.querySelector("[data-car-cost]");
+  const savedDestination = readPreference("celeritas-destination");
+  if (shipDestinationSelect && [...shipDestinationSelect.options].some((option) => option.value === savedDestination)) shipDestinationSelect.value = savedDestination;
+  const costValue = (value) => (value === null || value === undefined || value === "" ? "Consultar" : Number(value) === 0 ? "Incluido" : formatMoney(Number(value)));
+  const updateShipping = () => {
+    const destination = shippingDestinationsList().find((item) => item.id === shipDestinationSelect?.value);
+    if (deliverySelect) {
+      const previous = deliverySelect.value;
+      deliverySelect.replaceChildren(...(destination?.entrega?.length ? destination.entrega : ["Consultar opciones"]).map((option) => new Option(option, option)));
+      if ([...deliverySelect.options].some((option) => option.value === previous)) deliverySelect.value = previous;
+    }
+    if (!costRoot) return;
+    const rows = [["Precio del vehículo", "IVA incluido", detailVehicle.priceEur]];
+    if (destination) {
+      rows.push(["Transporte hasta su destino", destination.nombre, destination.transporte], ["Trámites y documentación", "Exportación y gestión", destination.gestion], ["Impuestos estimados de destino", "Varían según el país y el coche", destination.impuestos]);
+    }
+    const known = rows.every(([, , value]) => value !== null && value !== undefined && value !== "");
+    const total = rows.reduce((sum, [, , value]) => sum + (Number(value) || 0), 0);
+    costRoot.innerHTML = `<dl>${rows.map(([label, note, value]) => `<div><dt>${escapeText(label)}<small>${escapeText(note)}</small></dt><dd>${escapeText(costValue(value))}</dd></div>`).join("")}<div class="car-cost-total"><dt>Total estimado</dt><dd>${known ? escapeText(formatMoney(total)) : `Desde ${escapeText(formatMoney(total))}`}</dd></div></dl><p>${destination ? "Estimación orientativa. Le confirmaremos el importe final antes de la reserva." : "Elija un destino en «¿Cuánto cuesta recibirlo?» para ver el coste hasta su domicilio o puerto."}</p>`;
+  };
+  shipDestinationSelect?.addEventListener("change", () => { savePreference("celeritas-destination", shipDestinationSelect.value); updateShipping(); });
+  updateShipping();
+  document.querySelectorAll("[data-currency-select]").forEach((select) => select.addEventListener("change", updateShipping));
+  const docsRoot = document.querySelector("[data-car-docs]");
+  if (docsRoot) {
+    const docs = (detailRecord.documentos || []).map((item) => (typeof item === "string" ? { nombre: item } : item)).filter((item) => item?.nombre);
+    const list = docs.length ? docs : [{ nombre: "Informe de inspección Celeritas" }, { nombre: "Ficha técnica y permiso de circulación" }, { nombre: "Historial de mantenimiento" }, { nombre: "Contrato de compraventa y factura" }];
+    docsRoot.innerHTML = list.map((item) => `<li>${item.archivo && /^(assets\/uploads\/|https:\/\/)/.test(item.archivo) ? `<a href="${escapeText(item.archivo)}" target="_blank" rel="noopener noreferrer">${escapeText(item.nombre)} ↗</a>` : `<span>${escapeText(item.nombre)}</span><small>Bajo petición</small>`}</li>`).join("");
+    const request = document.querySelector("[data-car-docs-request]");
+    if (request) request.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name })}`;
+  }
+  const diagramPoints = document.querySelector("[data-diagram-points]");
+  if (diagramPoints) {
+    const spots = [[118, 34], [214, 62], [184, 80], [40, 62], [120, 58], [66, 46]];
+    const count = Math.min(document.querySelectorAll("[data-detail-services] .service-option").length, spots.length);
+    diagramPoints.innerHTML = spots.slice(0, count).map(([x, y], index) => `<circle cx="${x}" cy="${y}" r="8" /><text x="${x}" y="${y + 3.5}">${index + 1}</text>`).join("");
+  }
+  const advisor = siteSettings.asesor || {};
+  const advisorName = document.querySelector("[data-advisor-name]");
+  if (advisorName && advisor.nombre) advisorName.textContent = advisor.nombre;
+  const advisorRole = document.querySelector("[data-advisor-role]");
+  if (advisorRole && (advisor.cargo || advisor.sede)) advisorRole.textContent = [advisor.cargo, advisor.sede].filter(Boolean).join(" · ");
+  const advisorLangs = document.querySelector("[data-advisor-langs]");
+  if (advisorLangs) advisorLangs.textContent = advisor.idiomas ? `Idiomas: ${advisor.idiomas}` : "";
+  const advisorPhoto = document.querySelector("[data-advisor-photo]");
+  if (advisorPhoto && advisor.foto && /^assets\//.test(advisor.foto)) { advisorPhoto.style.backgroundImage = cssUrl(advisor.foto); advisorPhoto.classList.add("has-photo"); }
+  const whatsappDigits = String(advisor.whatsapp || "").replace(/\D/g, "");
+  const advisorWhatsapp = document.querySelector("[data-advisor-whatsapp]");
+  if (advisorWhatsapp) {
+    if (whatsappDigits.length >= 8) {
+      advisorWhatsapp.href = `https://wa.me/${whatsappDigits}?${new URLSearchParams({ text: `Hola, me interesa el ${detailVehicle.name}.` })}`;
+      advisorWhatsapp.target = "_blank";
+      advisorWhatsapp.rel = "noopener noreferrer";
+    } else advisorWhatsapp.href = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: detailVehicle.name })}`;
+  }
+  const callDigits = String(advisor.telefono || siteSettings.contacto?.telefonos?.[0]?.numero || "").replace(/[^\d+]/g, "");
+  const advisorCall = document.querySelector("[data-advisor-call]");
+  if (advisorCall) advisorCall.href = callDigits.replace(/\D/g, "").length >= 6 ? `tel:${callDigits}` : `contacto.html?${new URLSearchParams({ motivo: "llamada", coche: detailVehicle.name })}`;
+  const imperfectionsEmpty = document.querySelector("[data-car-imperfections-empty]");
+  if (imperfectionsEmpty) imperfectionsEmpty.hidden = Boolean(detailRecord.imperfecciones?.length);
   const imperfectionList = document.querySelector("[data-detail-imperfections]");
   if (imperfectionList && detailRecord.imperfecciones?.length) {
     imperfectionList.hidden = false;

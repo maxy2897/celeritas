@@ -1496,3 +1496,111 @@ body[data-page="comprar"]{background:#fff}
 body[data-page="comprar"] .buy-layout{padding:2.2rem clamp(1rem,4vw,4rem) 5rem;background:#fff}
 @media(min-width:901px){body[data-page="comprar"] .buy-layout .mobile-filter-toggle{display:none}}
 @media(max-width:700px){.buy-categories{padding-top:1.8rem}.buy-categories h2{font-size:1.1rem}.buy-cat{flex:0 0 8.6rem;min-height:6.4rem;padding:.8rem}.buy-cat strong{font-size:.78rem}.buy-cat small{font-size:.62rem}.buy-cat svg{width:3.8rem;height:2.2rem;right:.55rem;bottom:.45rem}.buy-head{padding-top:1.8rem;padding-bottom:1.6rem}.buy-head h1{font-size:1.75rem}.buy-head p{font-size:.85rem}.buy-layout{padding-top:1.4rem}}
+
+/* Ficha del coche (maqueta del cliente) */
+body[data-page="coche"]{background:#fff}
+.car-page{padding-top:1rem}
+.car-page .back-link{margin:.4rem 0 1.2rem;color:#46525c;font-size:.75rem;font-weight:700;text-transform:none}
+.car-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(20rem,25rem);gap:clamp(1.5rem,3vw,2.6rem);align-items:start}
+.car-main{min-width:0}
+.car-media .detail-stage{aspect-ratio:1.55;border-radius:.3rem;background:#eef1f4}
+.car-stage-badge{position:absolute;top:.8rem;left:.8rem;z-index:2;padding:.3rem .55rem;color:#2f6b40;background:#dcefdf;font-size:.66rem;font-weight:850;letter-spacing:.03em}
+.car-media .stage-tabs{border-radius:.2rem}
+.car-media .detail-thumbs{display:flex;overflow-x:auto;gap:.45rem;scroll-snap-type:x mandatory}
+.car-media .detail-thumbs>*{flex:0 0 clamp(6rem,15%,8.5rem);aspect-ratio:1.4;scroll-snap-align:start;border-radius:.2rem}
+.car-tabs{margin-top:2rem}
+.car-tablist{display:flex;gap:1.6rem;overflow-x:auto;border-bottom:1px solid #e3e7eb}
+.car-tablist button{position:relative;padding:.85rem 0;color:#5b6670;background:none;border:0;font:inherit;font-size:.85rem;font-weight:750;white-space:nowrap;cursor:pointer}
+.car-tablist button::after{position:absolute;right:0;bottom:-1px;left:0;height:2px;content:"";background:var(--navy);transform:scaleX(0);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.car-tablist button[aria-selected="true"]{color:var(--navy)}
+.car-tablist button[aria-selected="true"]::after{transform:scaleX(1)}
+.car-panel{padding:1.5rem 0 .5rem;animation:car-panel-in .35s ease both}
+@keyframes car-panel-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.car-panel h3{margin:1.4rem 0 .7rem;color:var(--navy);font-size:.95rem;font-weight:850}
+.car-lead{margin:0;color:#46525c;font-size:.92rem;line-height:1.65}
+.car-desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 2rem}
+.car-features,.car-checks{display:grid;gap:.45rem;margin:0;padding:0;list-style:none;color:#2b3640;font-size:.85rem;line-height:1.45}
+.car-checks li::before{margin-right:.4rem;color:#2f6b40;content:"✓"}
+.car-dl{display:grid;gap:0;margin:0}
+.car-dl div{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid #eef1f4;font-size:.82rem}
+.car-dl dt{color:#5b6670}.car-dl dd{margin:0;color:var(--navy);font-weight:700;text-align:right}
+.car-catalog-link{display:inline-block;margin-top:1rem;color:var(--navy);font-size:.8rem;font-weight:800}
+.car-catalog-note{display:block;margin-top:.3rem;color:#7b858d;font-size:.7rem}
+.car-rating{margin-top:1.6rem;padding:1.2rem;background:#f4f6f8}
+.car-rating h3{margin-top:0}.car-rating>p{margin:0 0 1rem;color:#5b6670;font-size:.8rem}
+.car-rating .rating-breakdown{display:grid;grid-template-columns:repeat(auto-fill,minmax(12.5rem,1fr));gap:.6rem}
+.car-rating .rating-breakdown article{display:grid;grid-template-columns:1fr;gap:.4rem;padding:.75rem;background:#fff;border:0}
+.car-rating .rating-breakdown article>span{color:#5b6670;font-size:.72rem;font-weight:700}
+.car-market{margin:0;color:#2f6b40;font-size:.95rem;font-weight:800;line-height:1.5}
+.car-location{margin:.6rem 0 0;color:#5b6670;font-size:.78rem;line-height:1.5}
+.car-docs{display:grid;gap:0;margin:1rem 0 1.4rem;padding:0;list-style:none}
+.car-docs li{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;border-bottom:1px solid #eef1f4;font-size:.86rem}
+.car-docs li::before{width:1.6rem;height:1.6rem;flex:0 0 auto;content:"";background:#eef1f4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2036' stroke-width='1.8'%3E%3Cpath d='M14 3H6v18h12V7z'/%3E%3Cpath d='M14 3v4h4M9 13h6M9 17h6'/%3E%3C/svg%3E") center/1rem no-repeat;border-radius:.2rem}
+.car-docs li span,.car-docs li a{flex:1;color:var(--navy);font-weight:700}
+.car-docs li small{color:#7b858d;font-size:.72rem}
+.car-services{display:grid;grid-template-columns:minmax(12rem,.8fr) minmax(0,1.2fr);gap:1.6rem;align-items:start;margin-top:1.2rem}
+.car-services-diagram{width:100%;padding:1rem;background:#f0f2f5;border-radius:.2rem;fill:none;stroke:var(--navy);stroke-width:1.6;stroke-linejoin:round}
+.car-services-diagram g circle{fill:var(--navy);stroke:#fff;stroke-width:1.2}
+.car-services-diagram g text{fill:#fff;stroke:none;font-family:var(--sans);font-size:9px;font-weight:800;text-anchor:middle}
+.car-service-list{counter-reset:service;display:grid;gap:.45rem}
+.car-service-list .service-option{counter-increment:service;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:.7rem;padding:.7rem .85rem;background:#fff;border:1px solid #e3e7eb;border-radius:.2rem;transition:border-color .2s ease,background-color .2s ease}
+.car-service-list .service-option::before{display:grid;width:1.45rem;height:1.45rem;place-items:center;color:#fff;background:var(--navy);border-radius:50%;content:counter(service);font-size:.68rem;font-weight:850}
+.car-service-list .service-option:has(input:checked){background:#f2f8f3;border-color:#2f6b40}
+.car-service-list .service-option strong{color:var(--navy);font-size:.82rem}
+.car-service-list .service-option small{display:block;color:#6b7680;font-size:.7rem}
+.car-service-list .service-option b{color:var(--navy);font-family:var(--sans);font-size:.82rem;font-weight:800;white-space:nowrap}
+.car-services-total{display:flex;justify-content:space-between;margin:1rem 0 0;color:var(--navy);font-size:.9rem;font-weight:850}
+.car-services-total.is-sub{margin-top:.3rem;color:#5b6670;font-size:.8rem;font-weight:700}
+.car-services .button{width:100%;margin-top:1rem;justify-content:center}
+.car-imperfections{display:grid;grid-template-columns:1fr;gap:.4rem;margin-top:2rem;padding:1.3rem;border:1px solid #e3e7eb;border-radius:.2rem}
+.car-imperfections h2{margin:0;color:var(--navy);font-size:1rem;font-weight:850}
+.car-imperfections>p{margin:0;color:#5b6670;font-size:.82rem;line-height:1.55}
+.car-imperfections-empty{font-style:italic}
+.car-side{position:sticky;top:6rem;display:grid;gap:.75rem;padding:0;background:transparent;border:0;box-shadow:none}
+.car-kicker{margin:0;color:#2f6b40;font-size:.66rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.car-side h1{margin:0;color:var(--navy);font-family:var(--sans);font-size:clamp(1.6rem,2.3vw,2rem);font-weight:900;line-height:1.1;letter-spacing:-.01em;text-transform:uppercase}
+.car-version{margin:-.35rem 0 0;color:#5b6670;font-size:.88rem}
+.car-quick{margin:0}
+.car-prices{display:flex;gap:2rem;padding:.9rem 0;border-top:1px solid #e3e7eb;border-bottom:1px solid #e3e7eb}
+.car-prices span{display:block;color:#5b6670;font-size:.7rem}
+.car-prices strong{display:block;margin-top:.15rem;color:var(--navy);font-size:1.75rem;font-weight:900;line-height:1.1}
+.car-prices [hidden]{display:none}
+.car-local-price{margin:0;color:#2f6b40;font-size:.8rem;font-style:normal;font-weight:800}
+.car-ship{display:grid;gap:.6rem;margin:0;padding:1rem;background:#edf4ee;border:0;border-radius:.2rem}
+.car-ship p{margin:0;color:var(--navy);font-size:.95rem;font-weight:850}
+.car-ship label{display:grid;gap:.3rem}
+.car-ship label span{color:#5b6670;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.car-ship select{width:100%;min-height:2.6rem;padding:0 .75rem;color:var(--ink);background:#fff;border:1px solid #cfd6dc;border-radius:.2rem;font:inherit;font-size:.82rem}
+.car-ship .button,.car-cta{width:100%;min-height:2.8rem;justify-content:center;font-size:.75rem}
+.car-links{display:grid;border:1px solid #e3e7eb;border-radius:.2rem}
+.car-links a{display:flex;justify-content:space-between;padding:.8rem .95rem;color:var(--navy);font-size:.8rem;font-weight:700;transition:background-color .2s ease}
+.car-links a+a{border-top:1px solid #e3e7eb}
+.car-links a:hover{background:#f4f6f8}
+.car-links b{transition:transform .2s ease}.car-links a:hover b{transform:translateX(3px)}
+.car-advisor{display:grid;gap:.75rem;padding:1rem;border:1px solid #e3e7eb;border-radius:.2rem}
+.car-advisor>p{margin:0;color:#2f6b40;font-size:.62rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.car-advisor>div:first-of-type{display:flex;align-items:center;gap:.8rem}
+.car-advisor-photo{width:3.2rem;height:3.2rem;flex:0 0 auto;background:#e3e8ee url("assets/celeritas-wheel-icon-outlined.svg") center/1.8rem no-repeat;background-size:1.8rem;border-radius:50%}
+.car-advisor-photo.has-photo{background-size:cover;background-position:center}
+.car-advisor strong{display:block;color:var(--navy);font-size:.9rem}
+.car-advisor small{display:block;color:#5b6670;font-size:.72rem}
+.car-advisor-actions{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.car-advisor-actions .button{min-height:2.5rem;justify-content:center;font-size:.72rem}
+.car-bottom{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,3vw,3rem);margin-top:3rem}
+.car-bottom h2{margin:0 0 1rem;color:var(--navy);font-family:var(--sans);font-size:1.25rem;font-weight:850}
+.car-bottom h2+dl+h2,.car-cost+h2{margin-top:2rem}
+.car-spec-table{display:grid;margin:0}
+.car-spec-table div{display:flex;justify-content:space-between;gap:1rem;padding:.6rem .8rem;font-size:.8rem}
+.car-spec-table div:nth-child(odd){background:#f4f6f8}
+.car-spec-table dt{color:#2b3640;font-weight:700}.car-spec-table dd{margin:0;color:#46525c;text-align:right}
+.car-cost{padding:1rem 1.1rem;border:1px solid #e3e7eb;border-radius:.2rem}
+.car-cost dl{display:grid;margin:0}
+.car-cost dl div{display:flex;justify-content:space-between;gap:1rem;padding:.65rem 0;border-bottom:1px solid #eef1f4;font-size:.82rem}
+.car-cost dt{color:var(--navy);font-weight:750}.car-cost dt small{display:block;color:#7b858d;font-size:.68rem;font-weight:500}
+.car-cost dd{margin:0;color:var(--navy);font-weight:800;white-space:nowrap}
+.car-cost .car-cost-total{border-bottom:0;font-size:1rem}
+.car-cost .car-cost-total dt,.car-cost .car-cost-total dd{font-weight:900}
+.car-cost>p{margin:.4rem 0 0;color:#7b858d;font-size:.7rem;line-height:1.5}
+@media(max-width:1000px){.car-layout{grid-template-columns:1fr}.car-side{position:static;order:-1}.car-main{display:contents}.car-media{order:-2}.car-tabs{order:1}.car-imperfections{order:2}}
+@media(max-width:700px){.car-desc-grid,.car-services,.car-bottom{grid-template-columns:1fr}.car-media .detail-stage{aspect-ratio:1.3}.car-side h1{font-size:1.5rem}.car-prices strong{font-size:1.45rem}.car-services-diagram{max-width:18rem;justify-self:center}}
+@media(prefers-reduced-motion:reduce){.car-panel{animation:none}.car-tablist button::after{transition:none}}

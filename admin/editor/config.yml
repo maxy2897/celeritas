@@ -99,6 +99,8 @@ collections:
               - { name: ubicacion, label: "Dónde está el coche", widget: string, hint: "Ej.: Salamanca" }
               - { name: precio, label: "Precio (€)", widget: number, value_type: int, min: 0 }
               - { name: precioAnterior, label: "Precio anterior (€) para mostrarlo en oferta", widget: number, value_type: int, required: false }
+              - { name: precioFinanciado, label: "Precio financiado (€)", widget: number, value_type: int, required: false, hint: "Opcional. Se muestra junto al precio al contado." }
+              - { name: descripcion, label: "Descripción del coche", widget: text, required: false, hint: "Texto que aparece en la pestaña Descripción de la ficha." }
               - { name: ofertaHasta, label: "Oferta válida hasta", widget: datetime, required: false, date_format: "DD/MM/YYYY", time_format: false, format: "YYYY-MM-DD", hint: "Al pasar esta fecha la oferta deja de mostrarse sola." }
               - { name: precioMercado, label: "Precio medio de mercado (€)", widget: number, value_type: int, required: false, hint: "Para mostrar cuánto ahorra el cliente frente al mercado." }
               - name: fotos
@@ -193,6 +195,15 @@ collections:
                   - { name: zona, label: "Zona (ej.: Parachoques delantero)", widget: string }
                   - { name: descripcion, label: "Descripción (ej.: Arañazo)", widget: string }
               - { name: datosBastidor, label: "Datos según bastidor", widget: list, required: false, field: { name: dato, label: Dato, widget: string } }
+              - name: documentos
+                label: Documentos del coche
+                label_singular: documento
+                widget: list
+                required: false
+                hint: "Si lo dejas vacío se muestra la lista estándar (informe, ficha técnica, mantenimiento y contrato) como «bajo petición»."
+                fields:
+                  - { name: nombre, label: "Nombre (ej.: Informe de inspección)", widget: string }
+                  - { name: archivo, label: "Archivo (opcional, PDF o foto)", widget: file, required: false }
           - name: serviciosComunes
             label: "Servicios disponibles para todos los coches"
             label_singular: servicio
@@ -237,6 +248,18 @@ collections:
             widget: object
             fields:
               - { name: goatcounter, label: "Código de GoatCounter", widget: string, required: false, hint: "La parte inicial de tu dirección de GoatCounter. Si es https://celeritas.goatcounter.com, escribe celeritas. Vacío = no se registran visitas." }
+          - name: asesor
+            label: "Asesor que aparece en las fichas"
+            widget: object
+            required: false
+            fields:
+              - { name: nombre, label: "Nombre y apellidos", widget: string, required: false }
+              - { name: cargo, label: Cargo, widget: string, required: false, default: "Asesor comercial" }
+              - { name: sede, label: Sede, widget: string, required: false }
+              - { name: idiomas, label: Idiomas, widget: string, required: false, hint: "Ej.: Español, francés" }
+              - { name: foto, label: Foto, widget: image, required: false }
+              - { name: whatsapp, label: "WhatsApp con prefijo de país", widget: string, required: false, hint: "Ej.: 34600000000 (sin espacios ni +)" }
+              - { name: telefono, label: "Teléfono para llamar", widget: string, required: false }
           - name: envios
             label: Envíos (calculadora y destinos)
             widget: object
