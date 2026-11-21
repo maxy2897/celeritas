@@ -5,7 +5,7 @@ try {
   await root?.removeEntry("sveltia-cms-test", { recursive: true });
 } catch { /* No había copia anterior o el navegador no permite borrarla. */ }
 const editor = document.createElement("script");
-editor.src = "../editor/sveltia-cms.js";
+editor.src = "../editor/sveltia-cms.js?v=2";
 document.body.append(editor);
 
 // Salta las pantallas de bienvenida del modo de prueba (en inglés) pulsando sus botones automáticamente.
