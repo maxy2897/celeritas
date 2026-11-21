@@ -141,6 +141,40 @@ function originBadge(record) {
   return `<span class="card-badges">${origin ? `<b class="origin-badge">${origin}</b>` : ""}${availability ? `<b class="availability-badge">${escapeText(availability)}</b>` : ""}</span>`;
 }
 
+function vehicleModel(record) {
+  if (record.modelo) return String(record.modelo).trim();
+  const brand = String(record.marca || "").toLocaleLowerCase("es");
+  const words = String(record.nombre || "").trim().split(/\s+/);
+  if (words[0] && words[0].toLocaleLowerCase("es") === brand) words.shift();
+  return words[0] || "";
+}
+
+function vehicleShipsTo(record) {
+  const destinations = shippingDestinationsList();
+  const wanted = (record.enviosA || []).map((item) => normalizeSearch(typeof item === "string" ? item : item?.destino || "")).filter(Boolean);
+  if (!wanted.length) return destinations;
+  return destinations.filter((destination) => wanted.includes(normalizeSearch(destination.nombre)) || wanted.includes(destination.id));
+}
+
+const heartIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.4 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z" /></svg>';
+function buyCardMarkup(id, favoriteIds = []) {
+  const vehicle = vehicleCatalog[id];
+  const record = vehicleRecords[id];
+  const name = escapeText(vehicle.name);
+  const link = `coche.html?id=${id}`;
+  const ships = vehicleShipsTo(record);
+  const specs = [record.anio, vehicle.specs.Kilómetros, record.fuelText, record.transmissionText, record.potencia].filter(Boolean).map((item) => `<li>${escapeText(item)}</li>`).join("");
+  const price = vehicle.previousPriceEur ? `<del data-price-eur="${vehicle.previousPriceEur}">${plainEuros(vehicle.previousPriceEur)}</del><strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong>` : `<strong data-price-eur="${vehicle.priceEur}">${vehicle.price}</strong>`;
+  const photoCount = record.photos.length > 1 ? `<span class="buy-card-count">${record.photos.length} fotos</span>` : "";
+  const search = escapeText(normalizeSearch(`${vehicle.name} ${record.marca || ""} ${record.fuelText} ${vehicleTypeLabels[record.tipo] || ""}`));
+  const visit = `contacto.html?${new URLSearchParams({ motivo: "comprar", coche: vehicle.name, tipo: "visita" })}`;
+  const saved = favoriteIds.includes(id);
+  return `<article class="buy-card" data-vehicle data-id="${id}" data-type="${escapeText(record.tipo || "")}" data-fuel="${escapeText(record.combustible || "")}" data-brand="${escapeText(normalizeSearch(record.marca || ""))}" data-model="${escapeText(normalizeSearch(vehicleModel(record)))}" data-origin="${escapeText(record.origen || "")}" data-ships="${escapeText(ships.map((destination) => destination.id).join(" "))}" data-price="${vehicle.priceEur}" data-km="${Number(record.km) || 0}" data-transmission="${escapeText(record.cambio || "")}" data-year="${Number(record.anio) || 0}" data-search="${search}">`
+    + `<a class="buy-card-photo" href="${link}" tabindex="-1" aria-hidden="true"><span class="single-car-photo ${vehicle.imageClass} view-front"></span>${photoCount}</a>`
+    + `<div class="buy-card-body">${originBadge(record)}<h3><a href="${link}">${name}</a></h3><ul class="buy-card-specs">${specs}</ul>${ships.length ? `<p class="buy-card-ships">Disponible para envío a: <strong>${ships.map((destination) => escapeText(destination.nombre)).join(" · ")}</strong></p>` : ""}${vehicle.dealDeadline ? `<p class="buy-card-deal">Oferta por tiempo limitado · <strong data-countdown data-deal-deadline="${vehicle.dealDeadline}">Calculando…</strong></p>` : ""}</div>`
+    + `<div class="buy-card-side"><button class="buy-card-fav${saved ? " is-active" : ""}" type="button" data-favorite-vehicle="${id}" aria-pressed="${saved}" aria-label="Guardar ${name} en favoritos" title="Guardar en favoritos">${heartIcon}</button><p class="buy-card-price">${price}</p><small>IVA incluido</small><small class="buy-card-local" data-local-xaf>≈ ${groupThousands(vehicle.priceEur * 655.957)} FCFA</small><a class="button button-dark" href="envios.html?id=${id}#calculadora" data-buy-ship>Calcular envío</a><a class="button button-outline" href="${escapeText(visit)}" data-buy-visit>Reservar una visita</a></div></article>`;
+}
+
 function shippingDestinationsList() {
   return (siteSettings.envios?.destinos || []).filter((destination) => destination && destination.id);
 }
@@ -158,12 +192,16 @@ function fillSelectFromData(select, values, labels = {}) {
 const publishedIds = Object.keys(vehicleCatalog);
 const catalogGrid = document.querySelector("[data-catalog-grid]");
 if (catalogGrid) {
-  catalogGrid.innerHTML = publishedIds.map((id) => vehicleCardMarkup(id, " large")).join("");
+  catalogGrid.innerHTML = catalogGrid.matches("[data-catalog-list]")
+    ? publishedIds.map((id) => buyCardMarkup(id, readListPreference("celeritas-favorites"))).join("")
+    : publishedIds.map((id) => vehicleCardMarkup(id, " large")).join("");
   const unique = (key) => [...new Set(publishedIds.map((id) => vehicleRecords[id][key]).filter(Boolean))];
   fillSelectFromData(document.querySelector("#filter-type"), unique("tipo"), vehicleTypeLabels);
   fillSelectFromData(document.querySelector("#filter-fuel"), unique("combustible"), vehicleFuelLabels);
   fillSelectFromData(document.querySelector("#filter-location"), unique("ubicacion").sort((a, b) => a.localeCompare(b, "es")));
   fillSelectFromData(document.querySelector("#filter-year"), unique("anio").sort((a, b) => a - b).map(String));
+  const brands = unique("marca").sort((a, b) => a.localeCompare(b, "es"));
+  fillSelectFromData(document.querySelector("#filter-brand"), brands.map(normalizeSearch), Object.fromEntries(brands.map((brand) => [normalizeSearch(brand), brand])));
   const count = document.querySelector("#result-count");
   if (count) count.textContent = String(publishedIds.length);
 }
@@ -334,6 +372,7 @@ function updateCurrencyPrices() {
     element.textContent = formatMoney(Number(element.dataset.priceEur));
   });
   document.querySelectorAll("[data-currency-select]").forEach((select) => { select.value = currentCurrency; });
+  document.querySelectorAll("[data-local-xaf]").forEach((element) => { element.hidden = currentCurrency === "XAF"; });
 }
 
 const languageFlags = {
@@ -571,6 +610,15 @@ const filterTransmission = document.querySelector("#filter-transmission");
 const filterYear = document.querySelector("#filter-year");
 const filterLocation = document.querySelector("#filter-location");
 const filterSort = document.querySelector("#filter-sort");
+const filterBrand = document.querySelector("#filter-brand");
+const filterModel = document.querySelector("#filter-model");
+const filterKm = document.querySelector("#filter-km");
+const filterOrigin = document.querySelector("#filter-origin");
+const buyDestination = document.querySelector("[data-buy-destination]");
+const buyMore = document.querySelector("[data-buy-more]");
+const buyFilters = document.querySelector("[data-buy-filters]");
+const buyPageSize = 6;
+let buyShown = buyPageSize;
 const resultCount = document.querySelector("#result-count");
 const catalogEmpty = document.querySelector("#catalog-empty");
 const mobileFilterButton = document.querySelector(".mobile-filter-toggle");
@@ -664,6 +712,10 @@ heroFilterToggle?.addEventListener("click", () => {
   armHeroFilters?.();
 });
 
+function prefersReducedMotionEarly() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function normalize(value) {
   return value.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -677,6 +729,11 @@ function updateCatalog() {
   const transmission = filterTransmission?.value || "all";
   const minYear = Number(filterYear?.value || 0);
   const location = filterLocation?.value || "all";
+  const brand = filterBrand?.value || "all";
+  const model = filterModel?.value || "all";
+  const maxKm = Number(filterKm?.value || 9999999);
+  const origin = filterOrigin?.value || "all";
+  const destination = buyDestination?.value || "";
   let visible = 0;
 
   const groupTypes = { suv: ["suv", "4x4"], furgoneta: ["furgoneta"], caravana: ["caravana"], moto: ["moto"] }[catalogGroup];
@@ -687,6 +744,11 @@ function updateCatalog() {
       (fuel === "all" || item.dataset.fuel === fuel) &&
       (transmission === "all" || item.dataset.transmission === transmission) &&
       (location === "all" || item.dataset.location === location) &&
+      (brand === "all" || item.dataset.brand === brand) &&
+      (model === "all" || item.dataset.model === model) &&
+      (origin === "all" || item.dataset.origin === origin) &&
+      (!destination || item.dataset.ships === undefined || item.dataset.ships.split(" ").includes(destination)) &&
+      Number(item.dataset.km || 0) <= maxKm &&
       Number(item.dataset.year || 0) >= minYear &&
       Number(item.dataset.price) <= maxPrice;
     const cardShell = item.closest(".vehicle-card-shell");
@@ -694,6 +756,15 @@ function updateCatalog() {
     else item.hidden = !show;
     if (show) visible += 1;
   });
+  if (buyMore) {
+    let index = 0;
+    [...document.querySelectorAll("[data-catalog-list] > [data-vehicle]")].forEach((item) => {
+      if (item.hidden) return;
+      index += 1;
+      if (index > buyShown) item.hidden = true;
+    });
+    buyMore.hidden = visible <= buyShown;
+  }
 
   if (resultCount) resultCount.textContent = String(visible);
   if (catalogEmpty) catalogEmpty.hidden = visible !== 0;
@@ -714,10 +785,48 @@ function sortCatalog() {
   sortedItems.forEach((item) => grid.append(item.closest(".vehicle-card-shell") || item));
 }
 
-[filterSearch, filterType, filterFuel, filterPrice, filterTransmission, filterYear, filterLocation].forEach((control) => {
-  control?.addEventListener(control === filterSearch ? "input" : "change", updateCatalog);
+function fillModelFilter() {
+  if (!filterModel) return;
+  const brand = filterBrand?.value || "all";
+  const previous = filterModel.value;
+  const models = [...new Set(publishedIds.filter((id) => brand === "all" || normalizeSearch(vehicleRecords[id].marca || "") === brand).map((id) => vehicleModel(vehicleRecords[id])).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+  fillSelectFromData(filterModel, models.map(normalizeSearch), Object.fromEntries(models.map((item) => [normalizeSearch(item), item])));
+  filterModel.value = [...filterModel.options].some((option) => option.value === previous) ? previous : "all";
+}
+fillModelFilter();
+filterBrand?.addEventListener("change", fillModelFilter);
+const resetBuyPaging = () => { buyShown = buyPageSize; updateCatalog(); };
+[filterSearch, filterType, filterFuel, filterPrice, filterTransmission, filterYear, filterLocation, filterBrand, filterModel, filterKm, filterOrigin].forEach((control) => {
+  control?.addEventListener(control === filterSearch ? "input" : "change", resetBuyPaging);
 });
-filterSort?.addEventListener("change", sortCatalog);
+buyFilters?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  resetBuyPaging();
+  inventoryCatalog?.classList.remove("filters-open");
+  if (mobileFilterButton) setFilterToggle(mobileFilterButton, false);
+  document.querySelector(".buy-results")?.scrollIntoView({ block: "start", behavior: prefersReducedMotionEarly() ? "auto" : "smooth" });
+});
+buyFilters?.addEventListener("reset", () => window.setTimeout(() => { fillModelFilter(); resetBuyPaging(); }, 0));
+buyMore?.addEventListener("click", () => { buyShown += buyPageSize; updateCatalog(); });
+function syncBuyShipLinks() {
+  const destination = buyDestination?.value || "";
+  document.querySelectorAll("[data-buy-ship]").forEach((link) => {
+    const id = link.closest("[data-id]")?.dataset.id;
+    if (id) link.href = `envios.html?${new URLSearchParams(destination ? { id, destino: destination } : { id })}#calculadora`;
+  });
+}
+if (buyDestination) {
+  shippingDestinationsList().forEach((destination) => buyDestination.append(new Option(destination.nombre, destination.id)));
+  const savedDestination = readPreference("celeritas-destination");
+  if ([...buyDestination.options].some((option) => option.value === savedDestination)) buyDestination.value = savedDestination;
+  buyDestination.addEventListener("change", () => {
+    savePreference("celeritas-destination", buyDestination.value);
+    syncBuyShipLinks();
+    resetBuyPaging();
+  });
+  syncBuyShipLinks();
+}
+filterSort?.addEventListener("change", () => { sortCatalog(); updateCatalog(); });
 
 if (vehicleItems.length) {
   const params = new URLSearchParams(window.location.search);
@@ -730,9 +839,12 @@ if (vehicleItems.length) {
   if (filterFuel && [...filterFuel.options].some((option) => option.value === requestedFuel)) filterFuel.value = requestedFuel;
   if (filterPrice && [...filterPrice.options].some((option) => option.value === requestedPrice)) filterPrice.value = requestedPrice;
   if (filterSearch && requestedQuery) filterSearch.value = requestedQuery;
+  else if (filterBrand && [...filterBrand.options].some((option) => option.value === requestedBrand)) { filterBrand.value = requestedBrand; fillModelFilter(); }
   else if (filterSearch && requestedBrand && requestedBrand !== "all") filterSearch.value = requestedBrand;
-  updateCatalog();
+  const requestedDestination = params.get("destino");
+  if (buyDestination && [...buyDestination.options].some((option) => option.value === requestedDestination)) { buyDestination.value = requestedDestination; syncBuyShipLinks(); }
   sortCatalog();
+  updateCatalog();
 }
 
 const modelTrack = document.querySelector("#model-track");
@@ -1984,6 +2096,7 @@ document.querySelectorAll("[data-catalog-group]").forEach((button) => {
       other.setAttribute("aria-pressed", String(other === button));
     });
     if (filterType) filterType.value = "all";
+    buyShown = buyPageSize;
     updateCatalog();
   });
 });

@@ -54,6 +54,8 @@ collections:
               - { name: publicado, label: "Publicado en la web", widget: boolean, default: true }
               - { name: destacado, label: "Mostrar en la portada", widget: boolean, default: false }
               - { name: marca, label: Marca, widget: string }
+              - { name: modelo, label: "Modelo", widget: string, required: false, hint: "Ej.: Ibiza. Se usa en el filtro Modelo del catálogo." }
+              - { name: version, label: "Versión", widget: string, required: false, hint: "Ej.: 1.0 TSI FR" }
               - { name: subtitulo, label: "Línea superior de la ficha", widget: string, required: false, hint: "Opcional. Ej.: SEAT · Utilitario" }
               - name: tipo
                 label: Tipo de vehículo
@@ -163,6 +165,7 @@ collections:
                 widget: select
                 required: false
                 options: ["Disponible · en España", "Consultar disponibilidad", "Reservado", "Próximamente"]
+              - { name: enviosA, label: "Se puede enviar a", widget: list, required: false, hint: "Destinos donde se puede enviar este coche. Si lo dejas vacío se muestran todos los destinos de Envíos.", field: { name: destino, label: Destino, widget: string } }
               - name: ficha
                 label: "Datos técnicos de la ficha"
                 widget: object
