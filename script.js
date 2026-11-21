@@ -1317,6 +1317,115 @@ document.querySelectorAll("[data-success-form]").forEach((form) => {
   });
 });
 
+// Formularios que se envían por WhatsApp o correo (no hay servidor): se compone el mensaje con los campos rellenados.
+function contactChannel() {
+  const whatsapp = String(siteSettings.asesor?.whatsapp || siteSettings.contacto?.whatsapp || "").replace(/\D/g, "");
+  const email = String(siteSettings.contacto?.email || "").trim();
+  return { whatsapp: whatsapp.length >= 8 ? whatsapp : "", email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : "" };
+}
+document.querySelectorAll("[data-send-form]").forEach((form) => {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const title = form.dataset.sendForm;
+    const lines = [...form.elements].filter((field) => field.name && field.type !== "submit").map((field) => {
+      if (field.type === "file") return field.files.length ? `${field.name}: ${field.files.length} archivo(s), los adjunto en este mensaje` : "";
+      const value = String(field.value || "").trim().slice(0, 200);
+      return value ? `${field.name}: ${value}` : "";
+    }).filter(Boolean);
+    const text = `${title} — Celeritas\n\n${lines.join("\n")}`;
+    const channel = contactChannel();
+    if (channel.whatsapp) window.open(`https://wa.me/${channel.whatsapp}?${new URLSearchParams({ text })}`, "_blank", "noopener");
+    else if (channel.email) window.location.href = `mailto:${channel.email}?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(text)}`;
+    const success = form.parentElement.querySelector(".success-message");
+    if (success) {
+      form.hidden = true;
+      success.hidden = false;
+      success.scrollIntoView({ behavior: prefersReducedMotionEarly() ? "auto" : "smooth", block: "center" });
+    }
+    document.querySelectorAll("[data-sell-status] li").forEach((item, index) => item.classList.toggle("is-active", index === 0));
+  });
+});
+document.querySelectorAll("[data-file-count]").forEach((input) => {
+  input.addEventListener("change", () => {
+    const label = input.closest("label")?.querySelector("[data-file-label]");
+    if (label) label.textContent = input.files.length ? `${input.files.length} archivo(s) seleccionado(s)` : "";
+    input.closest("label")?.classList.toggle("has-files", input.files.length > 0);
+  });
+});
+document.querySelectorAll("[data-sell-mode]").forEach((link) => {
+  link.addEventListener("click", () => {
+    const select = document.querySelector("[data-sell-mode-select]");
+    if (select) select.value = link.dataset.sellMode;
+  });
+});
+
+// Calendario de citas (Vender). Sedes, horas y días cerrados en Ajustes → Citas.
+const booking = document.querySelector("[data-booking]");
+if (booking) {
+  const settings = siteSettings.citas || {};
+  const sedes = (settings.sedes?.length ? settings.sedes : [{ nombre: "Celeritas Salamanca", pais: "España", tipo: "Sede" }, { nombre: "Celeritas Bata", pais: "Guinea Ecuatorial", tipo: "Sede principal" }, { nombre: "Celeritas Malabo", pais: "Guinea Ecuatorial", tipo: "Sede secundaria" }]).filter((sede) => sede?.nombre);
+  const hours = (settings.horas?.length ? settings.horas : ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "16:30", "17:00", "17:30", "18:00"]).filter((hour) => /^\d{1,2}:\d{2}$/.test(hour));
+  const closedWeekdays = new Set((settings.diasCerrados?.length ? settings.diasCerrados : [0]).map(Number));
+  const closedDates = new Set((settings.festivos || []).map(String));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const iso = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  const isOpen = (date) => date > today && !closedWeekdays.has(date.getDay()) && !closedDates.has(iso(date));
+  const nextOpen = () => { const date = new Date(today); do date.setDate(date.getDate() + 1); while (!isOpen(date)); return date; };
+  const longDate = (date) => date.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  let viewMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  let selectedDate = null;
+  let selectedHour = "";
+  let selectedSede = sedes[0];
+  const daysRoot = booking.querySelector("[data-booking-days]");
+  const timesRoot = booking.querySelector("[data-booking-times]");
+  const sedesRoot = booking.querySelector("[data-booking-sedes]");
+  const submit = booking.querySelector("[data-booking-submit]");
+  const field = (name) => booking.querySelector(`[data-booking-field="${name}"]`);
+  const sync = () => {
+    field("sede").value = selectedSede?.nombre || "";
+    field("dia").value = selectedDate ? longDate(selectedDate) : "";
+    field("hora").value = selectedHour;
+    submit.disabled = !(selectedDate && selectedHour && selectedSede);
+    booking.querySelector("[data-booking-sede-label]").textContent = selectedSede?.nombre || "";
+  };
+  const renderTimes = () => {
+    booking.querySelector("[data-booking-date]").textContent = selectedDate ? longDate(selectedDate) : "Elija un día en el calendario";
+    timesRoot.innerHTML = selectedDate ? hours.map((hour) => `<button type="button" data-booking-hour="${hour}" aria-pressed="${hour === selectedHour}">${hour}</button>`).join("") : "";
+  };
+  const renderDays = () => {
+    booking.querySelector("[data-booking-month]").textContent = viewMonth.toLocaleDateString("es-ES", { month: "long", year: "numeric" });
+    const offset = (viewMonth.getDay() + 6) % 7;
+    const total = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0).getDate();
+    const cells = Array.from({ length: offset }, () => '<span aria-hidden="true"></span>');
+    for (let day = 1; day <= total; day += 1) {
+      const date = new Date(viewMonth.getFullYear(), viewMonth.getMonth(), day);
+      const open = isOpen(date);
+      const selected = selectedDate && iso(date) === iso(selectedDate);
+      cells.push(`<button type="button" data-booking-day="${iso(date)}" ${open ? "" : "disabled"} aria-pressed="${Boolean(selected)}" aria-label="${longDate(date)}${open ? "" : ", no disponible"}">${day}</button>`);
+    }
+    daysRoot.innerHTML = cells.join("");
+    booking.querySelector("[data-booking-prev]").disabled = viewMonth <= new Date(today.getFullYear(), today.getMonth(), 1);
+  };
+  const renderSedes = () => {
+    const next = longDate(nextOpen());
+    sedesRoot.innerHTML = sedes.map((sede, index) => `<button type="button" data-booking-sede="${index}" aria-pressed="${sede === selectedSede}"><strong>${escapeText(sede.nombre)}</strong><small>${escapeText([sede.pais, sede.tipo].filter(Boolean).join(" · "))}</small><span>✓ Próxima cita disponible: ${escapeText(next)}</span></button>`).join("");
+  };
+  booking.addEventListener("click", (event) => {
+    const day = event.target.closest("[data-booking-day]");
+    if (day && !day.disabled) { const [y, m, d] = day.dataset.bookingDay.split("-").map(Number); selectedDate = new Date(y, m - 1, d); selectedHour = ""; renderDays(); renderTimes(); sync(); return; }
+    const hour = event.target.closest("[data-booking-hour]");
+    if (hour) { selectedHour = hour.dataset.bookingHour; renderTimes(); sync(); return; }
+    const sede = event.target.closest("[data-booking-sede]");
+    if (sede) { selectedSede = sedes[Number(sede.dataset.bookingSede)]; renderSedes(); sync(); return; }
+    if (event.target.closest("[data-booking-prev]")) { viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1); renderDays(); }
+    if (event.target.closest("[data-booking-next]")) { viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1); renderDays(); }
+  });
+  selectedDate = nextOpen();
+  if (selectedDate.getMonth() !== viewMonth.getMonth()) viewMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+  renderDays(); renderTimes(); renderSedes(); sync();
+}
+
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
 updateCurrencyPrices();

@@ -252,6 +252,24 @@ collections:
               - { name: foto, label: Foto, widget: image, required: false }
               - { name: whatsapp, label: "WhatsApp con prefijo de país", widget: string, required: false, hint: "Ej.: 34600000000 (sin espacios ni +)" }
               - { name: telefono, label: "Teléfono para llamar", widget: string, required: false }
+          - name: citas
+            label: "Citas de inspección (página Vender)"
+            widget: object
+            required: false
+            fields:
+              - name: sedes
+                label: Sedes
+                label_singular: sede
+                widget: list
+                required: false
+                hint: "Si lo dejas vacío se muestran Salamanca, Bata y Malabo."
+                fields:
+                  - { name: nombre, label: "Nombre (ej.: Celeritas Salamanca)", widget: string }
+                  - { name: pais, label: País, widget: string, required: false }
+                  - { name: tipo, label: "Tipo (ej.: Sede principal)", widget: string, required: false }
+              - { name: horas, label: "Horas de cita", widget: list, required: false, hint: "Formato 10:30. Vacío = 10:00 a 12:30 y 16:30 a 18:00.", field: { name: hora, label: Hora, widget: string } }
+              - { name: diasCerrados, label: "Días de la semana cerrados", widget: select, multiple: true, required: false, options: [{ label: Domingo, value: 0 }, { label: Lunes, value: 1 }, { label: Martes, value: 2 }, { label: Miércoles, value: 3 }, { label: Jueves, value: 4 }, { label: Viernes, value: 5 }, { label: Sábado, value: 6 }] }
+              - { name: festivos, label: "Festivos o días sin citas", widget: list, required: false, hint: "Formato AAAA-MM-DD", field: { name: dia, label: Día, widget: string } }
           - name: envios
             label: Envíos (calculadora y destinos)
             widget: object

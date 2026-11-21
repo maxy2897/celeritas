@@ -1637,3 +1637,88 @@ body[data-page="envios"] .ship-track-cta{border-radius:0}
 body[data-page="envios"] .ship-destinations article{border-radius:.2rem}
 @media(max-width:700px){body[data-page="envios"] .ship-destinations{grid-template-columns:1fr 1fr;gap:.55rem}body[data-page="envios"] .ship-destinations article{padding:.85rem}body[data-page="envios"] .ship-destinations strong{font-size:.92rem}body[data-page="envios"] .ship-destinations ul{font-size:.7rem}body[data-page="envios"] .ship-hero h1{font-size:1.6rem}}
 body[data-page="mi-envio"]{background:#fff}
+
+/* Vender (maqueta del cliente) */
+body[data-page="vender"]{background:#fff}
+.sell-hero{padding:clamp(2.4rem,5vw,4rem) clamp(1rem,4vw,4rem) clamp(2.4rem,4vw,3.4rem);color:#fff;background:var(--navy)}
+.sell-hero .eyebrow{color:var(--green)}
+.sell-hero h1{max-width:40rem;margin:.5rem 0 0;font-family:var(--sans);font-size:clamp(2.2rem,4.4vw,3.6rem);font-weight:900;line-height:1.05;letter-spacing:-.02em}
+.sell-hero h1 em{color:var(--green);font-style:normal}
+.sell-hero>p:not(.eyebrow){max-width:30rem;margin:1rem 0 1.8rem;color:#ffffffc9;line-height:1.6}
+.sell-hero-options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:62rem}
+.sell-hero-option{display:grid;gap:.45rem;padding:1.15rem 1.25rem;color:var(--navy);text-align:left;background:#fff;border:0;border-radius:.2rem;font:inherit;text-decoration:none;cursor:pointer;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+.sell-hero-option:hover{transform:translateY(-3px);box-shadow:0 1rem 2rem #0006}
+.sell-hero-option strong{display:flex;align-items:center;gap:.6rem;font-size:1rem;font-weight:850}
+.sell-hero-option strong b{padding:.15rem .4rem;color:var(--navy);background:var(--green);font-size:.58rem;letter-spacing:.06em;text-transform:uppercase}
+.sell-hero-option span{color:#46525c;font-size:.82rem;line-height:1.5}
+.sell-form-section{display:grid;grid-template-columns:minmax(0,1fr) 19rem;gap:clamp(1.5rem,3vw,3rem);align-items:start;padding:3rem clamp(1rem,4vw,4rem)}
+.sell-form-wrap h2,.sell-how h2,.sell-booking h2{margin:0 0 1.2rem;color:var(--navy);font-family:var(--sans);font-size:clamp(1.4rem,2.4vw,1.8rem);font-weight:850}
+.sell-form{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.9rem 1rem}.sell-form>label{grid-column:span 2}
+.sell-form label,.booking-confirm label{display:grid;gap:.35rem}
+.sell-form label>span,.booking-confirm label>span{color:#5b6670;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.sell-form input:not([type=file]),.sell-form select,.booking-confirm input{width:100%;min-height:2.7rem;padding:0 .8rem;color:var(--ink);background:#fff;border:1px solid #cfd6dc;border-radius:.2rem;font:inherit;font-size:.85rem;transition:border-color .2s ease,box-shadow .2s ease}
+.sell-form input:focus,.sell-form select:focus,.booking-confirm input:focus{border-color:var(--navy);box-shadow:0 0 0 3px #0b203618;outline:0}
+.sell-form input:user-invalid{border-color:#c2453b}
+.sell-form>.span-2{grid-column:span 4}
+.sell-form>.span-half{grid-column:span 3}
+.sell-form .sell-drop{position:relative;display:grid;align-content:center;justify-items:center;gap:.2rem;min-height:5.2rem;padding:1rem;text-align:center;background:#fafbfc;border:1.5px dashed #b8c2cb;border-radius:.2rem;cursor:pointer;transition:border-color .2s ease,background-color .2s ease}
+.sell-drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.sell-drop strong{color:var(--navy);font-size:.85rem}
+.sell-drop small{color:#6b7680;font-size:.72rem}
+.sell-drop em{color:#2f6b40;font-size:.72rem;font-style:normal;font-weight:800}
+.sell-drop:hover,.sell-drop.has-files{background:#f2f8f3;border-color:#2f6b40}
+.sell-drop:focus-within{outline:2px solid var(--navy);outline-offset:2px}
+.sell-form-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.2rem;grid-column:1/-1;margin-top:.4rem}
+.sell-form-actions small{max-width:28rem;color:#6b7680;font-size:.72rem;line-height:1.5}
+.sell-success{padding:1.4rem;background:#edf4ee}
+.sell-status{padding:1.3rem;background:#edf4ee}
+.sell-status h3{margin:0 0 .5rem;color:var(--navy);font-size:1rem;font-weight:850}
+.sell-status p{margin:0;color:#46525c;font-size:.8rem;line-height:1.55}
+.sell-status ol{display:grid;grid-template-columns:1fr 1fr;margin:1rem 0;padding:0;list-style:none;border:1px solid var(--navy)}
+.sell-status li{padding:.65rem .7rem;color:var(--navy);background:#fff;font-size:.75rem;font-weight:800}
+.sell-status li:nth-child(odd){border-right:1px solid var(--navy)}
+.sell-status li:nth-child(-n+2){border-bottom:1px solid var(--navy)}
+.sell-status li.is-active{color:#fff;background:var(--navy)}
+.sell-how{padding:3rem clamp(1rem,4vw,4rem);background:#f4f6f8}
+.sell-how ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem;margin:0;padding:0;list-style:none}
+.sell-how li{display:grid;gap:.3rem}
+.sell-how b{color:#2f6b40;font-size:.8rem}
+.sell-how strong{color:var(--navy);font-size:.92rem}
+.sell-how span{color:#5b6670;font-size:.8rem;line-height:1.5}
+.sell-booking{padding:3rem clamp(1rem,4vw,4rem) 4rem;background:#f0f3f7}
+.sell-booking h2{margin-bottom:.3rem}
+.sell-booking-sub{margin:0 0 1.6rem;color:#5b6670;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sell-booking-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(1.5rem,3vw,2.6rem);align-items:start}
+.booking-month{display:flex;align-items:center;gap:1rem;margin-bottom:.8rem}
+.booking-month strong{color:var(--navy);font-size:1.2rem;font-weight:850}.booking-month strong::first-letter,.booking-date::first-letter{text-transform:uppercase}
+.booking-month button{width:2rem;height:2rem;color:var(--navy);background:none;border:0;font-size:1.4rem;cursor:pointer}
+.booking-month button:disabled{opacity:.25;cursor:default}
+.booking-calendar{padding:1rem;background:#fff;border-radius:.3rem}
+.booking-weekdays,.booking-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem}
+.booking-weekdays span{color:#5b6670;font-size:.7rem;text-align:center}
+.booking-days{margin-top:.4rem}
+.booking-days button{aspect-ratio:1.25;color:var(--navy);background:#fff;border:1px solid #cfd6dc;border-radius:.2rem;font:inherit;font-size:.85rem;font-weight:750;cursor:pointer;transition:background-color .15s ease,transform .15s ease}
+.booking-days button:hover:not(:disabled){transform:translateY(-1px);border-color:var(--navy)}
+.booking-days button:disabled{color:#b3bcc4;background:linear-gradient(to top right,transparent calc(50% - .5px),#cfd6dc calc(50% - .5px),#cfd6dc calc(50% + .5px),transparent calc(50% + .5px)) #f5f6f8;cursor:default}
+.booking-days button[aria-pressed="true"],.booking-times button[aria-pressed="true"],.booking-sedes button[aria-pressed="true"]{color:#fff;background:var(--navy);border-color:var(--navy)}
+.booking-times-box{padding:1rem;background:#fff;border-radius:.3rem}
+.booking-date{margin:0 0 .8rem;color:var(--navy);font-weight:850}
+.booking-times{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.4rem,1fr));gap:.45rem}
+.booking-times button{min-height:2.3rem;color:var(--navy);background:#fff;border:1px solid #cfd6dc;border-radius:.2rem;font:inherit;font-size:.8rem;font-weight:750;cursor:pointer}
+.booking-side h3{margin:1.4rem 0 .7rem;color:var(--navy);font-size:.95rem;font-weight:850;text-align:center}
+.booking-sedes{display:grid;gap:.5rem}
+.booking-sedes button{display:grid;gap:.15rem;padding:.8rem .9rem;color:var(--navy);text-align:left;background:#fff;border:1px solid #e3e7eb;border-radius:.2rem;font:inherit;cursor:pointer;transition:border-color .2s ease}
+.booking-sedes button:hover{border-color:var(--navy)}
+.booking-sedes strong{font-size:.82rem;letter-spacing:.04em;text-transform:uppercase}
+.booking-sedes small{color:#6b7680;font-size:.7rem}
+.booking-sedes span{margin-top:.35rem;padding:.35rem .5rem;color:var(--navy);background:#e4ecf7;font-size:.7rem;font-weight:700}
+.booking-sedes button[aria-pressed="true"] small{color:#ffffffb0}
+.booking-sedes button[aria-pressed="true"] span{color:#fff;background:#ffffff22}
+.booking-confirm{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem}
+.booking-confirm .button{grid-column:1/-1;min-height:2.9rem;justify-content:center}
+.booking-confirm .button:disabled{opacity:.45;cursor:not-allowed}
+body[data-page="vender"] .inner-faq{background:#fff}
+@media(max-width:900px){.sell-form-section,.sell-booking-grid{grid-template-columns:1fr}.sell-how ol{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.sell-hero-options{grid-template-columns:1fr}.sell-form{grid-template-columns:1fr 1fr}.sell-form>label{grid-column:span 1}.sell-form>.span-2,.sell-form>.sell-drop,.sell-form>label:has(input[name="Email"]),.sell-form>label:has(input[name="Marca y modelo"]){grid-column:1/-1}.sell-how ol{grid-template-columns:1fr}.booking-confirm{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.sell-hero-option,.booking-days button{transition:none}}
+body[data-page="vender"] .inner-faq h2{font-family:var(--sans);font-size:clamp(1.6rem,3vw,2.4rem);font-weight:850;letter-spacing:-.01em}body[data-page="vender"] .inner-faq summary{font-family:var(--sans);font-size:.95rem;font-weight:700}
