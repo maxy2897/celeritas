@@ -1604,3 +1604,36 @@ body[data-page="coche"]{background:#fff}
 @media(max-width:1000px){.car-layout{grid-template-columns:1fr}.car-side{position:static;order:-1}.car-main{display:contents}.car-media{order:-2}.car-tabs{order:1}.car-imperfections{order:2}}
 @media(max-width:700px){.car-desc-grid,.car-services,.car-bottom{grid-template-columns:1fr}.car-media .detail-stage{aspect-ratio:1.3}.car-side h1{font-size:1.5rem}.car-prices strong{font-size:1.45rem}.car-services-diagram{max-width:18rem;justify-self:center}}
 @media(prefers-reduced-motion:reduce){.car-panel{animation:none}.car-tablist button::after{transition:none}}
+
+/* Envíos (maqueta del cliente): panel verde claro con destinos y calculadora */
+body[data-page="envios"]{background:#fff}
+body[data-page="envios"] main{padding-top:0}
+body[data-page="envios"] .ship-hero{width:var(--page);margin:1.6rem auto 0;padding:clamp(1.8rem,4vw,3.2rem) clamp(1.2rem,3vw,2.6rem) 1rem;color:var(--ink);background:#edf4ee}
+body[data-page="envios"] .ship-hero h1{color:var(--navy);font-size:clamp(1.8rem,3.2vw,2.6rem);font-weight:850}
+body[data-page="envios"] .ship-hero>p{max-width:34rem;margin:.6rem 0 1.6rem;color:#46525c;font-size:.92rem;line-height:1.55}
+body[data-page="envios"] .ship-calc-section{width:var(--page);margin:0 auto;padding:1.4rem clamp(1.2rem,3vw,2.6rem) 2.4rem;background:#edf4ee}
+body[data-page="envios"] .ship-calc-section>.eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;color:#5b6670;font-weight:600;letter-spacing:.18em}
+body[data-page="envios"] .ship-calc-section>.eyebrow::before{width:2.2rem;height:2px;content:"";background:#4a7bd0}
+body[data-page="envios"] .ship-total strong{color:var(--navy);font-family:var(--sans);font-weight:900}
+.ship-world-grid{display:block!important;width:var(--page);margin:3rem auto!important;padding:0!important;background:none!important;border:0!important}
+.ship-world-grid h2{margin:0;color:var(--navy);font-size:clamp(1.4rem,2.4vw,1.9rem);font-weight:850}
+.ship-world-grid>p{margin:.4rem 0 1.2rem;color:#5b6670;font-size:.88rem}
+.ship-world-grid>div{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.7rem}
+.ship-continent{display:grid;overflow:hidden;color:var(--navy);background:#fff;border:1px solid #e3e7eb;border-radius:.2rem;text-decoration:none;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+a.ship-continent:hover{transform:translateY(-3px);box-shadow:0 .8rem 1.6rem #0b20361a}
+.ship-continent-map{position:relative;display:grid;aspect-ratio:1.6;place-items:center;overflow:hidden;background:#e6ebf1}
+.ship-continent-map img{width:78%;height:auto;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+a.ship-continent:hover .ship-continent-map img{transform:scale(1.06)}
+.ship-continent-map b{position:absolute;top:.6rem;left:.6rem;z-index:1;padding:.2rem .45rem;color:#fff;background:var(--navy);font-size:.6rem;font-weight:850}
+.ship-continent strong{padding:.8rem .85rem 0;font-size:.85rem;font-weight:850}
+.ship-continent small{padding:.2rem .85rem .9rem;color:#2f6b40;font-size:.72rem;font-weight:700}
+.ship-continent.is-soon{color:#5b6670}
+.ship-continent.is-soon .ship-continent-map img{opacity:.45;filter:grayscale(1)}
+.ship-continent.is-soon small{color:#7b858d;font-weight:500}
+body[data-page="envios"] .ship-track-cta{border-radius:0}
+@media(max-width:900px){.ship-world-grid>div{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.ship-continent{flex:0 0 12rem;scroll-snap-align:start}}
+@media(max-width:700px){body[data-page="envios"] main{padding-top:0}body[data-page="envios"] .ship-hero,body[data-page="envios"] .ship-calc-section{width:100%;margin-top:0}}
+@media(prefers-reduced-motion:reduce){.ship-continent,.ship-continent-map img{transition:none}}
+body[data-page="envios"] .ship-destinations article{border-radius:.2rem}
+@media(max-width:700px){body[data-page="envios"] .ship-destinations{grid-template-columns:1fr 1fr;gap:.55rem}body[data-page="envios"] .ship-destinations article{padding:.85rem}body[data-page="envios"] .ship-destinations strong{font-size:.92rem}body[data-page="envios"] .ship-destinations ul{font-size:.7rem}body[data-page="envios"] .ship-hero h1{font-size:1.6rem}}
+body[data-page="mi-envio"]{background:#fff}

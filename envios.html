@@ -7,23 +7,22 @@
     <meta name="description" content="Entregamos su coche en la Península, Baleares, Canarias, Ceuta, Melilla y Guinea Ecuatorial. Calcule el coste total del envío en su moneda." />
     <meta name="theme-color" content="#f6f3ec" />
     <title>Envíos — Celeritas</title>
-    <link rel="stylesheet" href="styles.css?v=75" />
-    <script src="script.js?v=75" type="module"></script>
+    <link rel="stylesheet" href="styles.css?v=76" />
+    <script src="script.js?v=76" type="module"></script>
   </head>
   <body data-page="envios">
     <header class="site-header header-light"><a class="brand" href="index.html"><img class="brand-logo" src="assets/celeritas-logo-transparent-v2.webp" alt="Celeritas" /></a><button class="menu-button" type="button" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span class="sr-only">Abrir menú</span></button><nav id="main-nav"><a href="comprar.html">Comprar</a><a class="active" href="envios.html">Envíos</a><a href="vender.html">Vender</a><a href="tienda.html">Tienda</a><a href="conocenos.html">Conócenos</a><a href="contacto.html">Contacto</a></nav></header>
     <aside class="scroll-wheel" aria-hidden="true"><img src="assets/celeritas-wheel-icon-outlined.svg" alt="" /><span>CELERITAS</span></aside>
     <main data-shipping-page>
       <section class="ship-hero">
-        <p class="eyebrow">Envíos Celeritas</p>
-        <h1>Entregamos allí<br /><em>donde se encuentre.</em></h1>
-        <p>En toda España y en Guinea Ecuatorial: recójalo en el puerto o recíbalo en su domicilio, con el coste total detallado desde el primer momento.</p>
+        <h1>Entregamos allí donde se encuentre</h1>
+        <p>En toda España y en Guinea Ecuatorial: recójalo en el puerto o recíbalo en su domicilio.</p>
         <div class="ship-destinations" data-ship-destinations></div>
       </section>
 
       <section class="ship-calc-section" id="calculadora" aria-labelledby="calc-title">
         <p class="eyebrow dark">Entrega en detalle</p>
-        <h2 id="calc-title">¿Cuánto cuesta recibirlo?</h2>
+        <h2 id="calc-title" class="sr-only">¿Cuánto cuesta recibirlo?</h2>
         <div class="ship-calc" data-shipping-calc>
           <form class="ship-calc-form" data-ship-form>
             <label><span>Vehículo</span><select data-ship-vehicle><option value="">Sin elegir (solo el envío)</option></select></label>
@@ -48,10 +47,7 @@
         </div>
       </section>
 
-      <section class="ship-world">
-        <div><h2>También enviamos a otros países</h2><p>Consulte los continentes y países a los que llevamos su coche.</p></div>
-        <a class="button button-dark" href="index.html#envios">Ver destinos →</a>
-      </section>
+      <section class="ship-world ship-world-grid"><h2>También enviamos a otros países</h2><p>Seleccione su continente y descubra los destinos disponibles.</p><div><a class="ship-continent" href="index.html#envios"><span class="ship-continent-map"><img src="assets/continent-europa.svg" alt="" width="540" height="500" loading="lazy" decoding="async" /></span><strong>Enviamos a Europa</strong><small>Ver destinos →</small></a><a class="ship-continent" href="index.html#envios"><span class="ship-continent-map"><img src="assets/continent-africa.svg" alt="" width="540" height="500" loading="lazy" decoding="async" /></span><strong>Enviamos a África</strong><small>Ver destinos →</small></a><div class="ship-continent is-soon"><span class="ship-continent-map"><b>Próximamente</b><img src="assets/continent-asia.svg" alt="" width="540" height="500" loading="lazy" decoding="async" /></span><strong>Enviamos a Asia</strong><small>Aún no disponible</small></div><div class="ship-continent is-soon"><span class="ship-continent-map"><b>Próximamente</b><img src="assets/continent-america-norte.svg" alt="" width="540" height="500" loading="lazy" decoding="async" /></span><strong>Enviamos a América del Norte</strong><small>Aún no disponible</small></div><div class="ship-continent is-soon"><span class="ship-continent-map"><b>Próximamente</b><img src="assets/continent-america-sur.svg" alt="" width="540" height="500" loading="lazy" decoding="async" /></span><strong>Enviamos a América del Sur</strong><small>Aún no disponible</small></div></div></section>
 
       <section class="ship-track-cta">
         <div><h2>¿Tiene un envío en camino?</h2><p>Siga su vehículo paso a paso y hable con su asesor en cualquier momento.</p></div>
